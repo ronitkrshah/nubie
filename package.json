@@ -1,0 +1,38 @@
+{
+    "name": "nubie",
+    "version": "0.0.0-dev",
+    "description": "A Simple Express Based API Framework For Nubs Laik Me :)",
+    "main": "dist/index.js",
+    "scripts": {
+        "prepare": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ronitkrshah/nubie.git"
+    },
+    "keywords": [
+        "express",
+        "typescript",
+        "webapi",
+        "nubie"
+    ],
+    "author": "RKS",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ronitkrshah/nubie/issues"
+    },
+    "homepage": "https://github.com/ronitkrshah/nubie#readme",
+    "devDependencies": {
+        "@types/express": "^5.0.3",
+        "@types/node": "^24.1.0",
+        "nodemon": "^3.1.10",
+        "prettier": "^3.6.2",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "express": "^5.1.0"
+    },
+    "peerDependencies": {
+        "reflect-metadata": "^0.2.2"
+    }
+}
