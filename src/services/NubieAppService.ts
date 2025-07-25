@@ -48,7 +48,18 @@ class NubieAppService {
 
                 /** Express Route Handler */
                 async function handleApiRequest(req: Request, res: Response, next: NextFunction) {
-                    const data = await instance[methodName]();
+                    // Executing extension methods
+                    for (const method of AppContext.getExtensionMethods(methodName)) {
+                        await method.executeAsync(req, res, next);
+                    }
+
+                    // Executing extension params
+                    const arguements: unknown[] = [];
+                    for (const param of AppContext.getExtensionParams(methodName)) {
+                        arguements[param.paramIndex] = await param.executeAsync(req, res, next);
+                    }
+
+                    const data = await instance[methodName](...arguements);
                     return res.json(data || { ping: "pong" });
                 }
 

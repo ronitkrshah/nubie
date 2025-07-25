@@ -2,16 +2,16 @@ import { Logger } from "../../helpers";
 import { NubieMethodDecorator } from "../helpers";
 
 class RouteVersionDecorator extends NubieMethodDecorator {
-    public constructor(private readonly _version: number) {
+    public constructor(public readonly version: number) {
         super();
-        if (typeof _version !== "number") {
+        if (typeof version !== "number") {
             Logger.error("Version Must Be A Valid Integer");
             process.exit(1);
         }
     }
 
     public async executeAsync(): Promise<void> {
-        this.updateMethodMetadata({ apiVersion: this._version });
+        this.updateMethodMetadata({ apiVersion: this.version });
     }
 }
 
