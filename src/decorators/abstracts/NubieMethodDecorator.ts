@@ -4,6 +4,7 @@ export type TMethodMetadata = {
     endpoint: string;
     apiVersion?: number;
     httpMethod: "get" | "post" | "put" | "patch" | "delete";
+    body?: Record<string, string>;
 };
 
 export default abstract class NubieMethodDecorator {
@@ -63,6 +64,22 @@ export default abstract class NubieMethodDecorator {
                 },
             },
             this._target.constructor,
+        );
+    }
+
+    public static updateMethodMetadata(target: Object, methodName: string, metadata: Partial<TMethodMetadata>) {
+        const existingMetadata: Record<string, TMethodMetadata> =
+            Reflect.getMetadata(NubieMethodDecorator.METADATA_KEY, target) || {};
+        Reflect.defineMetadata(
+            NubieMethodDecorator.METADATA_KEY,
+            {
+                ...existingMetadata,
+                [methodName]: {
+                    ...(existingMetadata[methodName] || {}),
+                    ...metadata,
+                },
+            },
+            target,
         );
     }
 
