@@ -1,5 +1,5 @@
 import { NubieExtensionMethodDecorator, NubieExtensionParamDecorator } from "./decorators";
-import { TClass } from "./interfaces";
+import { TClass } from "./types";
 
 class AppContext {
     private _classDecorators = new Map<string, TClass>();

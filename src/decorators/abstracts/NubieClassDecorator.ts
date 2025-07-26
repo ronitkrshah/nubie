@@ -1,5 +1,5 @@
 import AppContext from "../../AppContext";
-import { TClass } from "../../interfaces";
+import { TClass } from "../../types";
 import { TMethodMetadata } from "./NubieMethodDecorator";
 
 export type TClassMetadata = {

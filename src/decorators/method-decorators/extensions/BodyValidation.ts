@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { NubieExtensionMethodDecorator, NubieMethodDecorator } from "../../abstracts";
-import { TClass } from "../../../interfaces";
+import { TClass } from "../../../types";
 import { plainToInstance, instanceToPlain, ClassTransformer } from "class-transformer";
 import { validate } from "class-validator";
 
