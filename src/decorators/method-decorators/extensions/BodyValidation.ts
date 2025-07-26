@@ -10,6 +10,10 @@ class BodyValidationDecorator extends NubieExtensionMethodDecorator {
     }
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
+        if (req.method === "GET") {
+            throw new Error("GET requests should not contain a request body. Consider using POST or PATCH.");
+        }
+
         const dtoInstance = plainToInstance(this.DTO, req.body);
         const validationErrors = await validate(dtoInstance);
         if (validationErrors.length > 0) {
