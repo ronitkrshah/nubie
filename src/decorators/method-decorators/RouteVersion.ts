@@ -1,5 +1,5 @@
 import { Logger } from "../../helpers";
-import { NubieMethodDecorator } from "../helpers";
+import { NubieMethodDecorator } from "../abstracts";
 
 class RouteVersionDecorator extends NubieMethodDecorator {
     public constructor(public readonly version: number) {

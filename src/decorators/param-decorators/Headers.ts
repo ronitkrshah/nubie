@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionParamDecorator } from "../helpers";
+import { NubieExtensionParamDecorator } from "../abstracts";
 
 class HeadersParamDecorator extends NubieExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {

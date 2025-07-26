@@ -1,5 +1,5 @@
 import { Logger } from "../../helpers";
-import { NubieMethodDecorator, TMethodMetadata } from "../helpers";
+import { NubieMethodDecorator, TMethodMetadata } from "../abstracts";
 
 type TFunctionType = "AsyncFunction" | "Function";
 

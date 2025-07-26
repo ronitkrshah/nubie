@@ -1,5 +1,5 @@
 import { Logger } from "../../helpers";
-import { NubieClassDecorator } from "../helpers";
+import { NubieClassDecorator } from "../abstracts";
 
 class ApiVersionDecorator extends NubieClassDecorator {
     private readonly _version?: number;

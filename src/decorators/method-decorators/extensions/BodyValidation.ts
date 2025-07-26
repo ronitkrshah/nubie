@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionMethodDecorator } from "../../helpers";
+import { NubieExtensionMethodDecorator } from "../../abstracts";
 import { TClass } from "../../../interfaces";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
