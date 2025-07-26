@@ -4,6 +4,7 @@ import { Logger } from "../helpers";
 import AppContext from "../AppContext";
 import { NubieClassDecorator } from "../decorators";
 import { NextFunction, Router, Request, Response } from "express";
+import chalk from "chalk";
 
 class NubieAppService {
     private readonly _router = Router();
@@ -26,7 +27,6 @@ class NubieAppService {
         for (const file of files) {
             if (file.endsWith("Controller.js")) {
                 await import(`${controllerDirectory}/${file}`);
-                Logger.success(`Loaded: ${file.split("/").pop()?.replace(".js", "")}`);
             }
         }
     }
@@ -37,6 +37,8 @@ class NubieAppService {
         for (const decorator of AppContext.classDecorators) {
             const metadata = NubieClassDecorator.getMetadata(decorator);
             const instance = new decorator();
+
+            Logger.title(`${metadata.className} Routes`);
 
             /** registering methods */
             for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {
@@ -60,11 +62,15 @@ class NubieAppService {
                     }
 
                     const data = await instance[methodName](...arguements);
-                    return res.json(data || { ping: "pong" });
+                    return res.json(data);
                 }
 
                 this._router[methodMetadata.httpMethod](fullpath, handleApiRequest);
-                Logger.success(`[${methodMetadata.httpMethod.toUpperCase()}] :: ${fullpath}`);
+                console.log(
+                    `${chalk.green("✔️")}  ${chalk.yellow(`${methodMetadata.httpMethod.toUpperCase()}`)} ` +
+                        `${chalk.cyan(fullpath)} ` +
+                        `${chalk.gray(`➜ ${metadata.className}.${methodName}()`)}`,
+                );
             }
         }
     }

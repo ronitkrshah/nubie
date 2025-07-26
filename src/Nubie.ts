@@ -25,9 +25,11 @@ export default class Nubie {
         this._expressApp.use(router);
         const config = await NubieAppConfig.getAppConfigAsync();
 
+        Logger.title("Installing Skill Issue Fix...");
+
         this._expressApp.listen(config.port, () => {
-            Logger.success(`Nubie App Running On PORT: ${config.port}`);
-            Logger.success(`WebAPI Url: http://127.0.0.1:${config.port}`);
+            Logger.info(`WebAPI Url: http://127.0.0.1:${config.port}`);
+            Logger.success("Skill Issues Fixed :)");
         });
     }
 }

@@ -23,7 +23,6 @@ class NubieAppConfig {
             const fileContents = await FileSystem.readFile(`${this.projectPath}/${this._configFile}`, {
                 encoding: "utf-8",
             });
-            Logger.success("Loaded Nubie Configuration");
             const data: typeof this._config = JSON.parse(fileContents);
 
             this._config = {
