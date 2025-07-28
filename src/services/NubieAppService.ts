@@ -6,7 +6,7 @@ import { NubieClassDecorator, TClassMetadata } from "../decorators";
 import { NextFunction, Router, Request, Response } from "express";
 import chalk from "chalk";
 import { TClass } from "../types";
-import NubieContainer from "./NubieContainer";
+import { NubieContainer } from "../core";
 
 class NubieAppService {
     private readonly _router = Router();

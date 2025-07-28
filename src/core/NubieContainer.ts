@@ -1,6 +1,7 @@
 import { container, DependencyContainer, Lifecycle } from "tsyringe";
 import { TClass } from "../types";
 
+/** Dependency Injection */
 class NubieContainer {
     private readonly _container: DependencyContainer;
 
