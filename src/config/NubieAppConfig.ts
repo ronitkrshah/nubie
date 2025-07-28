@@ -1,12 +1,12 @@
 import path from "path";
 import * as FileSystem from "node:fs/promises";
-import { Logger } from "../helpers";
 
 const _defaultConfiguration = {
     port: 4321,
     defaultApiVersion: 1,
     controllersDirectory: "controllers",
     buildDir: "dist",
+    jwtSeceretKey: undefined as string | undefined,
 };
 
 class NubieAppConfig {
