@@ -3,7 +3,7 @@ import { NubieExtensionParamDecorator } from "../abstracts";
 
 class ResParamDecorator extends NubieExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
-        return req;
+        return res;
     }
 }
 
