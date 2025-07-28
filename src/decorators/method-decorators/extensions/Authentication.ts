@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionMethodDecorator } from "../abstracts";
-import { JWTToken } from "../../core";
+import { NubieExtensionMethodDecorator } from "../../abstracts";
+import { JWTToken } from "../../../core";
 
 class AuthenticationDecorator extends NubieExtensionMethodDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {

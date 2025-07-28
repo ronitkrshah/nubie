@@ -5,5 +5,6 @@ import Res from "./Res";
 import Param from "./Param";
 import Query, { QueryType } from "./Query";
 import BearerToken from "./BearerToken";
+import BearerTokenPayload from "./BearerTokenPayload";
 
-export { Body, Headers, Req, Res, Param, Query, QueryType, BearerToken };
+export { Body, Headers, Req, Res, Param, Query, QueryType, BearerToken, BearerTokenPayload };
