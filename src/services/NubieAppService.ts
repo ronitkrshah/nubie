@@ -6,7 +6,7 @@ import { NubieClassDecorator, TClassMetadata } from "../decorators";
 import { NextFunction, Router, Request, Response } from "express";
 import chalk from "chalk";
 import { TClass } from "../types";
-import { NubieContainer } from "../core";
+import { NubieContainer, TMethodResponse } from "../core";
 
 class NubieAppService {
     private readonly _router = Router();
@@ -72,8 +72,10 @@ class NubieAppService {
                         arguements[param.paramIndex] = await param.executeAsync(req, res, next);
                     }
 
-                    const data = await instance[methodName](...arguements);
-                    return res.json(data);
+                    const data: TMethodResponse<any> = await instance[methodName](...arguements);
+                    if (data) {
+                        return res.status(data.statusCode).json(data.data);
+                    }
                 }
 
                 this._router[methodMetadata.httpMethod](fullpath, handleApiRequest);
