@@ -36,11 +36,7 @@ class NubieAppService {
     private getClassInstance(Class: TClass, constructorInjection: TClassMetadata["constructorInjections"]) {
         const arguements: unknown[] = [];
         for (const injectionData of constructorInjection || []) {
-            try {
-                arguements[injectionData.paramIndex] = NubieContainer.resolve(injectionData.token);
-            } catch (error) {
-                continue;
-            }
+            arguements[injectionData.paramIndex] = NubieContainer.resolve(injectionData.token);
         }
 
         return new Class(...arguements);
