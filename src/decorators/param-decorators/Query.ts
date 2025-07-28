@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { NubieExtensionParamDecorator } from "../abstracts";
+import { NubieError } from "../../helpers";
+import { HttpStatusCodes } from "../../core";
 
 export const enum QueryType {
     Optional,
@@ -17,7 +19,11 @@ class QueryDecorator extends NubieExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         const query = req.query[this.query];
         if (this.required === QueryType.Required && !query) {
-            throw new Error("Required QueryParam: " + this.query);
+            throw new NubieError(
+                "MissingRequiredParam",
+                HttpStatusCodes.BadRequest,
+                `Missing Required Param: ${this.query}`,
+            );
         }
         return query;
     }

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { NubieExtensionMethodDecorator } from "../../abstracts";
-import { JWTToken } from "../../../core";
+import { HttpStatusCodes, JWTToken } from "../../../core";
+import { NubieError } from "../../../helpers";
 
 class RolesDecorator extends NubieExtensionMethodDecorator {
     private readonly _roles: string | string[];
@@ -12,17 +13,30 @@ class RolesDecorator extends NubieExtensionMethodDecorator {
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
         const bearerToken = req.headers["authorization"];
-        if (!bearerToken) throw Error("Missing Bearer Token");
+        if (!bearerToken)
+            throw new NubieError(
+                "MissingBearerToken",
+                HttpStatusCodes.BadRequest,
+                "Request Header Must Contain A Valid Bearer Token",
+            );
 
         const token = bearerToken.split(" ")[1];
         const data = await JWTToken.verifyTokenAsync(token);
 
         if (typeof data === "string" || !data?.role) {
-            throw new Error("You Don't Have Permission To Access Data");
+            throw new NubieError(
+                "Unauthorized",
+                HttpStatusCodes.Unauthorized,
+                "You Don't Have Access For Requested Data",
+            );
         }
 
         if (!this._roles.includes(data.role)) {
-            throw new Error("You Don't Have Permission To Access Data");
+            throw new NubieError(
+                "Unauthorized",
+                HttpStatusCodes.Unauthorized,
+                "You Don't Have Access For Requested Data",
+            );
         }
     }
 }

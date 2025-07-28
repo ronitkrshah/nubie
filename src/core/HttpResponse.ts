@@ -1,4 +1,4 @@
-const STATUS_CODES = {
+export const HttpStatusCodes = {
     Continue: 100,
     SwitchingProtocols: 101,
     Processing: 102,
@@ -68,9 +68,9 @@ const STATUS_CODES = {
     NetworkAuthenticationRequired: 511,
 } as const;
 
-type THttpStatusNames = keyof typeof STATUS_CODES;
+type THttpStatusNames = keyof typeof HttpStatusCodes;
 export type TMethodResponse<T extends Record<string, unknown>> = {
-    statusCode: (typeof STATUS_CODES)[THttpStatusNames];
+    statusCode: (typeof HttpStatusCodes)[THttpStatusNames];
     data: T;
 };
 
@@ -79,7 +79,7 @@ type THttpResponse = {
 };
 
 const HttpResponse = Object.fromEntries(
-    Object.entries(STATUS_CODES).map(([name, code]) => {
+    Object.entries(HttpStatusCodes).map(([name, code]) => {
         return [
             name,
             <T>(data: T) => {

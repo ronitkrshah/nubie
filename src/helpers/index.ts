@@ -1,3 +1,4 @@
 import Logger from "./Logger";
+import NubieError from "./NubieError";
 
-export { Logger };
+export { Logger, NubieError };

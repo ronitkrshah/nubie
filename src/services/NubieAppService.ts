@@ -1,12 +1,13 @@
 import { NubieAppConfig } from "../config";
 import * as FileSystem from "node:fs/promises";
-import { Logger } from "../helpers";
+import { Logger, NubieError } from "../helpers";
 import AppContext from "../AppContext";
 import { NubieClassDecorator, TClassMetadata } from "../decorators";
 import { NextFunction, Router, Request, Response } from "express";
 import chalk from "chalk";
 import { TClass } from "../types";
 import { NubieContainer, TMethodResponse } from "../core";
+import { json } from "node:stream/consumers";
 
 class NubieAppService {
     private readonly _router = Router();
@@ -62,19 +63,30 @@ class NubieAppService {
                 /** Express Route Handler */
                 async function handleApiRequest(req: Request, res: Response, next: NextFunction) {
                     // Executing extension methods
-                    for (const method of AppContext.getExtensionMethods(methodName)) {
-                        await method.executeAsync(req, res, next);
-                    }
+                    try {
+                        for (const method of AppContext.getExtensionMethods(methodName)) {
+                            await method.executeAsync(req, res, next);
+                        }
 
-                    // Executing extension params
-                    const arguements: unknown[] = [];
-                    for (const param of AppContext.getExtensionParams(methodName)) {
-                        arguements[param.paramIndex] = await param.executeAsync(req, res, next);
-                    }
+                        // Executing extension params
+                        const arguements: unknown[] = [];
+                        for (const param of AppContext.getExtensionParams(methodName)) {
+                            arguements[param.paramIndex] = await param.executeAsync(req, res, next);
+                        }
 
-                    const data: TMethodResponse<any> = await instance[methodName](...arguements);
-                    if (data) {
-                        return res.status(data.statusCode).json(data.data);
+                        const data: TMethodResponse<any> = await instance[methodName](...arguements);
+                        if (data) {
+                            return res.status(data.statusCode).json(data.data);
+                        }
+                    } catch (error) {
+                        if (error instanceof NubieError) {
+                            res.status(error.statusCode).json({
+                                message: error.message,
+                                explaination: error.explaination,
+                            });
+                        } else {
+                            throw error;
+                        }
                     }
                 }
 

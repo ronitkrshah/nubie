@@ -3,6 +3,8 @@ import { NubieExtensionMethodDecorator, NubieMethodDecorator } from "../../abstr
 import { TClass } from "../../../types";
 import { plainToInstance, instanceToPlain, ClassTransformer } from "class-transformer";
 import { validate } from "class-validator";
+import { NubieError } from "../../../helpers";
+import { HttpStatusCodes } from "../../../core";
 
 class BodyValidationDecorator extends NubieExtensionMethodDecorator {
     public constructor(public readonly DTO: TClass) {
@@ -11,13 +13,16 @@ class BodyValidationDecorator extends NubieExtensionMethodDecorator {
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
         if (req.method === "GET") {
-            throw new Error("GET requests should not contain a request body. Consider using POST or PATCH.");
+            throw new NubieError(
+                "GET requests should not contain a request body. Consider using POST or PATCH.",
+                HttpStatusCodes.BadRequest,
+            );
         }
 
         const dtoInstance = plainToInstance(this.DTO, req.body);
         const validationErrors = await validate(dtoInstance);
         if (validationErrors.length > 0) {
-            throw new Error("Request Body Validation Failed");
+            throw new NubieError("RequestBodyValidationFailed", HttpStatusCodes.BadRequest, validationErrors);
         }
     }
 }
