@@ -1,3 +1,4 @@
 import NubieAppService from "./NubieAppService";
+import NubieContainer from "./NubieContainer";
 
-export { NubieAppService };
+export { NubieAppService, NubieContainer };

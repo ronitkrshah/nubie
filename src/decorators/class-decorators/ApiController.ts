@@ -28,7 +28,7 @@ class ApiControllerDecorator extends NubieClassDecorator {
             return Logger.error(`Ignoring ${this._target.name}. Because It Doesn't Match Nubie Naming Convention`);
         }
         this.configureEndpoint();
-        this.updateMetadata({ endpoint: this._endpoint, className: this._target.name });
+        NubieClassDecorator.updateMetadata(this._target, { endpoint: this._endpoint, className: this._target.name });
     }
 }
 

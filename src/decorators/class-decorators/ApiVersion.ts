@@ -17,7 +17,7 @@ class ApiVersionDecorator extends NubieClassDecorator {
             return;
         }
 
-        this.updateMetadata({ apiVersion: this._version });
+        NubieClassDecorator.updateMetadata(this._target, { apiVersion: this._version });
     }
 }
 

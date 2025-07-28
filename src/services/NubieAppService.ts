@@ -2,9 +2,11 @@ import { NubieAppConfig } from "../config";
 import * as FileSystem from "node:fs/promises";
 import { Logger } from "../helpers";
 import AppContext from "../AppContext";
-import { NubieClassDecorator } from "../decorators";
+import { NubieClassDecorator, TClassMetadata } from "../decorators";
 import { NextFunction, Router, Request, Response } from "express";
 import chalk from "chalk";
+import { TClass } from "../types";
+import NubieContainer from "./NubieContainer";
 
 class NubieAppService {
     private readonly _router = Router();
@@ -31,12 +33,25 @@ class NubieAppService {
         }
     }
 
+    private getClassInstance(Class: TClass, constructorInjection: TClassMetadata["constructorInjections"]) {
+        const arguements: unknown[] = [];
+        for (const injectionData of constructorInjection || []) {
+            try {
+                arguements[injectionData.paramIndex] = NubieContainer.resolve(injectionData.token);
+            } catch (error) {
+                continue;
+            }
+        }
+
+        return new Class(...arguements);
+    }
+
     private async configureControllerAsync() {
         const appConfig = await NubieAppConfig.getAppConfigAsync();
 
         for (const decorator of AppContext.classDecorators) {
             const metadata = NubieClassDecorator.getMetadata(decorator);
-            const instance = new decorator();
+            const instance = this.getClassInstance(decorator, metadata.constructorInjections);
 
             Logger.title(`${metadata.className} Routes`);
 

@@ -7,6 +7,10 @@ export type TClassMetadata = {
     apiVersion?: number;
     methods?: Record<string, TMethodMetadata>;
     className: string;
+    constructorInjections?: {
+        token: string;
+        paramIndex: number;
+    }[];
 };
 
 export default abstract class NubieClassDecorator {
@@ -20,9 +24,9 @@ export default abstract class NubieClassDecorator {
         this._target = target;
     }
 
-    protected updateMetadata(metadata: Partial<TClassMetadata>) {
-        const existingMetadata = NubieClassDecorator.getMetadata(this._target);
-        Reflect.defineMetadata(NubieClassDecorator.METADATA_KEY, { ...existingMetadata, ...metadata }, this._target);
+    public static updateMetadata(target: TClass, metadata: Partial<TClassMetadata>) {
+        const existingMetadata = NubieClassDecorator.getMetadata(target);
+        Reflect.defineMetadata(NubieClassDecorator.METADATA_KEY, { ...existingMetadata, ...metadata }, target);
     }
 
     public static getMetadata(target: TClass): TClassMetadata {
