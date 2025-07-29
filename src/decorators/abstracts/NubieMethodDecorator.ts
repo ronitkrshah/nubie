@@ -1,3 +1,4 @@
+import { RequestHandler } from "express";
 import NubieClassDecorator, { TClassMetadata } from "./NubieClassDecorator";
 
 export type TMethodMetadata = {
@@ -5,6 +6,7 @@ export type TMethodMetadata = {
     apiVersion?: number;
     httpMethod: "get" | "post" | "put" | "patch" | "delete";
     body?: Record<string, string>;
+    middlewares?: RequestHandler[];
 };
 
 export default abstract class NubieMethodDecorator {

@@ -3,7 +3,7 @@ import * as FileSystem from "node:fs/promises";
 import { Logger, NubieError } from "../helpers";
 import AppContext from "../AppContext";
 import { NubieClassDecorator, TClassMetadata } from "../decorators";
-import { NextFunction, Router, Request, Response } from "express";
+import { NextFunction, Router, Request, Response, RequestHandler } from "express";
 import chalk from "chalk";
 import { TClass } from "../types";
 import { NubieContainer, TMethodResponse } from "../core";
@@ -60,6 +60,13 @@ class NubieAppService {
                     "/",
                 );
 
+                const handlers: RequestHandler[] = [];
+
+                // Add Middlewares
+                methodMetadata.middlewares?.forEach((middleware) => {
+                    handlers.push(middleware);
+                });
+
                 /** Express Route Handler */
                 async function handleApiRequest(req: Request, res: Response, next: NextFunction) {
                     // Executing extension methods
@@ -90,7 +97,9 @@ class NubieAppService {
                     }
                 }
 
-                this._router[methodMetadata.httpMethod](fullpath, handleApiRequest);
+                handlers.push(handleApiRequest);
+
+                this._router[methodMetadata.httpMethod](fullpath, ...handlers);
                 console.log(
                     `${chalk.green("✔️")}  ${chalk.yellow(`${methodMetadata.httpMethod.toUpperCase()}`)} ` +
                         `${chalk.cyan(fullpath)} ` +
