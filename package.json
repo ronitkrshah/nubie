@@ -1,11 +1,17 @@
 {
     "name": "nubie",
-    "version": "0.0.0-dev",
+    "version": "0.1.0-alpha",
     "description": "A Simple Express Based API Framework For Nubs Laik Me :)",
     "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist/",
+        "README.md",
+        "LICENSE"
+    ],
     "scripts": {
         "build": "tsc",
-        "prepare": "yarn run build"
+        "prepare": "npm run build"
     },
     "repository": {
         "type": "git",
