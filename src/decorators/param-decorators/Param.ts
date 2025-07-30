@@ -2,12 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import { NubieExtensionParamDecorator } from "../abstracts";
 
 class ParamDecorator extends NubieExtensionParamDecorator {
-    public constructor(public readonly param: string) {
+    public constructor(public readonly param?: string) {
         super();
     }
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
-        return req.params[this.param];
+        if (this.param) return req.params[this.param];
+        return req.params;
     }
 }
 
