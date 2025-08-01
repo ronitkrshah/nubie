@@ -13,7 +13,7 @@ export default class Nubie {
     private constructor() {
         this._expressApp = express();
         this._expressApp.use(express.json());
-        this._expressApp.use(express.urlencoded({ extended: true }));
+        this._expressApp.use(express.urlencoded({ extended: false }));
     }
 
     public static createApp(): Nubie {
