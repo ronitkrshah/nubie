@@ -1,20 +1,19 @@
-import { NubieAppConfig } from "../config";
+import { AppConfiguration } from "./config";
 import * as FileSystem from "node:fs/promises";
-import { Logger, NubieError } from "../helpers";
-import AppContext from "../AppContext";
-import { NubieClassDecorator, TClassMetadata } from "../decorators";
+import { Logger, NubieError } from "./helpers";
+import AppContext from "./AppContext";
+import { ClassDecorator, TClassMetadata } from "./decorators";
 import { NextFunction, Router, Request, Response, RequestHandler } from "express";
 import chalk from "chalk";
-import { TClass } from "../types";
-import { NubieContainer, TMethodResponse } from "../core";
-import { json } from "node:stream/consumers";
+import { TClass } from "./types";
+import { DiContainer, TMethodResponse } from "./core";
 
-class NubieAppService {
+class NubieCore {
     private readonly _router = Router();
 
     private async loadControllersAsync() {
-        const config = await NubieAppConfig.getAppConfigAsync();
-        const controllerDirectory = `${NubieAppConfig.projectPath}/${config.buildDir}/${config.controllersDirectory}`;
+        const config = await AppConfiguration.getAppConfigAsync();
+        const controllerDirectory = `${AppConfiguration.projectPath}/${config.buildDir}/${config.controllersDirectory}`;
         let isDirExists = false;
         try {
             await FileSystem.stat(controllerDirectory);
@@ -37,17 +36,17 @@ class NubieAppService {
     private getClassInstance(Class: TClass, constructorInjection: TClassMetadata["constructorInjections"]) {
         const arguements: unknown[] = [];
         for (const injectionData of constructorInjection || []) {
-            arguements[injectionData.paramIndex] = NubieContainer.resolve(injectionData.token);
+            arguements[injectionData.paramIndex] = DiContainer.resolve(injectionData.token);
         }
 
         return new Class(...arguements);
     }
 
     private async configureControllerAsync() {
-        const appConfig = await NubieAppConfig.getAppConfigAsync();
+        const appConfig = await AppConfiguration.getAppConfigAsync();
 
         for (const decorator of AppContext.classDecorators) {
-            const metadata = NubieClassDecorator.getMetadata(decorator);
+            const metadata = ClassDecorator.getMetadata(decorator);
             const instance = this.getClassInstance(decorator, metadata.constructorInjections);
 
             Logger.title(`${metadata.className} Routes`);
@@ -116,4 +115,4 @@ class NubieAppService {
     }
 }
 
-export default new NubieAppService();
+export default new NubieCore();

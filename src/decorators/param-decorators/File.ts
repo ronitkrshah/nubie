@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionParamDecorator } from "../abstracts";
+import { ExtensionParamDecorator } from "../abstracts";
 
-class FileDecorator extends NubieExtensionParamDecorator {
+class FileDecorator extends ExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         return req.file;
     }
 }
 
-const File = NubieExtensionParamDecorator.createDecorator(FileDecorator);
+const File = ExtensionParamDecorator.createDecorator(FileDecorator);
 
 export default File;

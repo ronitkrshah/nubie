@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionMethodDecorator, NubieMethodDecorator } from "../../abstracts";
+import { ExtensionMethodDecorator, MethodDecorator } from "../../abstracts";
 import { TClass } from "../../../types";
 import { plainToInstance, instanceToPlain, ClassTransformer } from "class-transformer";
 import { validate } from "class-validator";
 import { NubieError } from "../../../helpers";
 import { HttpStatusCodes } from "../../../core";
 
-class BodyValidationDecorator extends NubieExtensionMethodDecorator {
+class BodyValidationDecorator extends ExtensionMethodDecorator {
     public constructor(public readonly DTO: TClass) {
         super();
     }
@@ -28,7 +28,7 @@ class BodyValidationDecorator extends NubieExtensionMethodDecorator {
 }
 
 function BodyValidation(DTO: TClass) {
-    const factory = NubieExtensionMethodDecorator.createDecorator(BodyValidationDecorator);
+    const factory = ExtensionMethodDecorator.createDecorator(BodyValidationDecorator);
     const decorator = factory(DTO);
 
     return function (target: Object, methodName: string, descriptor: PropertyDescriptor) {

@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import NubieClassDecorator, { TClassMetadata } from "./NubieClassDecorator";
+import ClassDecorator, { TClassMetadata } from "./ClassDecorator";
 
 export type TMethodMetadata = {
     endpoint: string;
@@ -9,7 +9,7 @@ export type TMethodMetadata = {
     middlewares?: RequestHandler[];
 };
 
-export default abstract class NubieMethodDecorator {
+export default abstract class MethodDecorator {
     public static readonly METADATA_KEY = Symbol("api:method");
 
     protected _target!: Object;
@@ -26,14 +26,14 @@ export default abstract class NubieMethodDecorator {
 
     protected getMethodMetadata() {
         const existingMetadata: Record<string, TMethodMetadata> =
-            Reflect.getMetadata(NubieMethodDecorator.METADATA_KEY, this._target) || {};
+            Reflect.getMetadata(MethodDecorator.METADATA_KEY, this._target) || {};
         return existingMetadata || {};
     }
 
     protected updateMethodMetadata(metadata: Partial<TMethodMetadata>) {
         const existingMetadata = this.getMethodMetadata();
         Reflect.defineMetadata(
-            NubieMethodDecorator.METADATA_KEY,
+            MethodDecorator.METADATA_KEY,
             {
                 ...existingMetadata,
                 [this._methodName]: {
@@ -47,14 +47,14 @@ export default abstract class NubieMethodDecorator {
 
     private addMethodToController() {
         const existingMetadata: TClassMetadata = Reflect.getMetadata(
-            NubieClassDecorator.METADATA_KEY,
+            ClassDecorator.METADATA_KEY,
             this._target.constructor,
         );
 
         const methodMetadata = this.getMethodMetadata();
 
         Reflect.defineMetadata(
-            NubieClassDecorator.METADATA_KEY,
+            ClassDecorator.METADATA_KEY,
             {
                 ...existingMetadata,
                 methods: {
@@ -71,9 +71,9 @@ export default abstract class NubieMethodDecorator {
 
     public static updateMethodMetadata(target: Object, methodName: string, metadata: Partial<TMethodMetadata>) {
         const existingMetadata: Record<string, TMethodMetadata> =
-            Reflect.getMetadata(NubieMethodDecorator.METADATA_KEY, target) || {};
+            Reflect.getMetadata(MethodDecorator.METADATA_KEY, target) || {};
         Reflect.defineMetadata(
-            NubieMethodDecorator.METADATA_KEY,
+            MethodDecorator.METADATA_KEY,
             {
                 ...existingMetadata,
                 [methodName]: {
@@ -85,7 +85,7 @@ export default abstract class NubieMethodDecorator {
         );
     }
 
-    public static createDecorator<T extends any[]>(MethodDecorator: new (...args: T) => NubieMethodDecorator) {
+    public static createDecorator<T extends any[]>(MethodDecorator: new (...args: T) => MethodDecorator) {
         return function (...params: T) {
             return function (target: Object, methodName: string, descriptor: PropertyDescriptor) {
                 const decoratorInstance = new MethodDecorator(...params);

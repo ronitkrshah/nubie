@@ -1,13 +1,13 @@
-import NubieClassDecorator, { TClassMetadata } from "./NubieClassDecorator";
-import NubieExtensionMethodDecorator from "./NubieExtensionMethodDecorator";
-import NubieMethodDecorator, { TMethodMetadata } from "./NubieMethodDecorator";
-import NubieExtensionParamDecorator from "./NubieExtensionParamDecorator";
+import ClassDecorator, { TClassMetadata } from "./ClassDecorator";
+import ExtensionMethodDecorator from "./ExtensionMethodDecorator";
+import MethodDecorator, { TMethodMetadata } from "./MethodDecorator";
+import ExtensionParamDecorator from "./ExtensionParamDecorator";
 
 export {
-    NubieClassDecorator,
+    ClassDecorator,
     TClassMetadata,
-    NubieMethodDecorator,
+    MethodDecorator,
     TMethodMetadata,
-    NubieExtensionMethodDecorator,
-    NubieExtensionParamDecorator,
+    ExtensionMethodDecorator,
+    ExtensionParamDecorator,
 };

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionParamDecorator } from "../abstracts";
+import { ExtensionParamDecorator } from "../abstracts";
 import { NubieError } from "../../helpers";
 import { HttpStatusCodes } from "../../core";
 
-class BodyParamDecorator extends NubieExtensionParamDecorator {
+class BodyParamDecorator extends ExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         if (req.method === "GET") {
             throw new NubieError(
@@ -16,6 +16,6 @@ class BodyParamDecorator extends NubieExtensionParamDecorator {
     }
 }
 
-const Body = NubieExtensionParamDecorator.createDecorator(BodyParamDecorator);
+const Body = ExtensionParamDecorator.createDecorator(BodyParamDecorator);
 
 export default Body;

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { NubieAppConfig } from "../config";
+import { AppConfiguration } from "../config";
 
 type TClaims = "iat" | "exp" | "nbf" | "iss" | "aud" | "sub" | "role";
 
@@ -15,13 +15,13 @@ export default class JWTToken {
     }
 
     public async generateTokenAsync() {
-        const config = await NubieAppConfig.getAppConfigAsync();
+        const config = await AppConfiguration.getAppConfigAsync();
         if (!config.jwtSeceretKey) throw new Error("JWT Secret Not Found");
         return jwt.sign(this._claims, config.jwtSeceretKey);
     }
 
     public static async verifyTokenAsync(token: string) {
-        const config = await NubieAppConfig.getAppConfigAsync();
+        const config = await AppConfiguration.getAppConfigAsync();
         if (!config.jwtSeceretKey) throw new Error("JWT Secret Not Found");
         return jwt.verify(token, config.jwtSeceretKey);
     }

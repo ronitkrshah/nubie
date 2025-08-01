@@ -1,10 +1,10 @@
 import multer from "multer";
-import { NubieAppConfig } from "../config";
+import { AppConfiguration } from "../config";
 import path from "path";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(NubieAppConfig.projectPath, "uploads"));
+        cb(null, path.join(AppConfiguration.projectPath, "uploads"));
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);

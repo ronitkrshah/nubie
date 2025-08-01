@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionMethodDecorator } from "../../abstracts";
+import { ExtensionMethodDecorator } from "../../abstracts";
 import { NubieError } from "../../../helpers";
 import { HttpStatusCodes } from "../../../core";
 
-class HeaderDecorator extends NubieExtensionMethodDecorator {
+class HeaderDecorator extends ExtensionMethodDecorator {
     public constructor(public readonly key: string) {
         super();
     }
@@ -21,6 +21,6 @@ class HeaderDecorator extends NubieExtensionMethodDecorator {
     }
 }
 
-const Header = NubieExtensionMethodDecorator.createDecorator(HeaderDecorator);
+const Header = ExtensionMethodDecorator.createDecorator(HeaderDecorator);
 
 export default Header;

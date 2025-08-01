@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionMethodDecorator } from "../../abstracts";
+import { ExtensionMethodDecorator } from "../../abstracts";
 import { HttpStatusCodes, JWTToken } from "../../../core";
 import { NubieError } from "../../../helpers";
 
-class RolesDecorator extends NubieExtensionMethodDecorator {
+class RolesDecorator extends ExtensionMethodDecorator {
     private readonly _roles: string | string[];
 
     public constructor(roles: string | string[]) {
@@ -41,6 +41,6 @@ class RolesDecorator extends NubieExtensionMethodDecorator {
     }
 }
 
-const Role = NubieExtensionMethodDecorator.createDecorator(RolesDecorator);
+const Role = ExtensionMethodDecorator.createDecorator(RolesDecorator);
 
 export default Role;

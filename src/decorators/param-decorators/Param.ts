@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionParamDecorator } from "../abstracts";
+import { ExtensionParamDecorator } from "../abstracts";
 
-class ParamDecorator extends NubieExtensionParamDecorator {
+class ParamDecorator extends ExtensionParamDecorator {
     public constructor(public readonly param?: string) {
         super();
     }
@@ -12,6 +12,6 @@ class ParamDecorator extends NubieExtensionParamDecorator {
     }
 }
 
-const Param = NubieExtensionParamDecorator.createDecorator(ParamDecorator);
+const Param = ExtensionParamDecorator.createDecorator(ParamDecorator);
 
 export default Param;

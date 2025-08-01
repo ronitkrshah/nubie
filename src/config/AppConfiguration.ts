@@ -9,7 +9,7 @@ const _defaultConfiguration = {
     jwtSeceretKey: undefined as string | undefined,
 };
 
-class NubieAppConfig {
+class AppConfiguration {
     public readonly projectPath = path.resolve();
 
     private _isLoaded = false;
@@ -37,4 +37,4 @@ class NubieAppConfig {
     }
 }
 
-export default new NubieAppConfig();
+export default new AppConfiguration();

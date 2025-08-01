@@ -1,3 +1,3 @@
-import NubieAppConfig from "./NubieAppConfig";
+import AppConfiguration from "./AppConfiguration";
 
-export { NubieAppConfig };
+export { AppConfiguration };

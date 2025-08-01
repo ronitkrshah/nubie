@@ -1,7 +1,7 @@
 import express, { Express } from "express";
-import { NubieAppConfig } from "./config";
+import { AppConfiguration } from "./config";
 import { Logger } from "./helpers";
-import { NubieAppService } from "./services";
+import NubieCore from "./NubieCore";
 
 export default class Nubie {
     private _expressApp: Express;
@@ -21,9 +21,9 @@ export default class Nubie {
     }
 
     public async runAsync() {
-        const router = await NubieAppService.setupRouterAsyc();
+        const router = await NubieCore.setupRouterAsyc();
         this._expressApp.use(router);
-        const config = await NubieAppConfig.getAppConfigAsync();
+        const config = await AppConfiguration.getAppConfigAsync();
 
         Logger.title("Installing Skill Issue Fix...");
 

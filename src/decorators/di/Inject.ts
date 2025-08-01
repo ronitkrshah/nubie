@@ -1,10 +1,9 @@
-import { TClass } from "../../types";
-import { NubieClassDecorator } from "../abstracts";
+import { ClassDecorator } from "../abstracts";
 
 export default function Inject(token: string) {
     return function (target: any, _paramKey: undefined, paramIndex: number) {
-        const metadata = NubieClassDecorator.getMetadata(target);
-        NubieClassDecorator.updateMetadata(target, {
+        const metadata = ClassDecorator.getMetadata(target);
+        ClassDecorator.updateMetadata(target, {
             constructorInjections: [
                 ...(metadata.constructorInjections || []),
                 {

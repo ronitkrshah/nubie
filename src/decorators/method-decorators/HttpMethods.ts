@@ -1,9 +1,9 @@
 import { Logger } from "../../helpers";
-import { NubieMethodDecorator, TMethodMetadata } from "../abstracts";
+import { MethodDecorator, TMethodMetadata } from "../abstracts";
 
 type TFunctionType = "AsyncFunction" | "Function";
 
-abstract class BaseHttpDecorator extends NubieMethodDecorator {
+abstract class BaseHttpDecorator extends MethodDecorator {
     protected abstract httpMethod: TMethodMetadata["httpMethod"];
 
     constructor(protected readonly endpoint: string) {
@@ -50,8 +50,8 @@ class HttpDeleteDecorator extends BaseHttpDecorator {
     protected httpMethod: "get" | "post" | "put" | "patch" | "delete" = "delete";
 }
 
-export const HttpGet = NubieMethodDecorator.createDecorator(HttpGetDecorator);
-export const HttpPost = NubieMethodDecorator.createDecorator(HttpPostDecorator);
-export const HttpPut = NubieMethodDecorator.createDecorator(HttpPutDecorator);
-export const HttpPatch = NubieMethodDecorator.createDecorator(HttpPatchDecorator);
-export const HttpDelete = NubieMethodDecorator.createDecorator(HttpDeleteDecorator);
+export const HttpGet = MethodDecorator.createDecorator(HttpGetDecorator);
+export const HttpPost = MethodDecorator.createDecorator(HttpPostDecorator);
+export const HttpPut = MethodDecorator.createDecorator(HttpPutDecorator);
+export const HttpPatch = MethodDecorator.createDecorator(HttpPatchDecorator);
+export const HttpDelete = MethodDecorator.createDecorator(HttpDeleteDecorator);

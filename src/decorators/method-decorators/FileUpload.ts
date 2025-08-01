@@ -1,7 +1,7 @@
 import * as FileSystem from "node:fs/promises";
 import { FileUploadHandler } from "../../core";
-import { NubieMethodDecorator } from "../abstracts";
-import { NubieAppConfig } from "../../config";
+import { MethodDecorator } from "../abstracts";
+import { AppConfiguration } from "../../config";
 import path from "node:path";
 
 export const enum FileUploadType {
@@ -12,7 +12,7 @@ export const enum FileUploadType {
 
 type TUploadFields = { name: string; maxCount?: number }[];
 
-class FileUploadDecorator extends NubieMethodDecorator {
+class FileUploadDecorator extends MethodDecorator {
     public constructor(
         public readonly field: string | TUploadFields,
         public readonly uploadType: FileUploadType = FileUploadType.Single,
@@ -48,4 +48,4 @@ class FileUploadDecorator extends NubieMethodDecorator {
     }
 }
 
-export const FileUpload = NubieMethodDecorator.createDecorator(FileUploadDecorator);
+export const FileUpload = MethodDecorator.createDecorator(FileUploadDecorator);

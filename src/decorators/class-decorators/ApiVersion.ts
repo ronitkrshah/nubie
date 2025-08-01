@@ -1,7 +1,7 @@
 import { Logger } from "../../helpers";
-import { NubieClassDecorator } from "../abstracts";
+import { ClassDecorator } from "../abstracts";
 
-class ApiVersionDecorator extends NubieClassDecorator {
+class ApiVersionDecorator extends ClassDecorator {
     private readonly _version?: number;
 
     public constructor(version: number) {
@@ -17,10 +17,10 @@ class ApiVersionDecorator extends NubieClassDecorator {
             return;
         }
 
-        NubieClassDecorator.updateMetadata(this._target, { apiVersion: this._version });
+        ClassDecorator.updateMetadata(this._target, { apiVersion: this._version });
     }
 }
 
-const ApiVersion = NubieClassDecorator.createDecorator(ApiVersionDecorator);
+const ApiVersion = ClassDecorator.createDecorator(ApiVersionDecorator);
 
 export default ApiVersion;

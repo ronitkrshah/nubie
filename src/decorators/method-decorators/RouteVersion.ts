@@ -1,7 +1,7 @@
 import { Logger } from "../../helpers";
-import { NubieMethodDecorator } from "../abstracts";
+import { MethodDecorator } from "../abstracts";
 
-class RouteVersionDecorator extends NubieMethodDecorator {
+class RouteVersionDecorator extends MethodDecorator {
     public constructor(public readonly version: number) {
         super();
         if (typeof version !== "number") {
@@ -15,6 +15,6 @@ class RouteVersionDecorator extends NubieMethodDecorator {
     }
 }
 
-const RouteVersion = NubieMethodDecorator.createDecorator(RouteVersionDecorator);
+const RouteVersion = MethodDecorator.createDecorator(RouteVersionDecorator);
 
 export default RouteVersion;

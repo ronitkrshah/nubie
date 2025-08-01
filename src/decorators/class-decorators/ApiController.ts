@@ -1,7 +1,7 @@
 import { Logger } from "../../helpers";
-import { NubieClassDecorator } from "../abstracts";
+import { ClassDecorator } from "../abstracts";
 
-class ApiControllerDecorator extends NubieClassDecorator {
+class ApiControllerDecorator extends ClassDecorator {
     private _endpoint: string;
 
     public constructor(endpoint = "[controller]") {
@@ -28,10 +28,10 @@ class ApiControllerDecorator extends NubieClassDecorator {
             return Logger.error(`Ignoring ${this._target.name}. Because It Doesn't Match Nubie Naming Convention`);
         }
         this.configureEndpoint();
-        NubieClassDecorator.updateMetadata(this._target, { endpoint: this._endpoint, className: this._target.name });
+        ClassDecorator.updateMetadata(this._target, { endpoint: this._endpoint, className: this._target.name });
     }
 }
 
-const ApiController = NubieClassDecorator.createDecorator(ApiControllerDecorator);
+const ApiController = ClassDecorator.createDecorator(ApiControllerDecorator);
 
 export default ApiController;

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionMethodDecorator } from "../../abstracts";
+import { ExtensionMethodDecorator } from "../../abstracts";
 import { HttpStatusCodes, JWTToken } from "../../../core";
 import { NubieError } from "../../../helpers";
 
-class AuthenticationDecorator extends NubieExtensionMethodDecorator {
+class AuthenticationDecorator extends ExtensionMethodDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
         const bearerToken = req.headers["authorization"];
         if (!bearerToken)
@@ -21,6 +21,6 @@ class AuthenticationDecorator extends NubieExtensionMethodDecorator {
     }
 }
 
-const Authentication = NubieExtensionMethodDecorator.createDecorator(AuthenticationDecorator);
+const Authentication = ExtensionMethodDecorator.createDecorator(AuthenticationDecorator);
 
 export default Authentication;

@@ -1,8 +1,7 @@
 import { container, DependencyContainer, Lifecycle } from "tsyringe";
 import { TClass } from "../types";
 
-/** Dependency Injection */
-class NubieContainer {
+class DiContainer {
     private readonly _container: DependencyContainer;
 
     public constructor() {
@@ -22,4 +21,4 @@ class NubieContainer {
     }
 }
 
-export default new NubieContainer();
+export default new DiContainer();

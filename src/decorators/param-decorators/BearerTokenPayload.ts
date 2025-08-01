@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieExtensionParamDecorator } from "../abstracts";
-import { NubieAppConfig } from "../../config";
+import { ExtensionParamDecorator } from "../abstracts";
+import { AppConfiguration } from "../../config";
 import { HttpStatusCodes, JWTToken } from "../../core";
 import { NubieError } from "../../helpers";
 
-class BearerTokenPayloadDecorator extends NubieExtensionParamDecorator {
+class BearerTokenPayloadDecorator extends ExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
-        const config = await NubieAppConfig.getAppConfigAsync();
+        const config = await AppConfiguration.getAppConfigAsync();
         if (!config.jwtSeceretKey) {
             throw new NubieError("JWT Code Not Available In Config File", HttpStatusCodes.InternalServerError);
         }
@@ -27,6 +27,6 @@ class BearerTokenPayloadDecorator extends NubieExtensionParamDecorator {
     }
 }
 
-const BearerTokenPayload = NubieExtensionParamDecorator.createDecorator(BearerTokenPayloadDecorator);
+const BearerTokenPayload = ExtensionParamDecorator.createDecorator(BearerTokenPayloadDecorator);
 
 export default BearerTokenPayload;

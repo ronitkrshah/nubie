@@ -1,6 +1,6 @@
 import AppContext from "../../AppContext";
 import { TClass } from "../../types";
-import { TMethodMetadata } from "./NubieMethodDecorator";
+import { TMethodMetadata } from "./MethodDecorator";
 
 export type TClassMetadata = {
     endpoint: string;
@@ -13,7 +13,7 @@ export type TClassMetadata = {
     }[];
 };
 
-export default abstract class NubieClassDecorator {
+export default abstract class ClassDecorator {
     public static METADATA_KEY = Symbol("api:class");
 
     protected _target!: TClass;
@@ -25,15 +25,15 @@ export default abstract class NubieClassDecorator {
     }
 
     public static updateMetadata(target: TClass, metadata: Partial<TClassMetadata>) {
-        const existingMetadata = NubieClassDecorator.getMetadata(target);
-        Reflect.defineMetadata(NubieClassDecorator.METADATA_KEY, { ...existingMetadata, ...metadata }, target);
+        const existingMetadata = ClassDecorator.getMetadata(target);
+        Reflect.defineMetadata(ClassDecorator.METADATA_KEY, { ...existingMetadata, ...metadata }, target);
     }
 
     public static getMetadata(target: TClass): TClassMetadata {
-        return Reflect.getOwnMetadata(NubieClassDecorator.METADATA_KEY, target) || {};
+        return Reflect.getOwnMetadata(ClassDecorator.METADATA_KEY, target) || {};
     }
 
-    public static createDecorator<T extends any[]>(ClassDecorator: new (...args: T) => NubieClassDecorator) {
+    public static createDecorator<T extends any[]>(ClassDecorator: new (...args: T) => ClassDecorator) {
         return function (...params: T) {
             return function (target: TClass) {
                 const decoratorInstance = new ClassDecorator(...params);
