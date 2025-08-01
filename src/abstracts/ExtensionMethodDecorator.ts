@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import AppContext from "~/AppContext";
+import AppContext from "../AppContext";
 
 export default abstract class ExtensionMethodDecorator {
     abstract executeAsync(req: Request, res: Response, next: NextFunction): Promise<void>;

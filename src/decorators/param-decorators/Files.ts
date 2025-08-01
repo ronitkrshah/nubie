@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../abstracts";
+import { ExtensionParamDecorator } from "../../abstracts";
 
 class FilesDecorator extends ExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {

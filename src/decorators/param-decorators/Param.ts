@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../abstracts";
+import { ExtensionParamDecorator } from "../../abstracts";
 
 class ParamDecorator extends ExtensionParamDecorator {
     public constructor(public readonly param?: string) {

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { AppConfiguration } from "~/config";
+import { AppConfiguration } from "../config";
 
 type TClaims = "iat" | "exp" | "nbf" | "iss" | "aud" | "sub" | "role";
 

@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
-import ClassDecorator, { TClassMetadata } from "./ClassDecorator";
+import { TClassMetadata } from "./ClassDecorator";
+import ControllerBase from "./ControllerBase";
 
 export type TMethodMetadata = {
     endpoint: string;
@@ -47,14 +48,14 @@ export default abstract class MethodDecorator {
 
     private addMethodToController() {
         const existingMetadata: TClassMetadata = Reflect.getMetadata(
-            ClassDecorator.METADATA_KEY,
+            ControllerBase.METADATA_KEY,
             this._target.constructor,
         );
 
         const methodMetadata = this.getMethodMetadata();
 
         Reflect.defineMetadata(
-            ClassDecorator.METADATA_KEY,
+            ControllerBase.METADATA_KEY,
             {
                 ...existingMetadata,
                 methods: {

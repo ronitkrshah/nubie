@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionMethodDecorator } from "~/decorators/abstracts";
-import { TClass } from "~/types";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { NubieError } from "~/helpers";
-import { HttpStatusCodes } from "~/core";
+import { ExtensionMethodDecorator } from "../../../abstracts";
+import { HttpStatusCodes } from "../../../core";
+import { NubieError } from "../../../helpers";
+import { TClass } from "../../../types";
 
 class BodyValidationDecorator extends ExtensionMethodDecorator {
     public constructor(public readonly DTO: TClass) {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionMethodDecorator } from "~/decorators/abstracts";
-import { HttpStatusCodes, JWTToken } from "~/core";
-import { NubieError } from "~/helpers";
+import { ExtensionMethodDecorator } from "../../../abstracts";
+import { HttpStatusCodes, JWTToken } from "../../../core";
+import { NubieError } from "../../../helpers";
 
 class RolesDecorator extends ExtensionMethodDecorator {
     private readonly _roles: string | string[];

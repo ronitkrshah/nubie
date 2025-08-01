@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { NubieError } from "~/helpers";
-import { HttpStatusCodes } from "~/core";
-import { ExtensionMethodDecorator } from "~/decorators/abstracts";
+import { ExtensionMethodDecorator } from "../../../abstracts";
+import { HttpStatusCodes } from "../../../core";
+import { NubieError } from "../../../helpers";
 
 class HeaderDecorator extends ExtensionMethodDecorator {
     public constructor(public readonly key: string) {

@@ -1,14 +1,11 @@
-import { ExtensionMethodDecorator, ExtensionParamDecorator } from "./decorators";
-import { TClass } from "./types";
+import { ControllerBase, ExtensionMethodDecorator, ExtensionParamDecorator } from "./decorators";
+import { Express } from "express";
 
 class AppContext {
-    private _classDecorators = new Map<string, TClass>();
+    public ExpressApp!: Express;
+    public readonly ApiControllers: ControllerBase[] = [];
     private _extensionMethods = new Map<string, ExtensionMethodDecorator[]>();
     private _extensionParams = new Map<string, ExtensionParamDecorator[]>();
-
-    public get classDecorators() {
-        return Array.from(this._classDecorators.values());
-    }
 
     public getExtensionMethods(methodName: string) {
         const savedValue = this._extensionMethods.get(methodName);
@@ -18,10 +15,6 @@ class AppContext {
     public getExtensionParams(methodName: string) {
         const savedValue = this._extensionParams.get(methodName);
         return savedValue || [];
-    }
-
-    public addClassDecorator(decorator: TClass) {
-        this._classDecorators.set(decorator.name, decorator);
     }
 
     public addExtensionMethodDecorator(methodName: string, decorator: ExtensionMethodDecorator) {

@@ -1,5 +1,5 @@
-import { Logger } from "~/helpers";
-import { MethodDecorator } from "../abstracts";
+import { MethodDecorator } from "../../abstracts";
+import { Logger } from "../../helpers";
 
 class RouteVersionDecorator extends MethodDecorator {
     public constructor(public readonly version: number) {

@@ -1,7 +1,7 @@
-import { Logger } from "~/helpers";
-import { ClassDecorator } from "../abstracts";
+import { ControllerBase, ClassDecorator } from "../../abstracts";
+import { Logger } from "../../helpers";
 
-class ApiVersionDecorator extends ClassDecorator {
+class ApiVersionDecorator extends ControllerBase {
     private readonly _version?: number;
 
     public constructor(version: number) {
@@ -11,16 +11,15 @@ class ApiVersionDecorator extends ClassDecorator {
         }
     }
 
-    public async executeAsync(): Promise<void> {
+    public async registerControllerAsync(): Promise<void> {
         if (!this._version) {
             Logger.error(`Ignoring ${this._target.name} Version Because It's Not An Number`);
             return;
         }
-
-        ClassDecorator.updateMetadata(this._target, { apiVersion: this._version });
+        ClassDecorator.updateMetadata(ControllerBase.METADATA_KEY, this._target, { apiVersion: this._version });
     }
 }
 
-const ApiVersion = ClassDecorator.createDecorator(ApiVersionDecorator);
+const ApiVersion = ControllerBase.createDecorator(ApiVersionDecorator);
 
 export default ApiVersion;

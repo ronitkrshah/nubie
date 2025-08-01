@@ -1,5 +1,5 @@
-import { FileUploadHandler } from "~/core";
-import { MethodDecorator } from "../abstracts";
+import { MethodDecorator } from "../../abstracts";
+import { FileUploadHandler } from "../../core";
 
 export const enum FileUploadType {
     Single,

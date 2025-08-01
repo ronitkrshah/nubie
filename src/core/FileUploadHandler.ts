@@ -1,5 +1,5 @@
 import multer from "multer";
-import { AppConfiguration } from "~/config";
+import { AppConfiguration } from "../config";
 import path from "path";
 
 const storage = multer.diskStorage({

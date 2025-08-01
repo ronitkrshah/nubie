@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../abstracts";
-import { NubieError } from "~/helpers";
-import { HttpStatusCodes } from "~/core";
+import { ExtensionParamDecorator } from "../../abstracts";
+import { HttpStatusCodes } from "../../core";
+import { NubieError } from "../../helpers";
 
 class BodyParamDecorator extends ExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
