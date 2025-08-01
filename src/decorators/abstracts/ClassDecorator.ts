@@ -1,5 +1,5 @@
-import AppContext from "../../AppContext";
-import { TClass } from "../../types";
+import AppContext from "~/AppContext";
+import { TClass } from "~/types";
 import { TMethodMetadata } from "./MethodDecorator";
 
 export type TClassMetadata = {

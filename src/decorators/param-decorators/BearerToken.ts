@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { ExtensionParamDecorator } from "../abstracts";
-import { AppConfiguration } from "../../config";
-import { NubieError } from "../../helpers";
-import { HttpStatusCodes } from "../../core";
+import { AppConfiguration } from "~/config";
+import { NubieError } from "~/helpers";
+import { HttpStatusCodes } from "~/core";
 
 class BearerTokenDecorator extends ExtensionParamDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {

@@ -1,4 +1,4 @@
-import { Logger } from "../../helpers";
+import { Logger } from "~/helpers";
 import { ClassDecorator } from "../abstracts";
 
 class ApiVersionDecorator extends ClassDecorator {

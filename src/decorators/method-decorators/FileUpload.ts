@@ -1,8 +1,5 @@
-import * as FileSystem from "node:fs/promises";
-import { FileUploadHandler } from "../../core";
+import { FileUploadHandler } from "~/core";
 import { MethodDecorator } from "../abstracts";
-import { AppConfiguration } from "../../config";
-import path from "node:path";
 
 export const enum FileUploadType {
     Single,

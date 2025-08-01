@@ -1,4 +1,4 @@
-import { Logger } from "../../helpers";
+import { Logger } from "~/helpers";
 import { MethodDecorator, TMethodMetadata } from "../abstracts";
 
 type TFunctionType = "AsyncFunction" | "Function";

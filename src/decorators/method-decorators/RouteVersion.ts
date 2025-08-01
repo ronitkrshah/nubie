@@ -1,4 +1,4 @@
-import { Logger } from "../../helpers";
+import { Logger } from "~/helpers";
 import { MethodDecorator } from "../abstracts";
 
 class RouteVersionDecorator extends MethodDecorator {

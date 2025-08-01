@@ -1,5 +1,5 @@
 import { container, DependencyContainer, Lifecycle } from "tsyringe";
-import { TClass } from "../types";
+import { TClass } from "~/types";
 
 class DiContainer {
     private readonly _container: DependencyContainer;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionMethodDecorator } from "../../abstracts";
-import { HttpStatusCodes, JWTToken } from "../../../core";
-import { NubieError } from "../../../helpers";
+import { HttpStatusCodes, JWTToken } from "~/core";
+import { ExtensionMethodDecorator } from "~/decorators/abstracts";
+import { NubieError } from "~/helpers";
 
 class AuthenticationDecorator extends ExtensionMethodDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
