@@ -1,7 +1,7 @@
 import ClassDecorator, { TClassMetadata } from "./ClassDecorator";
-import ExtensionMethodDecorator from "./ExtensionMethodDecorator";
+import MethodExtensionDecorator from "./MethodExtensionDecorator";
 import MethodDecorator, { TMethodMetadata } from "./MethodDecorator";
-import ExtensionParamDecorator from "./ExtensionParamDecorator";
+import ParamExtensionDecorator from "./ParamExtensionDecorator";
 import ControllerBase from "./ControllerBase";
 
 export {
@@ -9,7 +9,7 @@ export {
     TClassMetadata,
     MethodDecorator,
     TMethodMetadata,
-    ExtensionMethodDecorator,
-    ExtensionParamDecorator,
+    MethodExtensionDecorator,
+    ParamExtensionDecorator,
     ControllerBase,
 };

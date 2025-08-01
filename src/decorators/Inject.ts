@@ -1,4 +1,4 @@
-import { ClassDecorator, ControllerBase } from "../../abstracts";
+import { ClassDecorator, ControllerBase } from "../abstracts";
 
 export default function Inject(token: string) {
     return function (target: any, _paramKey: undefined, paramIndex: number) {

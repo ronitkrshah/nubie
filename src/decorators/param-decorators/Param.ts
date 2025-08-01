@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../../abstracts";
+import { ParamExtensionDecorator } from "../../abstracts";
 
-class ParamDecorator extends ExtensionParamDecorator {
+class ParamDecorator extends ParamExtensionDecorator {
     public constructor(public readonly param?: string) {
         super();
     }
@@ -12,6 +12,6 @@ class ParamDecorator extends ExtensionParamDecorator {
     }
 }
 
-const Param = ExtensionParamDecorator.createDecorator(ParamDecorator);
+const Param = ParamExtensionDecorator.createDecorator(ParamDecorator);
 
 export default Param;

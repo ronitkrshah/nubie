@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../../abstracts";
+import { ParamExtensionDecorator } from "../../abstracts";
 
-class HeadersParamDecorator extends ExtensionParamDecorator {
+class HeadersParamDecorator extends ParamExtensionDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         return req.headers;
     }
 }
 
-const Headers = ExtensionParamDecorator.createDecorator(HeadersParamDecorator);
+const Headers = ParamExtensionDecorator.createDecorator(HeadersParamDecorator);
 
 export default Headers;

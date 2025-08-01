@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../../abstracts";
+import { ParamExtensionDecorator } from "../../abstracts";
 import { AppConfiguration } from "../../config";
 import { HttpStatusCodes } from "../../core";
 import { NubieError } from "../../helpers";
 
-class BearerTokenDecorator extends ExtensionParamDecorator {
+class BearerTokenDecorator extends ParamExtensionDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         const config = await AppConfiguration.getAppConfigAsync();
         if (!config.jwtSeceretKey) {
@@ -23,6 +23,6 @@ class BearerTokenDecorator extends ExtensionParamDecorator {
     }
 }
 
-const BearerToken = ExtensionParamDecorator.createDecorator(BearerTokenDecorator);
+const BearerToken = ParamExtensionDecorator.createDecorator(BearerTokenDecorator);
 
 export default BearerToken;

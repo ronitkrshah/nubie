@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionParamDecorator } from "../../abstracts";
+import { ParamExtensionDecorator } from "../../abstracts";
 import { HttpStatusCodes } from "../../core";
 import { NubieError } from "../../helpers";
 
@@ -8,7 +8,7 @@ export const enum QueryType {
     Required,
 }
 
-class QueryDecorator extends ExtensionParamDecorator {
+class QueryDecorator extends ParamExtensionDecorator {
     public constructor(
         public readonly query?: string,
         public readonly required: QueryType = QueryType.Optional,
@@ -31,6 +31,6 @@ class QueryDecorator extends ExtensionParamDecorator {
     }
 }
 
-const Query = ExtensionParamDecorator.createDecorator(QueryDecorator);
+const Query = ParamExtensionDecorator.createDecorator(QueryDecorator);
 
 export default Query;

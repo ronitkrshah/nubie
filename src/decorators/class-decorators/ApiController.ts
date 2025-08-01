@@ -47,12 +47,12 @@ class ApiControllerDecorator extends ControllerBase {
 
             async function handleApiRequest(req: Request, res: Response, next: NextFunction) {
                 try {
-                    for (const method of AppContext.getExtensionMethods(methodName)) {
+                    for (const method of AppContext.getExtensionsForMethod(methodName)) {
                         await method.executeAsync(req, res, next);
                     }
 
                     const arguements: unknown[] = [];
-                    for (const param of AppContext.getExtensionParams(methodName)) {
+                    for (const param of AppContext.getExtensionsForMethodParams(methodName)) {
                         arguements[param.paramIndex] = await param.executeAsync(req, res, next);
                     }
 

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
-import { ExtensionMethodDecorator } from "../../../abstracts";
+import { MethodExtensionDecorator } from "../../../abstracts";
 import { HttpStatusCodes } from "../../../core";
 import { NubieError } from "../../../helpers";
 
-class HeaderDecorator extends ExtensionMethodDecorator {
+class HeaderDecorator extends MethodExtensionDecorator {
     public constructor(public readonly key: string) {
         super();
     }
@@ -21,6 +21,6 @@ class HeaderDecorator extends ExtensionMethodDecorator {
     }
 }
 
-const Header = ExtensionMethodDecorator.createDecorator(HeaderDecorator);
+const Header = MethodExtensionDecorator.createDecorator(HeaderDecorator);
 
 export default Header;

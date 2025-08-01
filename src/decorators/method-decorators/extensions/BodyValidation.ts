@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { ExtensionMethodDecorator } from "../../../abstracts";
+import { MethodExtensionDecorator } from "../../../abstracts";
 import { HttpStatusCodes } from "../../../core";
 import { NubieError } from "../../../helpers";
 import { TClass } from "../../../types";
 
-class BodyValidationDecorator extends ExtensionMethodDecorator {
+class BodyValidationDecorator extends MethodExtensionDecorator {
     public constructor(public readonly DTO: TClass) {
         super();
     }
@@ -28,7 +28,7 @@ class BodyValidationDecorator extends ExtensionMethodDecorator {
 }
 
 function BodyValidation(DTO: TClass) {
-    const factory = ExtensionMethodDecorator.createDecorator(BodyValidationDecorator);
+    const factory = MethodExtensionDecorator.createDecorator(BodyValidationDecorator);
     const decorator = factory(DTO);
 
     return function (target: Object, methodName: string, descriptor: PropertyDescriptor) {

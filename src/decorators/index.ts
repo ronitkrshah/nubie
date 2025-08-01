@@ -1,1 +1,3 @@
-export * from "../abstracts";
+import Inject from "./Inject";
+
+export { Inject };
