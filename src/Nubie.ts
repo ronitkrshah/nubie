@@ -7,7 +7,7 @@ import NubieCore from "./NubieCore";
 export default class Nubie {
     private _expressApp: Express;
 
-    public get expressApp() {
+    public get ExpressApp() {
         return this._expressApp;
     }
 
