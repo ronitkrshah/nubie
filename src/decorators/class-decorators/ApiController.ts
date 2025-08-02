@@ -31,7 +31,7 @@ class ApiControllerDecorator extends ControllerBase {
         const metadata = ClassDecorator.getMetadata(ControllerBase.METADATA_KEY, this._target);
         const instance = this.getClassInstance(this._target, metadata.constructorInjections);
 
-        Logger.title(`${this._target.name} Routes`);
+        console.log("\n📦 Controller Loaded: " + this._target.name);
 
         /** Registering methods */
         for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {
@@ -76,11 +76,10 @@ class ApiControllerDecorator extends ControllerBase {
 
             this._router[methodMetadata.httpMethod](fullpath, ...handlers);
             console.log(
-                `${chalk.green("✔️")}  ${chalk.yellow(`${methodMetadata.httpMethod.toUpperCase()}`)} ` +
-                    `${chalk.cyan(fullpath)} ` +
-                    `${chalk.gray(`➜ ${this._target.name}.${methodName}()`)}`,
+                `\t• [${methodMetadata.httpMethod.toUpperCase()}] ${fullpath}\t➜\t${this._target.name}.${methodName}()`,
             );
         }
+        console.log("");
     }
 
     public async registerControllerAsync(): Promise<void> {
