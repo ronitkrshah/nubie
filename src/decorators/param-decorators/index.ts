@@ -8,5 +8,6 @@ import BearerToken from "./BearerToken";
 import BearerTokenPayload from "./BearerTokenPayload";
 import File from "./File";
 import Files from "./Files";
+import Ip from "./Ip";
 
-export { Body, Headers, Req, Res, Param, Query, QueryType, BearerToken, BearerTokenPayload, File, Files };
+export { Body, Headers, Req, Res, Param, Query, QueryType, BearerToken, BearerTokenPayload, File, Files, Ip };
