@@ -59,9 +59,9 @@ export default abstract class MethodDecorator {
             {
                 ...existingMetadata,
                 methods: {
-                    ...(existingMetadata.methods || {}),
+                    ...(existingMetadata?.methods || {}),
                     [this._methodName]: {
-                        ...(existingMetadata.methods?.[this._methodName] || {}),
+                        ...(existingMetadata?.methods?.[this._methodName] || {}),
                         ...methodMetadata[this._methodName],
                     },
                 },

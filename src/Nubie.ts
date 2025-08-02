@@ -29,7 +29,7 @@ export default class Nubie {
         Logger.title("Installing Skill Issue Fix...");
 
         this._expressApp.listen(config.port, () => {
-            Logger.info(`WebAPI Url: http://127.0.0.1:${config.port}`);
+            Logger.info(`WebAPI Url: http://localhost:${config.port}`);
             Logger.success("Skill Issues Fixed :)");
         });
     }
