@@ -7,7 +7,7 @@ import { NubieError } from "../../helpers";
 class BearerTokenDecorator extends ParamExtensionDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         const config = await AppConfiguration.getAppConfigAsync();
-        if (!config.jwtSeceretKey) {
+        if (!config.jwtSecretKey) {
             throw new NubieError("JWT Code Not Available In Config File", HttpStatusCodes.InternalServerError);
         }
 

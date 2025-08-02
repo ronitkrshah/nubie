@@ -16,13 +16,13 @@ export default class JWTToken {
 
     public async generateTokenAsync() {
         const config = await AppConfiguration.getAppConfigAsync();
-        if (!config.jwtSeceretKey) throw new Error("JWT Secret Not Found");
-        return jwt.sign(this._claims, config.jwtSeceretKey);
+        if (!config.jwtSecretKey) throw new Error("JWT Secret Not Found");
+        return jwt.sign(this._claims, config.jwtSecretKey);
     }
 
     public static async verifyTokenAsync(token: string) {
         const config = await AppConfiguration.getAppConfigAsync();
-        if (!config.jwtSeceretKey) throw new Error("JWT Secret Not Found");
-        return jwt.verify(token, config.jwtSeceretKey);
+        if (!config.jwtSecretKey) throw new Error("JWT Secret Not Found");
+        return jwt.verify(token, config.jwtSecretKey);
     }
 }

@@ -6,7 +6,7 @@ const _defaultConfiguration = {
     defaultApiVersion: 1,
     controllersDirectory: "controllers",
     buildDir: "dist",
-    jwtSeceretKey: undefined as string | undefined,
+    jwtSecretKey: undefined as string | undefined,
 };
 
 class AppConfiguration {
