@@ -3,7 +3,7 @@ import { MethodExtensionDecorator } from "../../../abstracts";
 import { HttpStatusCodes, JWTToken } from "../../../core";
 import { NubieError } from "../../../helpers";
 
-class AuthenticationDecorator extends MethodExtensionDecorator {
+class AuthorizeDecorator extends MethodExtensionDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
         const bearerToken = req.headers["authorization"];
         if (!bearerToken)
@@ -21,6 +21,6 @@ class AuthenticationDecorator extends MethodExtensionDecorator {
     }
 }
 
-const Authentication = MethodExtensionDecorator.createDecorator(AuthenticationDecorator);
+const Authorize = MethodExtensionDecorator.createDecorator(AuthorizeDecorator);
 
-export default Authentication;
+export default Authorize;

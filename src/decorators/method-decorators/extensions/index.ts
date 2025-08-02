@@ -1,6 +1,6 @@
 import BodyValidation from "./BodyValidation";
-import Authentication from "./Authentication";
+import Authorize from "./Authorize";
 import Role from "./Roles";
 import Header from "./Header";
 
-export { BodyValidation, Authentication, Role, Header };
+export { BodyValidation, Authorize, Role, Header };
