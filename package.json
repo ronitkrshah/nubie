@@ -1,6 +1,6 @@
 {
     "name": "nubie",
-    "version": "0.1.0-alpha",
+    "version": "0.2.0-alpha",
     "description": "A Simple Express Based API Framework For Nubs Laik Me :)",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
