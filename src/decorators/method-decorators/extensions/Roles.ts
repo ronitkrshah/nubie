@@ -35,6 +35,9 @@ class RolesDecorator extends MethodExtensionDecorator {
     }
 }
 
+/**
+ * Restricts access to users with specific roles.
+ */
 const Role = MethodExtensionDecorator.createDecorator(RolesDecorator);
 
 export default Role;

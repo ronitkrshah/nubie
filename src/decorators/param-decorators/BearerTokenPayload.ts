@@ -27,6 +27,9 @@ class BearerTokenPayloadDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Decodes and injects the payload from the bearer token.
+ */
 const BearerTokenPayload = ParamExtensionDecorator.createDecorator(BearerTokenPayloadDecorator);
 
 export default BearerTokenPayload;

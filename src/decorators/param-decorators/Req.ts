@@ -7,6 +7,9 @@ class ReqParamDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects the raw Express `req` object.
+ */
 const Req = ParamExtensionDecorator.createDecorator(ReqParamDecorator);
 
 export default Req;

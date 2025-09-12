@@ -31,6 +31,9 @@ class QueryDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects a query parameter by name.
+ */
 const Query = ParamExtensionDecorator.createDecorator(QueryDecorator);
 
 export default Query;

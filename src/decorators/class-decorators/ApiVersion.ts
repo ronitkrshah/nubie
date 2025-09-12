@@ -19,6 +19,11 @@ class ApiVersionDecorator extends ControllerBase {
     }
 }
 
+/**
+ * Specifies the version of the API for the controller.
+ *
+ * Useful for versioned routing and backward compatibility.
+ */
 const ApiVersion = ControllerBase.createDecorator(ApiVersionDecorator);
 
 export default ApiVersion;

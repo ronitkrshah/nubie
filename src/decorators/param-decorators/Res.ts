@@ -7,6 +7,9 @@ class ResParamDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects the raw Express `res` object.
+ */
 const Res = ParamExtensionDecorator.createDecorator(ResParamDecorator);
 
 export default Res;

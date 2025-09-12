@@ -3,7 +3,7 @@ import { ControllerBase, TMethodMetadata } from "../../base";
 import AppState from "../../AppState";
 import { AppConfig } from "../../config";
 import { DiContainer, TMethodResponse } from "../../core";
-import { Logger, Metadata, NubieError } from "../../utils";
+import { Logger, Metadata } from "../../utils";
 import { TConstructor } from "../../types";
 
 export type TApiControllerMetadata = {
@@ -25,6 +25,11 @@ class ApiControllerDecorator extends ControllerBase {
         this._endpoint = endpoint;
     }
 
+    /**
+     * Validates the format or structure of the controller class name.
+     *
+     * Used to enforce naming conventions or detect misconfigurations.
+     */
     private validateClassName() {
         const className = this._target.name;
         const isValidControllerName = className.endsWith("Controller");
@@ -37,6 +42,13 @@ class ApiControllerDecorator extends ControllerBase {
         }
     }
 
+    /**
+     * Injects constructor dependencies into the target class.
+     *
+     * Returns an instance with all required dependencies resolved.
+     *
+     * @returns The instantiated class with injected dependencies.
+     */
     private injectConstructorDependencies(
         Class: TConstructor,
         constructorInjection: TApiControllerMetadata["constructorInjections"],
@@ -49,6 +61,11 @@ class ApiControllerDecorator extends ControllerBase {
         return new Class(...arguements);
     }
 
+    /**
+     * Asynchronously configures the controller instance.
+     *
+     * Used to initialize routes, middleware, or metadata before registration.
+     */
     private async configureControllerAsync() {
         const appConfig = await AppConfig.getConfig();
         const metadata = Metadata.getMetadata(ControllerBase.METADATA_KEY, this._target) as TApiControllerMetadata;
@@ -103,6 +120,11 @@ class ApiControllerDecorator extends ControllerBase {
     }
 }
 
+/**
+ * Marks a class as an API controller.
+ *
+ * Enables route registration and metadata tracking for the decorated class.
+ */
 const ApiController = ControllerBase.createDecorator(ApiControllerDecorator);
 
 export default ApiController;

@@ -7,6 +7,9 @@ class IpDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects the client's IP address into the method parameter.
+ */
 const Ip = ParamExtensionDecorator.createDecorator(IpDecorator);
 
 export default Ip;

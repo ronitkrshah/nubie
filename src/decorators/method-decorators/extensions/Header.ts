@@ -21,6 +21,9 @@ class HeaderDecorator extends MethodExtensionDecorator {
     }
 }
 
+/**
+ * Extracts and validates headers from the incoming request.
+ */
 const Header = MethodExtensionDecorator.createDecorator(HeaderDecorator);
 
 export default Header;

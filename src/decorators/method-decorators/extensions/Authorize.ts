@@ -22,6 +22,11 @@ class AuthorizeDecorator extends MethodExtensionDecorator {
     }
 }
 
+/**
+ * Applies authorization logic to a controller method.
+ *
+ * Ensures that the request is authenticated and optionally checks roles or permissions.
+ */
 const Authorize = MethodExtensionDecorator.createDecorator(AuthorizeDecorator);
 
 export default Authorize;

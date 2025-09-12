@@ -31,6 +31,12 @@ class BodyValidationDecorator extends MethodExtensionDecorator {
     }
 }
 
+/**
+ * Validates the request body against the provided DTO class.
+ *
+ * @param DTO The class used for validation schema.
+ * @returns A method decorator that performs validation before execution.
+ */
 function BodyValidation(DTO: TConstructor) {
     const factory = MethodExtensionDecorator.createDecorator(BodyValidationDecorator);
     const decorator = factory(DTO);

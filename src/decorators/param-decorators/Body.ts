@@ -16,6 +16,9 @@ class BodyParamDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects the parsed request body into the method parameter.
+ */
 const Body = ParamExtensionDecorator.createDecorator(BodyParamDecorator);
 
 export default Body;

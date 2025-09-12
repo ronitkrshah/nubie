@@ -7,6 +7,9 @@ class HeadersParamDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects request headers into the method parameter.
+ */
 const Headers = ParamExtensionDecorator.createDecorator(HeadersParamDecorator);
 
 export default Headers;

@@ -7,6 +7,9 @@ class FileDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects a single uploaded file into the method parameter.
+ */
 const File = ParamExtensionDecorator.createDecorator(FileDecorator);
 
 export default File;

@@ -19,6 +19,9 @@ class BearerTokenDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Extracts the bearer token from the Authorization header.
+ */
 const BearerToken = ParamExtensionDecorator.createDecorator(BearerTokenDecorator);
 
 export default BearerToken;

@@ -45,4 +45,9 @@ class FileUploadDecorator extends MethodDecorator {
     }
 }
 
+/**
+ * Enables file upload handling for the decorated method.
+ *
+ * Automatically parses multipart/form-data and attaches files to the request.
+ */
 export const FileUpload = MethodDecorator.createDecorator(FileUploadDecorator);

@@ -2,6 +2,11 @@ import { ControllerBase } from "../base";
 import { Metadata } from "../utils";
 import { TApiControllerMetadata } from "./class-decorators";
 
+/**
+ * Injects a dependency into the controller constructor.
+ *
+ * @param token The DI token used to resolve the dependency.
+ */
 export default function Inject(token: string) {
     return function (target: any, _paramKey: undefined, paramIndex: number) {
         const metadata = Metadata.getMetadata(ControllerBase.METADATA_KEY, target) as TApiControllerMetadata;

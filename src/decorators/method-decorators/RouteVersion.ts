@@ -13,6 +13,11 @@ class RouteVersionDecorator extends MethodDecorator {
     }
 }
 
+/**
+ * Overrides the default route version for a specific method.
+ *
+ * Useful when a method needs to respond to a different API version than its controller.
+ */
 const RouteVersion = MethodDecorator.createDecorator(RouteVersionDecorator);
 
 export default RouteVersion;

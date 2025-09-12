@@ -12,6 +12,9 @@ class ParamDecorator extends ParamExtensionDecorator {
     }
 }
 
+/**
+ * Injects a route parameter by name.
+ */
 const Param = ParamExtensionDecorator.createDecorator(ParamDecorator);
 
 export default Param;
