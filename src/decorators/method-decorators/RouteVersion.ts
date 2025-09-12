@@ -1,12 +1,10 @@
-import { MethodDecorator } from "../../abstracts";
-import { Logger } from "../../helpers";
+import { MethodDecorator } from "../../base";
 
 class RouteVersionDecorator extends MethodDecorator {
     public constructor(public readonly version: number) {
         super();
         if (typeof version !== "number") {
-            Logger.error("Version Must Be A Valid Integer");
-            process.exit(1);
+            throw new Error("Version Must Be A Valid Integer");
         }
     }
 

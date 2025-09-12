@@ -1,5 +1,5 @@
 import { container, DependencyContainer, Lifecycle } from "tsyringe";
-import { TClass } from "../types";
+import { TConstructor } from "../types";
 
 class DiContainer {
     private readonly _container: DependencyContainer;
@@ -8,11 +8,11 @@ class DiContainer {
         this._container = container;
     }
 
-    public addSingleton(token: string, implementation: TClass) {
+    public addSingleton(token: string, implementation: TConstructor) {
         this._container.register(token, implementation, { lifecycle: Lifecycle.Singleton });
     }
 
-    public addTransient(token: string, implementation: TClass) {
+    public addTransient(token: string, implementation: TConstructor) {
         this._container.register(token, implementation, { lifecycle: Lifecycle.Transient });
     }
 

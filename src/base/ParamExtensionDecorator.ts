@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import AppContext from "../AppContext";
+import AppState from "../AppState";
 
 export default abstract class ParamExtensionDecorator {
     private _paramIndex!: number;
@@ -16,10 +16,10 @@ export default abstract class ParamExtensionDecorator {
 
     public static createDecorator<T extends any[]>(MethodDecorator: new (...args: T) => ParamExtensionDecorator) {
         return function (...params: T) {
-            return function (target: {}, methodName: string, paramIndex: number) {
+            return function (target: object, methodName: string, paramIndex: number) {
                 const decoratorInstance = new MethodDecorator(...params);
                 decoratorInstance.setContext(paramIndex);
-                AppContext.registerParamExtension(methodName, decoratorInstance);
+                AppState.registerParamExtension(`${target.constructor.name}_${methodName}`, decoratorInstance);
             };
         };
     }

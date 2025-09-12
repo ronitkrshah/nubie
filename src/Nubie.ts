@@ -1,11 +1,15 @@
-import express, { Express } from "express";
-import { AppConfiguration } from "./config";
-import AppContext from "./AppContext";
-import NubieCore from "./NubieCore";
-import OS from "node:os";
+import express, { Express, NextFunction, Request, Response } from "express";
+import { AppConfig } from "./config";
+import AppState from "./AppState";
+import { Logger, NubieError } from "./utils";
+import * as FileSystem from "node:fs/promises";
+
+type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
 
 export default class Nubie {
     private _expressApp: Express;
+    private _errorHanler?: TErrorHandlerFunc;
+    private _useDefaultErrorMessage = true;
 
     public get ExpressApp() {
         return this._expressApp;
@@ -15,30 +19,89 @@ export default class Nubie {
         this._expressApp = express();
         this._expressApp.use(express.json());
         this._expressApp.use(express.urlencoded({ extended: false }));
-        AppContext.ExpressApp = this._expressApp;
+        AppState.expressApp = this._expressApp;
     }
 
     public static createApp(): Nubie {
         return new Nubie();
     }
 
-    private showEnvironmentDetails(): void {
-        console.log("🔧 Environment:");
-        console.log(`\t• Node               : ${process.version}`);
-        console.log(`\t• Platform           : ${process.platform} (${process.arch})`);
-        console.log(`\t• Total RAM          : ${(OS.totalmem() / 1024 / 1024 / 1024).toFixed(2)} GB`);
-        console.log(`\t• Available RAM      : ${(OS.freemem() / 1024 / 1024 / 1024).toFixed(2)} GB`);
+    public setErrorHandler(
+        errorHandler?: (err: Error, req: Request, res: Response, next: NextFunction) => void,
+        useDefaultErrorResponse = true,
+    ) {
+        this._useDefaultErrorMessage = useDefaultErrorResponse;
+        this._errorHanler = errorHandler;
+        return this;
+    }
+
+    private async loadControllersAsync() {
+        const config = await AppConfig.getConfig();
+        const controllerDirectory = `${AppConfig.projectPath}/build/${config.controllersDirectory}`;
+        let isDirExists = false;
+        try {
+            await FileSystem.stat(controllerDirectory);
+            isDirExists = true;
+        } catch (error) {
+            // ... ignore
+        }
+
+        if (!isDirExists) return;
+
+        /** Importing Controllers */
+        const files = await FileSystem.readdir(controllerDirectory, { recursive: true });
+        for (const file of files) {
+            if (file.endsWith("Controller.js")) {
+                await import(`${controllerDirectory}/${file}`);
+            }
+        }
+    }
+
+    private useErrorHandler() {
+        this._expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+            console.error(err);
+            if (err instanceof NubieError && this._useDefaultErrorMessage) {
+                return res.status(err.statusCode).json({
+                    message: err.message,
+                    explaination: err.explaination,
+                    timestamp: new Date().toISOString(),
+                    path: req.originalUrl,
+                    method: req.method,
+                });
+            }
+
+            if (this._errorHanler) {
+                return this._errorHanler(err, req, res, next);
+            }
+
+            if (this._useDefaultErrorMessage) {
+                return res.status(500).json({
+                    message: "Internal Server Error",
+                    timestamp: new Date().toISOString(),
+                    path: req.originalUrl,
+                    method: req.method,
+                });
+            }
+
+            next(err);
+        });
+
+        return this;
     }
 
     public async runAsync() {
-        console.log("🌟 Application Boot Sequence Initialized...");
-        this.showEnvironmentDetails();
-
-        await NubieCore.setupRouterAsyc();
-        const config = await AppConfiguration.getAppConfigAsync();
+        console.clear();
+        Logger.log("Application Boot Sequence Initialized...");
+        Logger.log("Registering Controllers...");
+        await this.loadControllersAsync();
+        for (const controller of AppState.controllers) {
+            await controller.registerControllerAsync();
+        }
+        this.useErrorHandler();
+        const config = await AppConfig.getConfig();
 
         this._expressApp.listen(config.port, () => {
-            console.log("\n🔗 Connected to Web API at: http://localhost:4321");
+            Logger.log(`Connected to Web API at: http://localhost:${config.port}`);
         });
     }
 }

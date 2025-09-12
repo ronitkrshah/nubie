@@ -1,5 +1,4 @@
-import { MethodDecorator, TMethodMetadata } from "../../abstracts";
-import { Logger } from "../../helpers";
+import { MethodDecorator, TMethodMetadata } from "../../base";
 
 type TFunctionType = "AsyncFunction" | "Function";
 
@@ -15,12 +14,11 @@ abstract class BaseHttpDecorator extends MethodDecorator {
         const isAsyncSuffix = this._methodName.endsWith("Async");
 
         if (funcType !== "AsyncFunction") {
-            Logger.error("Methods Must Be An Async Function :: " + this._methodName);
-            process.exit(1);
+            throw new Error("Methods Must Be An Async Function :: " + this._methodName);
         }
 
         if (!isAsyncSuffix) {
-            Logger.error("Controller Methods Must End With Async Keyword :: " + this._methodName);
+            throw new Error("Controller Methods Must End With Async Keyword :: " + this._methodName);
             process.exit(1);
         }
     }

@@ -1,5 +1,5 @@
-import { ControllerBase, ClassDecorator } from "../../abstracts";
-import { Logger } from "../../helpers";
+import { ControllerBase } from "../../base";
+import { Metadata } from "../../utils";
 
 class ApiVersionDecorator extends ControllerBase {
     private readonly _version?: number;
@@ -13,10 +13,9 @@ class ApiVersionDecorator extends ControllerBase {
 
     public async registerControllerAsync(): Promise<void> {
         if (!this._version) {
-            Logger.error(`Ignoring ${this._target.name} Version Because It's Not An Number`);
-            return;
+            throw new Error(`Ignoring ${this._target.name} Version Because It's Not An Number`);
         }
-        ClassDecorator.updateMetadata(ControllerBase.METADATA_KEY, this._target, { apiVersion: this._version });
+        Metadata.updateMetadata(ControllerBase.METADATA_KEY, this._target, { apiVersion: this._version });
     }
 }
 

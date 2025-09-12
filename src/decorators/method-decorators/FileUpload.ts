@@ -1,4 +1,4 @@
-import { MethodDecorator } from "../../abstracts";
+import { MethodDecorator } from "../../base";
 import { FileUploadHandler } from "../../core";
 
 export const enum FileUploadType {

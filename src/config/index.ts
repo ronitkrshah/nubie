@@ -1,3 +1,3 @@
-import AppConfiguration from "./AppConfiguration";
+import AppConfig from "./AppConfig";
 
-export { AppConfiguration };
+export { AppConfig };

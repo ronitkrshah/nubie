@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { ParamExtensionDecorator } from "../../abstracts";
+import { ParamExtensionDecorator } from "../../base";
 import { HttpStatusCodes } from "../../core";
-import { NubieError } from "../../helpers";
+import { NubieError } from "../../utils";
 
 export const enum QueryType {
     Optional,
@@ -22,7 +22,7 @@ class QueryDecorator extends ParamExtensionDecorator {
         const query = req.query[this.query];
         if (this.required === QueryType.Required && !query) {
             throw new NubieError(
-                "MissingRequiredParam",
+                "Missing required parameter — a puzzle piece is missing.",
                 HttpStatusCodes.BadRequest,
                 `Missing Required Param: ${this.query}`,
             );

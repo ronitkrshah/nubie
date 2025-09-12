@@ -1,23 +1,46 @@
 import { NextFunction, RequestHandler, Request, Response, Router } from "express";
-import chalk from "chalk";
-import { ControllerBase, TClassMetadata, ClassDecorator } from "../../abstracts";
-import AppContext from "../../AppContext";
-import { AppConfiguration } from "../../config";
+import { ControllerBase, TMethodMetadata } from "../../base";
+import AppState from "../../AppState";
+import { AppConfig } from "../../config";
 import { DiContainer, TMethodResponse } from "../../core";
-import { Logger, NubieError } from "../../helpers";
-import { TClass } from "../../types";
+import { Logger, Metadata, NubieError } from "../../utils";
+import { TConstructor } from "../../types";
+
+export type TApiControllerMetadata = {
+    endpoint: string;
+    apiVersion?: number;
+    methods?: Record<string, TMethodMetadata>;
+    constructorInjections?: {
+        token: string;
+        paramIndex: number;
+    }[];
+};
 
 class ApiControllerDecorator extends ControllerBase {
     private _endpoint?: string;
-    private _router: Router;
+    private _router = Router();
 
     public constructor(endpoint?: string) {
         super();
         this._endpoint = endpoint;
-        this._router = Router();
     }
 
-    private getClassInstance(Class: TClass, constructorInjection: TClassMetadata["constructorInjections"]) {
+    private validateClassName() {
+        const className = this._target.name;
+        const isValidControllerName = className.endsWith("Controller");
+        if (!isValidControllerName) {
+            Logger.log(`Invalid Controller Name: ${className}. Aborting Execution..`);
+            process.exit(1);
+        }
+        if (!this._endpoint) {
+            this._endpoint = className.replace("Controller", "").toLowerCase();
+        }
+    }
+
+    private injectConstructorDependencies(
+        Class: TConstructor,
+        constructorInjection: TApiControllerMetadata["constructorInjections"],
+    ) {
         const arguements: unknown[] = [];
         for (const injectionData of constructorInjection || []) {
             arguements[injectionData.paramIndex] = DiContainer.resolve(injectionData.token);
@@ -27,72 +50,56 @@ class ApiControllerDecorator extends ControllerBase {
     }
 
     private async configureControllerAsync() {
-        const appConfig = await AppConfiguration.getAppConfigAsync();
-        const metadata = ClassDecorator.getMetadata(ControllerBase.METADATA_KEY, this._target);
-        const instance = this.getClassInstance(this._target, metadata.constructorInjections);
-
-        console.log("\n📦 Controller Loaded: " + this._target.name);
+        const appConfig = await AppConfig.getConfig();
+        const metadata = Metadata.getMetadata(ControllerBase.METADATA_KEY, this._target) as TApiControllerMetadata;
+        const instance = this.injectConstructorDependencies(this._target, metadata.constructorInjections);
 
         /** Registering methods */
         for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {
             const apiVersion = methodMetadata.apiVersion || metadata.apiVersion || appConfig.defaultApiVersion;
             const fullpath = `/api/v${apiVersion}/${this._endpoint}/${methodMetadata.endpoint}`.replace(/\/+/g, "/");
 
-            const handlers: RequestHandler[] = [];
+            const requestHandlers: RequestHandler[] = [];
 
-            // Add Middlewares
+            /**
+             * Middlewares like file upload via multer
+             */
             methodMetadata.middlewares?.forEach((middleware) => {
-                handlers.push(middleware);
+                requestHandlers.push(middleware);
             });
 
-            async function handleApiRequest(req: Request, res: Response, next: NextFunction) {
-                try {
-                    for (const method of AppContext.getExtensionsForMethod(methodName)) {
-                        await method.executeAsync(req, res, next);
-                    }
-
-                    const arguements: unknown[] = [];
-                    for (const param of AppContext.getExtensionsForMethodParams(methodName)) {
-                        arguements[param.paramIndex] = await param.executeAsync(req, res, next);
-                    }
-
-                    const data: TMethodResponse<any> = await instance[methodName](...arguements);
-                    if (data) {
-                        return res.status(data.statusCode).json(data.data);
-                    }
-                } catch (error) {
-                    if (error instanceof NubieError) {
-                        res.status(error.statusCode).json({
-                            message: error.message,
-                            explaination: error.explaination,
-                        });
-                    } else {
-                        throw error;
-                    }
+            /**
+             * Actual Incoming Express Request
+             */
+            const handleApiRequest = async (req: Request, res: Response, next: NextFunction) => {
+                const uniqueExtensionKey = `${this._target.name}_${methodName}`;
+                for (const method of AppState.getMethodExtensions(uniqueExtensionKey)) {
+                    await method.executeAsync(req, res, next);
                 }
-            }
 
-            handlers.push(handleApiRequest);
+                const arguements: unknown[] = [];
+                for (const param of AppState.getParamExtensions(uniqueExtensionKey)) {
+                    arguements[param.paramIndex] = await param.executeAsync(req, res, next);
+                }
 
-            this._router[methodMetadata.httpMethod](fullpath, ...handlers);
-            console.log(
-                `\t• [${methodMetadata.httpMethod.toUpperCase()}] ${fullpath}\t➜\t${this._target.name}.${methodName}()`,
-            );
+                const data: TMethodResponse<any> = await instance[methodName](...arguements);
+                if (data) {
+                    return res.status(data.statusCode).json(data.data);
+                }
+            };
+
+            requestHandlers.push(handleApiRequest);
+            this._router[methodMetadata.httpMethod](fullpath, ...requestHandlers);
         }
-        console.log("");
     }
 
+    /**
+     * Method To Register Controller
+     */
     public async registerControllerAsync(): Promise<void> {
-        const isValidControllerName = this._target.name.endsWith("Controller");
-        if (!this._endpoint) {
-            this._endpoint = this._target.name.replace("Controller", "").toLowerCase();
-        }
-        if (!isValidControllerName) {
-            return Logger.error(`Ignoring ${this._target.name}. Because It Doesn't Match Nubie Naming Convention`);
-        }
-
+        this.validateClassName();
         await this.configureControllerAsync();
-        AppContext.ExpressApp.use(this._router);
+        AppState.expressApp.use(this._router);
     }
 }
 

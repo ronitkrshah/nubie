@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import { TClassMetadata } from "./ClassDecorator";
 import ControllerBase from "./ControllerBase";
+import { TApiControllerMetadata } from "../decorators/class-decorators";
 
 export type TMethodMetadata = {
     endpoint: string;
@@ -13,13 +13,13 @@ export type TMethodMetadata = {
 export default abstract class MethodDecorator {
     public static readonly METADATA_KEY = Symbol("api:method");
 
-    protected _target!: Object;
+    protected _target!: object;
     protected _methodName!: string;
     protected _descriptor!: PropertyDescriptor;
 
     abstract executeAsync(): Promise<void>;
 
-    private setContext(target: Object, methodName: string, descriptor: PropertyDescriptor) {
+    private setContext(target: object, methodName: string, descriptor: PropertyDescriptor) {
         this._target = target;
         this._methodName = methodName;
         this._descriptor = descriptor;
@@ -47,7 +47,7 @@ export default abstract class MethodDecorator {
     }
 
     private addMethodToController() {
-        const existingMetadata: TClassMetadata = Reflect.getMetadata(
+        const existingMetadata: TApiControllerMetadata = Reflect.getMetadata(
             ControllerBase.METADATA_KEY,
             this._target.constructor,
         );
@@ -70,7 +70,7 @@ export default abstract class MethodDecorator {
         );
     }
 
-    public static updateMethodMetadata(target: Object, methodName: string, metadata: Partial<TMethodMetadata>) {
+    public static updateMethodMetadata(target: object, methodName: string, metadata: Partial<TMethodMetadata>) {
         const existingMetadata: Record<string, TMethodMetadata> =
             Reflect.getMetadata(MethodDecorator.METADATA_KEY, target) || {};
         Reflect.defineMetadata(
@@ -88,7 +88,7 @@ export default abstract class MethodDecorator {
 
     public static createDecorator<T extends any[]>(MethodDecorator: new (...args: T) => MethodDecorator) {
         return function (...params: T) {
-            return function (target: Object, methodName: string, descriptor: PropertyDescriptor) {
+            return function (target: object, methodName: string, descriptor: PropertyDescriptor) {
                 const decoratorInstance = new MethodDecorator(...params);
                 decoratorInstance.setContext(target, methodName, descriptor);
                 decoratorInstance.executeAsync().then(() => {

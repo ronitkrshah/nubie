@@ -1,4 +1,4 @@
-import ApiController from "./ApiController";
+import ApiController, { type TApiControllerMetadata } from "./ApiController";
 import ApiVersion from "./ApiVersion";
 
-export { ApiController, ApiVersion };
+export { ApiController, ApiVersion, TApiControllerMetadata };
