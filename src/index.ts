@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import Nubie from "./Nubie";
+import Nubie, { type TDiService } from "./Nubie";
 import { DiContainer, JWTToken, HttpResponse } from "./core";
 import { MethodExtensionDecorator, ParamExtensionDecorator } from "./base";
 import { NubieError } from "./utils";
@@ -11,6 +11,7 @@ export * from "./decorators/param-decorators";
 
 export {
     Nubie,
+    TDiService,
     MethodExtensionDecorator,
     ParamExtensionDecorator,
     DiContainer,

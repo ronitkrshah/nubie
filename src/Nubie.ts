@@ -5,13 +5,17 @@ import { Logger, NubieError } from "./utils";
 import * as FileSystem from "node:fs/promises";
 import { detect } from "detect-port";
 import figlet from "figlet";
+import { TConstructor } from "./types";
+import { DiContainer } from "./core";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
+export type TDiService = [TConstructor, string, "Singleton" | "Transient"];
 
 export default class Nubie {
     private _expressApp: Express;
     private _errorHanler?: TErrorHandlerFunc;
     private _useDefaultErrorMessage = true;
+    private _diServicesPaths: string[] = [];
 
     /**
      * Gets the underlying Express application instance.
@@ -89,6 +93,39 @@ export default class Nubie {
     }
 
     /**
+     * Auto load DI Files from the givn directories
+     * File name must be one of these `Injection.ts` or `DI.ts`
+     */
+    public addDiServices(directories: string[]) {
+        this._diServicesPaths = directories;
+        return this;
+    }
+
+    private async initializeDiServicesAsync() {
+        const fileNames = ["Injection.js", "DI.js"];
+
+        for (const dir of this._diServicesPaths) {
+            for (const file of fileNames) {
+                const fullPath = `${AppConfig.projectPath}/build/${dir}/${file}`;
+                try {
+                    await FileSystem.stat(fullPath);
+                    const module = await import(fullPath);
+                    const services = module?.services as TDiService[] | undefined;
+                    services?.forEach((service) => {
+                        if (service[2] === "Singleton") {
+                            DiContainer.addSingleton(service[1], service[0]);
+                        } else if (service[2] === "Transient") {
+                            DiContainer.addTransient(service[1], service[0]);
+                        } else {
+                            Logger.log("Invalid Lifecycle Type For " + service[1]);
+                        }
+                    });
+                } catch {}
+            }
+        }
+    }
+
+    /**
      * Applies the configured error handler to the Express app.
      *
      * Should be called after registering controllers to ensure error middleware is registered.
@@ -152,6 +189,11 @@ export default class Nubie {
 
         Logger.log("Reading Configuration File (if exists)...");
         const config = await AppConfig.getConfig();
+
+        if (this._diServicesPaths.length > 0) {
+            Logger.log("Injecting Dependencies...");
+            await this.initializeDiServicesAsync();
+        }
 
         Logger.log("Registering Controllers...");
         await this.loadControllersDynamically();
