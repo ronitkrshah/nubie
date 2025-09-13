@@ -1,6 +1,8 @@
 import { container, DependencyContainer, Lifecycle } from "tsyringe";
 import { TConstructor } from "../types";
 
+export const DI_METADATA_KEY = Symbol("di:constructor_injection");
+
 /**
  * Wrapper around the tsyringe dependency container.
  *
@@ -46,6 +48,25 @@ class DiContainer {
      */
     public resolve<T>(token: string): T {
         return this._container.resolve(token);
+    }
+
+    /**
+     * Resolves a dependency by its token.
+     *
+     * @param Class Class
+     * @returns The resolved instance.
+     */
+    public resolveWithInjections(Class: TConstructor) {
+        const injections = Reflect.getMetadata(DI_METADATA_KEY, Class) as
+            | { token: string; paramIndex: number }[]
+            | undefined;
+
+        const args: unknown[] = [];
+        for (const inj of injections || []) {
+            args[inj.paramIndex] = this.resolve(inj.token);
+        }
+
+        return new Class(...args);
     }
 }
 

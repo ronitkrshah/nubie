@@ -10,10 +10,6 @@ export type TApiControllerMetadata = {
     endpoint: string;
     apiVersion?: number;
     methods?: Record<string, TMethodMetadata>;
-    constructorInjections?: {
-        token: string;
-        paramIndex: number;
-    }[];
 };
 
 class ApiControllerDecorator extends ControllerBase {
@@ -43,25 +39,6 @@ class ApiControllerDecorator extends ControllerBase {
     }
 
     /**
-     * Injects constructor dependencies into the target class.
-     *
-     * Returns an instance with all required dependencies resolved.
-     *
-     * @returns The instantiated class with injected dependencies.
-     */
-    private injectConstructorDependencies(
-        Class: TConstructor,
-        constructorInjection: TApiControllerMetadata["constructorInjections"],
-    ) {
-        const arguements: unknown[] = [];
-        for (const injectionData of constructorInjection || []) {
-            arguements[injectionData.paramIndex] = DiContainer.resolve(injectionData.token);
-        }
-
-        return new Class(...arguements);
-    }
-
-    /**
      * Asynchronously configures the controller instance.
      *
      * Used to initialize routes, middleware, or metadata before registration.
@@ -69,7 +46,7 @@ class ApiControllerDecorator extends ControllerBase {
     private async configureControllerAsync() {
         const appConfig = await AppConfig.getConfig();
         const metadata = Metadata.getMetadata(ControllerBase.METADATA_KEY, this._target) as TApiControllerMetadata;
-        const instance = this.injectConstructorDependencies(this._target, metadata.constructorInjections);
+        const instance = DiContainer.resolveWithInjections(this._target);
 
         /** Registering methods */
         for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {
