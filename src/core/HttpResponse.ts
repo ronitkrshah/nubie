@@ -69,13 +69,13 @@ export const HttpStatusCodes = {
 } as const;
 
 type THttpStatusNames = keyof typeof HttpStatusCodes;
-export type TMethodResponse<T extends Record<string, unknown> | unknown[]> = {
+export type TMethodResponse = {
     statusCode: (typeof HttpStatusCodes)[THttpStatusNames];
-    data: T;
+    data: object;
 };
 
 type THttpResponse = {
-    [K in THttpStatusNames]: <T extends Record<string, unknown> | unknown[]>(data: T) => TMethodResponse<T>;
+    [K in THttpStatusNames]: (data: object) => TMethodResponse;
 };
 
 const HttpResponse = Object.fromEntries(

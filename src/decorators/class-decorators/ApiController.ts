@@ -78,7 +78,7 @@ class ApiControllerDecorator extends ControllerBase {
                     arguements[param.paramIndex] = await param.executeAsync(req, res, next);
                 }
 
-                const data: TMethodResponse<any> = await instance[methodName](...arguements);
+                const data: TMethodResponse = await instance[methodName](...arguements);
                 if (data) {
                     return res.status(data.statusCode).json(data.data);
                 }
