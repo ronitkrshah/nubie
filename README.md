@@ -4,6 +4,8 @@
 
 # Nubie
 
+**WARNING: This Project Is Still In Alpha Release**  
+
 **A simple, decorator-based WebAPI framework for TypeScript.**  
 Built on Express. Inspired by .NET. Designed to make backend development faster and cleaner.
 
