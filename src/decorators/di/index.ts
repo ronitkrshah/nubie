@@ -1,3 +1,3 @@
-import Inject from "./Inject";
+import Injectable, { Lifecycle } from "./Injectable";
 
-export { Inject };
+export { Injectable, Lifecycle };

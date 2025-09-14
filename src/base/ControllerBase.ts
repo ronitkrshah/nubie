@@ -1,5 +1,7 @@
+import { container, injectable } from "tsyringe";
 import AppState from "../AppState";
 import { TConstructor } from "../types";
+import { Logger } from "../utils";
 
 /**
  * Abstract base class for all API controllers.
@@ -30,6 +32,9 @@ export default abstract class ControllerBase {
     public static createDecorator<T extends any[]>(apiControllerClass: new (...args: T) => ControllerBase) {
         return function (...params: T) {
             return function (target: TConstructor) {
+                if (!container.isRegistered(target.name)) {
+                    injectable({ token: target.name })(target);
+                }
                 const controllerInstance = new apiControllerClass(...params);
                 controllerInstance._target = target;
                 AppState.controllers.push(controllerInstance);

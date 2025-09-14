@@ -2,9 +2,10 @@ import { NextFunction, RequestHandler, Request, Response, Router } from "express
 import { ControllerBase, TMethodMetadata } from "../../base";
 import AppState from "../../AppState";
 import { AppConfig } from "../../config";
-import { DiContainer, TMethodResponse } from "../../core";
+import { TMethodResponse } from "../../core";
 import { Logger, Metadata } from "../../utils";
 import { TConstructor } from "../../types";
+import { scopedDiContainerMiddleware } from "../../middlewares";
 
 export type TApiControllerMetadata = {
     endpoint: string;
@@ -14,11 +15,12 @@ export type TApiControllerMetadata = {
 
 class ApiControllerDecorator extends ControllerBase {
     private _endpoint?: string;
-    private _router = Router();
+    private _router: Router;
 
     public constructor(endpoint?: string) {
         super();
         this._endpoint = endpoint;
+        this._router = Router();
     }
 
     /**
@@ -46,7 +48,6 @@ class ApiControllerDecorator extends ControllerBase {
     private async configureControllerAsync() {
         const appConfig = await AppConfig.getConfig();
         const metadata = Metadata.getMetadata(ControllerBase.METADATA_KEY, this._target) as TApiControllerMetadata;
-        const instance = DiContainer.resolveWithInjections(this._target);
 
         /** Registering methods */
         for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {
@@ -66,6 +67,7 @@ class ApiControllerDecorator extends ControllerBase {
              * Actual Incoming Express Request
              */
             const handleApiRequest = async (req: Request, res: Response, next: NextFunction) => {
+                const instance = req.scope.resolve(this._target.name) as any;
                 const uniqueExtensionKey = `${this._target.name}_${methodName}`;
                 for (const method of AppState.getMethodExtensions(uniqueExtensionKey)) {
                     await method.executeAsync(req, res, next);
@@ -82,6 +84,7 @@ class ApiControllerDecorator extends ControllerBase {
                 }
             };
 
+            requestHandlers.push(scopedDiContainerMiddleware);
             requestHandlers.push(handleApiRequest);
             this._router[methodMetadata.httpMethod](fullpath, ...requestHandlers);
         }

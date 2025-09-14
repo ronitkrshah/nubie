@@ -5,11 +5,8 @@ import { Logger, NubieError } from "./utils";
 import * as FileSystem from "node:fs/promises";
 import { detect } from "detect-port";
 import figlet from "figlet";
-import { TConstructor } from "./types";
-import { DiContainer } from "./core";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
-export type TDiService = [TConstructor, string, "Singleton" | "Transient"];
 
 export default class Nubie {
     private _expressApp: Express;
@@ -109,17 +106,7 @@ export default class Nubie {
                 const fullPath = `${AppConfig.projectPath}/build/${dir}/${file}`;
                 try {
                     await FileSystem.stat(fullPath);
-                    const module = await import(fullPath);
-                    const services = module?.services as TDiService[] | undefined;
-                    services?.forEach((service) => {
-                        if (service[2] === "Singleton") {
-                            DiContainer.addSingleton(service[1], service[0]);
-                        } else if (service[2] === "Transient") {
-                            DiContainer.addTransient(service[1], service[0]);
-                        } else {
-                            Logger.log("Invalid Lifecycle Type For " + service[1]);
-                        }
-                    });
+                    await import(fullPath);
                 } catch {}
             }
         }
