@@ -10,7 +10,9 @@ class AuthorizeDecorator extends MethodExtensionDecorator {
         if (!bearerToken) throw new AuthorizationHeaderRequiredException();
 
         try {
-            await JWTToken.verifyTokenAsync(bearerToken.split(" ")[1]);
+            const payload = await JWTToken.verifyTokenAsync(bearerToken.split(" ")[1]);
+            if (typeof payload === "string") throw new UnauthorizedAccessException();
+            req.user = payload;
         } catch (error) {
             throw new UnauthorizedAccessException();
         }

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { MethodExtensionDecorator } from "../../../base";
-import { JWTToken } from "../../../core";
 import {
     AuthorizationHeaderRequiredException,
     InsufficientPermissionException,
@@ -15,19 +14,10 @@ class RolesDecorator extends MethodExtensionDecorator {
     }
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const bearerToken = req.headers["authorization"];
-        if (!bearerToken) throw new AuthorizationHeaderRequiredException();
-
-        const token = bearerToken.split(" ")[1];
-        const data = await JWTToken.verifyTokenAsync(token);
-
-        if (typeof data === "string" || !data?.role) {
-            throw new InsufficientPermissionException();
-        }
-
-        if (!this._roles.includes(data.role)) {
-            throw new InsufficientPermissionException();
-        }
+        const user = req.user;
+        if (!req.user) throw new AuthorizationHeaderRequiredException();
+        if (!user?.role) throw new InsufficientPermissionException();
+        if (!this._roles.includes(user.role)) throw new InsufficientPermissionException();
     }
 }
 
