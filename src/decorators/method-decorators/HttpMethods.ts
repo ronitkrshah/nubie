@@ -1,7 +1,5 @@
 import { MethodDecorator, TMethodMetadata } from "../../base";
 
-type TFunctionType = "AsyncFunction" | "Function";
-
 abstract class BaseHttpDecorator extends MethodDecorator {
     protected abstract httpMethod: TMethodMetadata["httpMethod"];
 
@@ -9,22 +7,7 @@ abstract class BaseHttpDecorator extends MethodDecorator {
         super();
     }
 
-    private validateMethodName() {
-        const funcType = this._descriptor.value.constructor.name as TFunctionType;
-        const isAsyncSuffix = this._methodName.endsWith("Async");
-
-        if (funcType !== "AsyncFunction") {
-            throw new Error("Methods Must Be An Async Function :: " + this._methodName);
-        }
-
-        if (!isAsyncSuffix) {
-            throw new Error("Controller Methods Must End With Async Keyword :: " + this._methodName);
-            process.exit(1);
-        }
-    }
-
     public async executeAsync(): Promise<void> {
-        this.validateMethodName();
         this.updateMethodMetadata({
             endpoint: this.endpoint,
             httpMethod: this.httpMethod,
