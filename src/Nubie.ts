@@ -11,7 +11,6 @@ type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFun
 export default class Nubie {
     private _expressApp: Express;
     private _errorHanler?: TErrorHandlerFunc;
-    private _useDefaultErrorMessage = true;
     private _diServicesPaths: string[] = [];
 
     /**
@@ -55,11 +54,7 @@ export default class Nubie {
      * @param errorHandler Optional custom error-handling middleware.
      * @param useDefaultErrorResponse Whether to apply the default error response format. Defaults to `true`.
      */
-    public setErrorHandler(
-        errorHandler?: (err: Error, req: Request, res: Response, next: NextFunction) => void,
-        useDefaultErrorResponse = true,
-    ) {
-        this._useDefaultErrorMessage = useDefaultErrorResponse;
+    public setErrorHandler(errorHandler?: (err: Error, req: Request, res: Response, next: NextFunction) => void) {
         this._errorHanler = errorHandler;
         return this;
     }
@@ -120,27 +115,17 @@ export default class Nubie {
     private initializeErrorHandler() {
         this._expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             console.error(err);
-            if (err instanceof NubieError && this._useDefaultErrorMessage) {
+            if (err instanceof NubieError) {
                 return res.status(err.statusCode).json({
                     message: err.message,
-                    explaination: err.explaination,
+                    errors: err.explaination,
                     timestamp: new Date().toISOString(),
                     path: req.originalUrl,
-                    method: req.method,
                 });
             }
 
             if (this._errorHanler) {
                 return this._errorHanler(err, req, res, next);
-            }
-
-            if (this._useDefaultErrorMessage) {
-                return res.status(500).json({
-                    message: "Internal Server Error",
-                    timestamp: new Date().toISOString(),
-                    path: req.originalUrl,
-                    method: req.method,
-                });
             }
 
             next(err);
