@@ -114,7 +114,7 @@ export default class Nubie {
      */
     private initializeErrorHandler() {
         this._expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-            console.error(err);
+            console.error(err.stack);
             if (err instanceof NubieError) {
                 return res.status(err.statusCode).json({
                     message: err.message,

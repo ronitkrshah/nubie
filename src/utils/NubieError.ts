@@ -29,6 +29,7 @@ export default class NubieError extends Error {
         this.statusCode = statusCode;
         this.explaination = explaination ?? defaultExplanations[statusCode] ?? "An error occurred.";
 
-        Object.setPrototypeOf(this, NubieError.prototype);
+        Object.setPrototypeOf(this, new.target.prototype);
+        this.name = new.target.name;
     }
 }
