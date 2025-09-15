@@ -1,7 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { MethodExtensionDecorator } from "../../../base";
-import { HttpStatusCodes, JWTToken } from "../../../core";
-import { NubieError } from "../../../utils";
+import { JWTToken } from "../../../core";
+import {
+    AuthorizationHeaderRequiredException,
+    InsufficientPermissionException,
+} from "../../../exceptions/authentication";
 
 class RolesDecorator extends MethodExtensionDecorator {
     private readonly _roles: string | string[];
@@ -13,24 +16,17 @@ class RolesDecorator extends MethodExtensionDecorator {
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
         const bearerToken = req.headers["authorization"];
-        if (!bearerToken)
-            throw new NubieError("Bearer token not found — bring your pass next time.", HttpStatusCodes.BadRequest);
+        if (!bearerToken) throw new AuthorizationHeaderRequiredException();
 
         const token = bearerToken.split(" ")[1];
         const data = await JWTToken.verifyTokenAsync(token);
 
         if (typeof data === "string" || !data?.role) {
-            throw new NubieError(
-                "You don’t have access to this resource — gatekeeper says no.",
-                HttpStatusCodes.Unauthorized,
-            );
+            throw new InsufficientPermissionException();
         }
 
         if (!this._roles.includes(data.role)) {
-            throw new NubieError(
-                "You don’t have access to this resource — gatekeeper says no.",
-                HttpStatusCodes.Unauthorized,
-            );
+            throw new InsufficientPermissionException();
         }
     }
 }

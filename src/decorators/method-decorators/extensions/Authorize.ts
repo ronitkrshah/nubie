@@ -1,23 +1,18 @@
 import { Request, Response, NextFunction } from "express";
 import { MethodExtensionDecorator } from "../../../base";
-import { HttpStatusCodes, JWTToken } from "../../../core";
-import { NubieError } from "../../../utils";
+import { JWTToken } from "../../../core";
+import { AuthorizationHeaderRequiredException, UnauthorizedAccessException } from "../../../exceptions/authentication";
 
 class AuthorizeDecorator extends MethodExtensionDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
         const bearerToken = req.headers["authorization"];
 
-        if (!bearerToken)
-            throw new NubieError("Bearer token not found — bring your pass next time.", HttpStatusCodes.BadRequest);
+        if (!bearerToken) throw new AuthorizationHeaderRequiredException();
 
         try {
             await JWTToken.verifyTokenAsync(bearerToken.split(" ")[1]);
         } catch (error) {
-            throw new NubieError(
-                "JWT validation failed — the lock didn’t like the key.",
-                HttpStatusCodes.BadRequest,
-                (error as Error).message,
-            );
+            throw new UnauthorizedAccessException();
         }
     }
 }

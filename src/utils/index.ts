@@ -1,5 +1,5 @@
 import Logger from "./Logger";
-import NubieError from "./NubieError";
+import Exception from "./Exception";
 import Metadata from "./Metadata";
 
-export { Logger, NubieError, Metadata };
+export { Logger, Exception, Metadata };

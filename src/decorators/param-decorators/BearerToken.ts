@@ -2,18 +2,16 @@ import { Request, Response, NextFunction } from "express";
 import { ParamExtensionDecorator } from "../../base";
 import { AppConfig } from "../../config";
 import { HttpStatusCodes } from "../../core";
-import { NubieError } from "../../utils";
+import { Exception } from "../../utils";
+import { AuthorizationHeaderRequiredException, InvalidJwtConfigException } from "../../exceptions/authentication";
 
 class BearerTokenDecorator extends ParamExtensionDecorator {
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
         const config = await AppConfig.getConfig();
-        if (!config.jwtSecretKey) {
-            throw new NubieError("JWT Code Not Available In Config File", HttpStatusCodes.InternalServerError);
-        }
+        if (!config.jwtSecretKey) throw new InvalidJwtConfigException();
 
         const bearerToken = req.headers["authorization"];
-        if (!bearerToken)
-            throw new NubieError("Bearer token not found — bring your pass next time.", HttpStatusCodes.BadRequest);
+        if (!bearerToken) throw new AuthorizationHeaderRequiredException();
 
         return bearerToken.split(" ")[1];
     }

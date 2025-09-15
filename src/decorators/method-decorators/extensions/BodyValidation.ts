@@ -2,9 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { MethodExtensionDecorator } from "../../../base";
-import { HttpStatusCodes } from "../../../core";
-import { NubieError } from "../../../utils";
 import { TConstructor } from "../../../types";
+import { InvalidRequestBodyException } from "../../../exceptions/req";
 
 class BodyValidationDecorator extends MethodExtensionDecorator {
     public constructor(public readonly DTO: TConstructor) {
@@ -12,13 +11,6 @@ class BodyValidationDecorator extends MethodExtensionDecorator {
     }
 
     public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
-        if (req.method === "GET") {
-            throw new NubieError(
-                "GET requests shouldn’t carry a body — consider POST or PATCH instead.",
-                HttpStatusCodes.BadRequest,
-            );
-        }
-
         const dtoInstance = plainToInstance(this.DTO, req.body);
         const validationErrors = await validate(dtoInstance);
         if (validationErrors.length > 0) {
@@ -30,11 +22,8 @@ class BodyValidationDecorator extends MethodExtensionDecorator {
                     }),
                 };
             });
-            throw new NubieError(
-                "Request body validation failed — the form didn’t pass inspection.",
-                HttpStatusCodes.BadRequest,
-                errBody,
-            );
+
+            throw new InvalidRequestBodyException();
         }
     }
 }

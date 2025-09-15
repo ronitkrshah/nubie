@@ -1,7 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import { AppConfig } from "./config";
 import AppState from "./AppState";
-import { Logger, NubieError } from "./utils";
+import { Logger, Exception } from "./utils";
 import * as FileSystem from "node:fs/promises";
 import { detect } from "detect-port";
 import figlet from "figlet";
@@ -115,13 +115,8 @@ export default class Nubie {
     private initializeErrorHandler() {
         this._expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             console.error(err.stack);
-            if (err instanceof NubieError) {
-                return res.status(err.statusCode).json({
-                    message: err.message,
-                    errors: err.explaination,
-                    timestamp: new Date().toISOString(),
-                    path: req.originalUrl,
-                });
+            if (err instanceof Exception) {
+                return res.status(err.statusCode).json(err.toJson());
             }
 
             if (this._errorHanler) {

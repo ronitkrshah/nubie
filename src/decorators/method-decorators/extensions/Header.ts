@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import { MethodExtensionDecorator } from "../../../base";
 import { HttpStatusCodes } from "../../../core";
-import { NubieError } from "../../../utils";
+import { Exception } from "../../../utils";
+import { HeaderNotFoundException } from "../../../exceptions/req";
 
 class HeaderDecorator extends MethodExtensionDecorator {
     public constructor(public readonly key: string) {
@@ -13,11 +14,7 @@ class HeaderDecorator extends MethodExtensionDecorator {
 
         if (headers[this.key]) return;
 
-        throw new NubieError(
-            "Required header missing — the request feels incomplete.",
-            HttpStatusCodes.BadRequest,
-            `${this.key} Is Missing In Request Headers`,
-        );
+        throw new HeaderNotFoundException(this.key);
     }
 }
 
