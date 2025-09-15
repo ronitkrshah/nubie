@@ -22,10 +22,18 @@ class BodyValidationDecorator extends MethodExtensionDecorator {
         const dtoInstance = plainToInstance(this.DTO, req.body);
         const validationErrors = await validate(dtoInstance);
         if (validationErrors.length > 0) {
+            const errBody = validationErrors.map((err) => {
+                return {
+                    key: err.property,
+                    problems: Object.entries(err.constraints || {}).map((constraint) => {
+                        return constraint[1];
+                    }),
+                };
+            });
             throw new NubieError(
                 "Request body validation failed — the form didn’t pass inspection.",
                 HttpStatusCodes.BadRequest,
-                validationErrors,
+                errBody,
             );
         }
     }
