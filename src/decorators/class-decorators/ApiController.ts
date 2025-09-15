@@ -69,8 +69,11 @@ class ApiControllerDecorator extends ControllerBase {
             const handleApiRequest = async (req: Request, res: Response, next: NextFunction) => {
                 const instance = req.scope.resolve(this._target.name) as any;
                 const uniqueExtensionKey = `${this._target.name}_${methodName}`;
-                for (const method of AppState.getMethodExtensions(uniqueExtensionKey)) {
-                    await method.executeAsync(req, res, next);
+
+                // Calling extensions from top to bottom instead of bottom to top
+                const methodExtensions = AppState.getMethodExtensions(uniqueExtensionKey);
+                for (let i = methodExtensions.length - 1; i >= 0; i--) {
+                    await methodExtensions[i].executeAsync(req, res, next);
                 }
 
                 const arguements: unknown[] = [];
