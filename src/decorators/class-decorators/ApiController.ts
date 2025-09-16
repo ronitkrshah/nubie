@@ -71,20 +71,24 @@ class ApiControllerDecorator extends ControllerBase {
                 const instance = req.scope.resolve(this._target.name) as any;
                 const uniqueExtensionKey = `${this._target.name}_${methodName}`;
 
-                // Calling extensions from top to bottom instead of bottom to top
-                const methodExtensions = AppState.getMethodExtensions(uniqueExtensionKey);
-                for (let i = methodExtensions.length - 1; i >= 0; i--) {
-                    await methodExtensions[i].executeAsync(req, res, next);
-                }
+                try {
+                    // Calling extensions from top to bottom instead of bottom to top
+                    const methodExtensions = AppState.getMethodExtensions(uniqueExtensionKey);
+                    for (let i = methodExtensions.length - 1; i >= 0; i--) {
+                        await methodExtensions[i].executeAsync(req, res, next);
+                    }
 
-                const arguements: unknown[] = [];
-                for (const param of AppState.getParamExtensions(uniqueExtensionKey)) {
-                    arguements[param.paramIndex] = await param.executeAsync(req, res, next);
-                }
+                    const arguements: unknown[] = [];
+                    for (const param of AppState.getParamExtensions(uniqueExtensionKey)) {
+                        arguements[param.paramIndex] = await param.executeAsync(req, res, next);
+                    }
 
-                const data: TMethodResponse = await instance[methodName](...arguements);
-                if (data) {
-                    return res.status(data.statusCode).json(data.data);
+                    const data: TMethodResponse = await instance[methodName](...arguements);
+                    if (data) {
+                        return res.status(data.statusCode).json(data.data);
+                    }
+                } catch (error) {
+                    next(error);
                 }
             };
 

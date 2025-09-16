@@ -7,6 +7,7 @@ import http from "node:http";
 import { detect } from "detect-port";
 import figlet from "figlet";
 import { Server } from "socket.io";
+import { IServiceContext, ServiceContext } from "./di";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
 
@@ -111,7 +112,12 @@ export default class Nubie {
                 const fullPath = `${AppConfig.projectPath}/build/${dir}/${file}`;
                 try {
                     await FileSystem.stat(fullPath);
-                    await import(fullPath);
+                    const file = (await import(fullPath)) as {
+                        ServiceCollection?: new (serviceContext: IServiceContext) => any;
+                    };
+                    if (file?.ServiceCollection) {
+                        new file.ServiceCollection(new ServiceContext());
+                    }
                 } catch {}
             }
         }
