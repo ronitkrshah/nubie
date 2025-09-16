@@ -3,7 +3,7 @@ import { ControllerBase, TMethodMetadata } from "../../base";
 import AppState from "../../AppState";
 import { AppConfig } from "../../config";
 import { TMethodResponse } from "../../core";
-import { Logger, Metadata } from "../../utils";
+import { Logger } from "../../utils";
 import { TConstructor } from "../../types";
 import { scopedDiContainerMiddleware } from "../../middlewares";
 
@@ -47,7 +47,8 @@ class ApiControllerDecorator extends ControllerBase {
      */
     private async configureControllerAsync() {
         const appConfig = await AppConfig.getConfig();
-        const metadata = Metadata.getMetadata(ControllerBase.METADATA_KEY, this._target) as TApiControllerMetadata;
+        const metadata: TApiControllerMetadata =
+            Reflect.getOwnMetadata(ControllerBase.METADATA_KEY, this._target) || {};
 
         /** Registering methods */
         for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {

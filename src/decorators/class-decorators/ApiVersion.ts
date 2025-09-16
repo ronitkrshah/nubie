@@ -1,5 +1,4 @@
 import { ControllerBase } from "../../base";
-import { Metadata } from "../../utils";
 
 class ApiVersionDecorator extends ControllerBase {
     private readonly _version?: number;
@@ -15,7 +14,12 @@ class ApiVersionDecorator extends ControllerBase {
         if (!this._version) {
             throw new Error(`Ignoring ${this._target.name} Version Because It's Not An Number`);
         }
-        Metadata.updateMetadata(ControllerBase.METADATA_KEY, this._target, { apiVersion: this._version });
+        const existingMetadata = Reflect.getOwnMetadata(ControllerBase.METADATA_KEY, this._target) || {};
+        Reflect.defineMetadata(
+            ControllerBase.METADATA_KEY,
+            { ...existingMetadata, ...{ apiVersion: this._version } },
+            this._target,
+        );
     }
 }
 
