@@ -1,21 +1,16 @@
 import { ControllerBase, MethodExtensionDecorator, ParamExtensionDecorator } from "./base";
 import { Express } from "express";
+import http from "node:http";
 
 /**
  * Manages global application state including Express instance,
  * registered controllers, and method/parameter decorators.
  */
 class AppState {
-    /** The Express application instance used by the framework. */
     public expressApp!: Express;
-
-    /** List of registered controller instances. */
+    public httpServer!: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
     public readonly controllers: ControllerBase[] = [];
-
-    /** Internal map of method-level decorators keyed by identifier. */
     private _extensionMethods = new Map<string, MethodExtensionDecorator[]>();
-
-    /** Internal map of parameter-level decorators keyed by identifier. */
     private _extensionParams = new Map<string, ParamExtensionDecorator[]>();
 
     /**

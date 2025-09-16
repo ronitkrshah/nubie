@@ -3,6 +3,7 @@ import { AppConfig } from "./config";
 import AppState from "./AppState";
 import { Logger, Exception } from "./utils";
 import * as FileSystem from "node:fs/promises";
+import http from "node:http";
 import { detect } from "detect-port";
 import figlet from "figlet";
 
@@ -10,6 +11,7 @@ type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFun
 
 export default class Nubie {
     private _expressApp: Express;
+    private _httpServer: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
     private _errorHanler?: TErrorHandlerFunc;
     private _diServicesPaths: string[] = [];
 
@@ -29,6 +31,8 @@ export default class Nubie {
         this._expressApp = express();
         this._expressApp.use(express.json());
         this._expressApp.use(express.urlencoded({ extended: false }));
+
+        this._httpServer = http.createServer(this._expressApp);
         AppState.expressApp = this._expressApp;
     }
 
@@ -179,7 +183,7 @@ export default class Nubie {
         }
 
         Logger.log("Starting Application...");
-        this._expressApp.listen(config.port, () => {
+        this._httpServer.listen(config.port, () => {
             Logger.log(`Connected to Web API at: http://localhost:${config.port}`);
             Logger.log("Application Started");
         });
