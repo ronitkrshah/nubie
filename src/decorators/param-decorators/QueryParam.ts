@@ -7,7 +7,7 @@ export const enum QueryType {
     Required,
 }
 
-class QueryDecorator extends ParamExtensionDecorator {
+class QueryParamDecorator extends ParamExtensionDecorator {
     public constructor(
         public readonly query?: string,
         public readonly required: QueryType = QueryType.Optional,
@@ -29,6 +29,6 @@ class QueryDecorator extends ParamExtensionDecorator {
 /**
  * Injects a query parameter by name.
  */
-const Query = ParamExtensionDecorator.createDecorator(QueryDecorator);
+const QueryParam = ParamExtensionDecorator.createDecorator(QueryParamDecorator);
 
-export default Query;
+export default QueryParam;

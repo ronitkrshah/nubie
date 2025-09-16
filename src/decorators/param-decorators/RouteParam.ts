@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ParamExtensionDecorator } from "../../base";
 
-class ParamDecorator extends ParamExtensionDecorator {
+class RouteParamDecorator extends ParamExtensionDecorator {
     public constructor(public readonly param?: string) {
         super();
     }
@@ -15,6 +15,6 @@ class ParamDecorator extends ParamExtensionDecorator {
 /**
  * Injects a route parameter by name.
  */
-const Param = ParamExtensionDecorator.createDecorator(ParamDecorator);
+const RouteParam = ParamExtensionDecorator.createDecorator(RouteParamDecorator);
 
-export default Param;
+export default RouteParam;
