@@ -105,7 +105,7 @@ export default class Nubie {
     }
 
     private async initializeDiServicesAsync() {
-        const fileNames = ["Injection.js", "DI.js"];
+        const fileNames = ["Injection.js", "DependencyInjection.js"];
 
         for (const dir of this._diServicesPaths) {
             for (const file of fileNames) {
