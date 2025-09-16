@@ -1,6 +1,6 @@
 import { ControllerBase, MethodExtensionDecorator, ParamExtensionDecorator } from "./base";
 import { Express } from "express";
-import http from "node:http";
+import { DefaultEventsMap, Server } from "socket.io";
 
 /**
  * Manages global application state including Express instance,
@@ -8,7 +8,7 @@ import http from "node:http";
  */
 class AppState {
     public expressApp!: Express;
-    public httpServer!: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
+    public socketIo!: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
     public readonly controllers: ControllerBase[] = [];
     private _extensionMethods = new Map<string, MethodExtensionDecorator[]>();
     private _extensionParams = new Map<string, ParamExtensionDecorator[]>();

@@ -6,6 +6,7 @@ import * as FileSystem from "node:fs/promises";
 import http from "node:http";
 import { detect } from "detect-port";
 import figlet from "figlet";
+import { Server } from "socket.io";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
 
@@ -31,8 +32,13 @@ export default class Nubie {
         this._expressApp = express();
         this._expressApp.use(express.json());
         this._expressApp.use(express.urlencoded({ extended: false }));
-
         this._httpServer = http.createServer(this._expressApp);
+        AppState.socketIo = new Server(this._httpServer, {
+            cors: {
+                origin: "*",
+                methods: ["GET", "POST"],
+            },
+        });
         AppState.expressApp = this._expressApp;
     }
 
