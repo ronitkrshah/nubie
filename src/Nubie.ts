@@ -7,15 +7,16 @@ import http from "node:http";
 import { detect } from "detect-port";
 import figlet from "figlet";
 import { Server } from "socket.io";
-import { IServiceContext, ServiceContext } from "./di";
+import { IServiceCollection, ServiceCollection } from "./di";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
+type TServiceBuilder = new (serviceCollection: IServiceCollection) => any;
 
 export default class Nubie {
     private _expressApp: Express;
     private _httpServer: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
     private _errorHanler?: TErrorHandlerFunc;
-    private _diServicesPaths: string[] = [];
+    private _services: TServiceBuilder[] = [];
 
     /**
      * Gets the underlying Express application instance.
@@ -95,32 +96,16 @@ export default class Nubie {
         }
     }
 
-    /**
-     * Auto load DI Files from the givn directories
-     * File name must be one of these `Injection.ts` or `DI.ts`
-     */
-    public addDiServices(directories: string[]) {
-        this._diServicesPaths = directories;
+    public addServices(services: TServiceBuilder[]) {
+        this._services = services;
         return this;
     }
 
-    private async initializeDiServicesAsync() {
-        const fileNames = ["Injection.js", "DependencyInjection.js"];
-
-        for (const dir of this._diServicesPaths) {
-            for (const file of fileNames) {
-                const fullPath = `${AppConfig.projectPath}/build/${dir}/${file}`;
-                try {
-                    await FileSystem.stat(fullPath);
-                    const file = (await import(fullPath)) as {
-                        ServiceCollection?: new (serviceContext: IServiceContext) => any;
-                    };
-                    if (file?.ServiceCollection) {
-                        new file.ServiceCollection(new ServiceContext());
-                    }
-                } catch {}
-            }
-        }
+    private intializeServices() {
+        const serviceCollection = new ServiceCollection();
+        this._services.forEach((classImpl) => {
+            new classImpl(serviceCollection);
+        });
     }
 
     /**
@@ -173,9 +158,9 @@ export default class Nubie {
         Logger.log("Reading Configuration File (if exists)...");
         const config = await AppConfig.getConfig();
 
-        if (this._diServicesPaths.length > 0) {
+        if (this._services.length > 0) {
             Logger.log("Injecting Dependencies...");
-            await this.initializeDiServicesAsync();
+            this.intializeServices();
         }
 
         Logger.log("Registering Controllers...");

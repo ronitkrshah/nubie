@@ -4,7 +4,7 @@ import { JWTToken, HttpResponse } from "./core";
 import { MethodExtensionDecorator, ParamExtensionDecorator, WebSocketControllerBase } from "./base";
 import { Exception } from "./utils";
 export { inject as Inject } from "tsyringe";
-import { IServiceContext } from "./di";
+import { IServiceCollection } from "./di";
 
 export * from "./decorators/class-decorators";
 export * from "./decorators/method-decorators";
@@ -18,5 +18,5 @@ export {
     HttpResponse,
     Exception,
     WebSocketControllerBase,
-    IServiceContext,
+    IServiceCollection,
 };

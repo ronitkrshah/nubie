@@ -1,4 +1,4 @@
-import { IServiceContext } from "./IServiceContext";
-import ServiceContext from "./ServiceContext";
+import { IServiceCollection } from "./IServiceCollection";
+import ServiceCollection from "./ServiceCollection";
 
-export { IServiceContext, ServiceContext };
+export { IServiceCollection, ServiceCollection };

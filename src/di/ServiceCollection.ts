@@ -1,8 +1,8 @@
 import { container, injectable, Lifecycle } from "tsyringe";
 import { TConstructor } from "../types";
-import { IServiceContext } from "./IServiceContext";
+import { IServiceCollection } from "./IServiceCollection";
 
-export default class ServiceContext implements IServiceContext {
+export default class ServiceCollection implements IServiceCollection {
     public addSingleton(key: string | symbol, classImpl: TConstructor): void {
         injectable()(classImpl);
         container.register(key, { useClass: classImpl }, { lifecycle: Lifecycle.Singleton });
