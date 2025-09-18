@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import Nubie from "./Nubie";
-import { JWTToken, HttpResponse } from "./core";
+import { JWTToken, HttpResponse, RateLimit } from "./core";
 import { MethodExtensionDecorator, ParamExtensionDecorator, WebSocketControllerBase } from "./base";
 import { Exception } from "./utils";
 export { inject as Inject } from "tsyringe";
@@ -19,4 +19,5 @@ export {
     Exception,
     WebSocketControllerBase,
     IServiceCollection,
+    RateLimit,
 };

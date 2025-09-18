@@ -42,6 +42,7 @@
         "chalk": "^5.4.1",
         "detect-port": "^2.1.0",
         "express": "^4.21.2",
+        "express-rate-limit": "^8.1.0",
         "figlet": "^1.9.1",
         "jsonwebtoken": "^9.0.2",
         "multer": "^2.0.2",
