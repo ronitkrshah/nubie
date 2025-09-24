@@ -56,7 +56,7 @@ With Nubie, you can build structured and maintainable APIs quickly using decorat
 
 ## Documentation
 
-Comprehensive documentation is available on the [Nubie Docs Website](https://ronitkrshah.github.io/nubie-docs).
+Comprehensive documentation is available on the [Nubie Docs Website](https://ronitkrshah.github.io/nubie).
 
 ---
 
