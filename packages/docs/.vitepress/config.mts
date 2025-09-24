@@ -47,5 +47,5 @@ export default defineConfig({
     ],
   },
   srcDir: "./src",
-  base: "/nubie-docs/",
+  base: "/nubie/",
 });
