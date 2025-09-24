@@ -1,16 +1,17 @@
 {
-  "name": "@nubie/cli",
+  "name": "nubie-cli",
   "version": "0.1.0",
   "description": "CLI to manage nubie",
   "license": "ISC",
   "author": "RKS",
   "type": "commonjs",
   "main": "src/index.js",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
   "bin": {
     "nubie": "src/index.js"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "commander": "^14.0.1"
