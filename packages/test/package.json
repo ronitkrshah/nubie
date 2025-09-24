@@ -1,0 +1,19 @@
+{
+  "name": "@nubie/test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "run": "node build/index.js"
+  },
+  "keywords": [],
+  "author": "RKS",
+  "license": "ISC",
+  "dependencies": {
+    "@nubie/framework": "^0.2.2-alpha",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
+    "socket.io": "^4.8.1"
+  }
+}
