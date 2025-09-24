@@ -37,6 +37,7 @@ export default defineConfig({
           { text: "Dependency Injection", link: "/concepts/di" },
           { text: "Error Handling", link: "/concepts/error-handling" },
           { text: "Rate Limit", link: "/concepts/rate-limit" },
+          { text: "Web Socket Controller (Beta)", link: "/concepts/websocket-controller" },
         ],
       },
     ],

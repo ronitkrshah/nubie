@@ -11,21 +11,14 @@ Before you begin, make sure you have the following installed:
 - `npm` or `yarn` as your package manager
 - Basic knowledge of **TypeScript**
 
-## Starter Template
-
-The easiest way to get started is by using the Nubie starter template:
+## Installation
+Install `nubie-cli` to bootstrap a new project
 
 ```bash
-npx degit ronitkrshah/nubie-starter-template my-nubie-app
-cd my-nubie-app
+npm i -g nubie-cli
 ```
 
-This will set up a minimal project structure with everything configured.
-
-## Installation
-
-Install Dependencies using `npm` or `yarn`
-
+After installation create a new nubie project
 ```bash
-npm install
+nubie bootstrap MyAwesomeApi
 ```

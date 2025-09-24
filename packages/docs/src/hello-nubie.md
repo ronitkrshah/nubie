@@ -41,13 +41,13 @@ class HelloController {
 Before running the server for the first time we have to create a build
 
 ```bash
-npx tsc
+npm run build
 ```
 
 ## Step 4: Run
 
 ```bash
-npm run dev
+npm run run
 ```
 
 Your api is live at `http://localhost:8080/api/v1/hello`. With this JSON response

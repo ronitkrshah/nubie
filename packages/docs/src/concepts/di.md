@@ -44,30 +44,3 @@ class AuthenticationController {
   }
 }
 ```
-
-# Folder Structure
-
-To enable automatic registration:
-
-```
-src/
- └─ services/
-     ├─ Injection.ts      // Imports all service classes
-     ├─ MusicService.ts
-     └─ AuthService.ts
-
-// services/Injection.ts
-import "./MusicService";
-import "./AuthService";
-
-```
-
-Nubie scans this folder and registers all classes marked with `@Injectable`.
-
-## Lifecycles
-
-- **Singleton:** One instance shared across the application.
-- **Scoped (default):** One instance per request.
-- **Transient:** A new instance every time the dependency is resolved.
-
-This ensures proper management of state and isolation of services per request or per resolution.
