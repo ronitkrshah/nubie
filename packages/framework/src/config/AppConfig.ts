@@ -1,37 +1,32 @@
 import path from "path";
 import * as FileSystem from "node:fs/promises";
+import { IConfig } from "./IConfig";
 
-const _defaultConfiguration = {
+const DEFAULT_NUBIE_CONFIG: IConfig = {
     port: 8080,
     defaultApiVersion: 1,
     controllersDirectory: "controllers",
-    jwtSecretKey: undefined as string | undefined,
 };
 
 class AppConfig {
     public readonly projectPath = path.resolve();
 
     private _isLoaded = false;
-    private _config = _defaultConfiguration;
-    private readonly _configFile = "Nubie.json";
+    private _config: IConfig = DEFAULT_NUBIE_CONFIG;
+    private readonly _configFile = path.join(this.projectPath, "nubie.config.js");
 
-    public async getConfig() {
+    public async getConfig(): Promise<IConfig> {
         if (this._isLoaded) return this._config;
-        this._isLoaded = true;
         try {
-            const fileContents = await FileSystem.readFile(
-                `${this.projectPath}/${this._configFile}`,
-                {
-                    encoding: "utf-8",
-                },
-            );
-            const data: typeof this._config = JSON.parse(fileContents);
-
+            const fileStat = await FileSystem.stat(this._configFile);
+            if (!fileStat.isFile()) throw new Error("Config Isn't A File");
+            const mod: { default: IConfig } = await import(this._configFile);
             this._config = {
                 ...this._config,
-                ...data,
+                ...mod.default,
             };
-        } catch (error) {
+            this._isLoaded = true;
+        } catch {
             this._isLoaded = false;
         }
 

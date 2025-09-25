@@ -10,6 +10,7 @@ import { Exception } from "./utils";
 import { type IServiceCollection } from "./di";
 import { inject } from "tsyringe";
 import { Module } from "./abstractions/module";
+import type { IConfig } from "./config";
 
 export * from "./decorators/class-decorators";
 export * from "./decorators/method-decorators";
@@ -27,4 +28,5 @@ export {
     RateLimit,
     inject as Inject,
     Module,
+    IConfig,
 };

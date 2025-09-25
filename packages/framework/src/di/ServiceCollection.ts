@@ -1,6 +1,6 @@
 import { container, injectable, Lifecycle } from "tsyringe";
 import { TConstructor } from "../types";
-import { IServiceCollection } from "./IServiceCollection";
+import type { IServiceCollection } from "./IServiceCollection";
 
 class ServiceCollection implements IServiceCollection {
     public addSingleton(key: string | symbol, classImpl: TConstructor): void {

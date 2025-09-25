@@ -7,7 +7,7 @@ import http from "node:http";
 import { detect } from "detect-port";
 import figlet from "figlet";
 import { Server } from "socket.io";
-import { IServiceCollection, ServiceCollection } from "./di";
+import { type IServiceCollection, ServiceCollection } from "./di";
 import { Module } from "./abstractions/module";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
@@ -15,10 +15,7 @@ type TServiceBuilder = new (serviceCollection: IServiceCollection) => any;
 
 export default class Nubie {
     private readonly _expressApp: Express;
-    private readonly _httpServer: http.Server<
-        typeof http.IncomingMessage,
-        typeof http.ServerResponse
-    >;
+    private readonly _httpServer: http.Server;
     private _errorHandler?: TErrorHandlerFunc;
     private _services: TServiceBuilder[] = [];
 

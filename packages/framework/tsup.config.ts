@@ -7,5 +7,7 @@ export default defineConfig({
     dts: true,
     clean: true,
     bundle: true,
+    minify: false,
     target: "es2022",
+    watch: true,
 });
