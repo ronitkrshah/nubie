@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { MethodExtensionDecorator } from "../../../abstractions/decorator-extensions";
 import { JWTToken } from "../../../core";
 import {
@@ -7,7 +7,7 @@ import {
 } from "../../../exceptions/authentication";
 
 class AuthorizeDecorator extends MethodExtensionDecorator {
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async executeAsync(req: Request): Promise<void> {
         const bearerToken = req.headers["authorization"];
 
         if (!bearerToken) throw new AuthorizationHeaderRequiredException();
@@ -16,7 +16,7 @@ class AuthorizeDecorator extends MethodExtensionDecorator {
             const payload = await JWTToken.verifyTokenAsync(bearerToken.split(" ")[1]);
             if (typeof payload === "string") throw new UnauthorizedAccessException();
             req.user = payload;
-        } catch (error) {
+        } catch {
             throw new UnauthorizedAccessException();
         }
     }

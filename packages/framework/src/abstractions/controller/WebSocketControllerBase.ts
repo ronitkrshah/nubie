@@ -1,4 +1,4 @@
-import { DisconnectReason, Namespace, Socket } from "socket.io";
+import type { DisconnectReason, Namespace, Socket } from "socket.io";
 
 export default abstract class WebSocketControllerBase {
     public io!: Namespace;

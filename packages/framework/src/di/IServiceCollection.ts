@@ -1,4 +1,4 @@
-import { TConstructor } from "../types";
+import type { TConstructor } from "../types";
 
 export interface IServiceCollection {
     addSingleton(key: string | symbol, classImpl: TConstructor): void;

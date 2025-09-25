@@ -1,6 +1,7 @@
 import { container } from "tsyringe";
 import AppState from "../../AppState";
-import { ControllerBase, WebSocketControllerBase } from "../../abstractions/controller";
+import type { WebSocketControllerBase } from "../../abstractions/controller";
+import { ControllerBase } from "../../abstractions/controller";
 import { Logger } from "../../utils";
 
 class WebSocketControllerDecorator extends ControllerBase {

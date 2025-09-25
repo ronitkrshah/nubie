@@ -1,6 +1,6 @@
-import { RequestHandler } from "express";
+import type { RequestHandler } from "express";
 import ControllerBase from "./controller/ControllerBase";
-import { TApiControllerMetadata } from "../decorators/class-decorators";
+import type { TApiControllerMetadata } from "../decorators/class-decorators";
 
 export type TMethodMetadata = {
     endpoint: string;
@@ -138,7 +138,7 @@ export default abstract class MethodDecorator {
      * @param MethodDecorator The decorator class to instantiate.
      * @returns A decorator function to apply to methods.
      */
-    public static createDecorator<T extends any[]>(
+    public static createDecorator<T extends unknown[]>(
         MethodDecorator: new (...args: T) => MethodDecorator,
     ) {
         return function (...params: T) {

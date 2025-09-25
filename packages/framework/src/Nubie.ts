@@ -1,4 +1,5 @@
-import express, { Express, NextFunction, Request, Response } from "express";
+import type { Express, NextFunction, Request, Response } from "express";
+import express from "express";
 import { AppConfig } from "./config";
 import AppState from "./AppState";
 import { Logger, Exception } from "./utils";
@@ -11,7 +12,7 @@ import { type IServiceCollection, ServiceCollection } from "./di";
 import { Module } from "./abstractions/module";
 
 type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
-type TServiceBuilder = new (serviceCollection: IServiceCollection) => any;
+type TServiceBuilder = new (serviceCollection: IServiceCollection) => object;
 
 export default class Nubie {
     private readonly _expressApp: Express;
@@ -81,11 +82,13 @@ export default class Nubie {
     private async loadControllersDynamically() {
         const config = await AppConfig.getConfig();
         const controllerDirectory = `${AppConfig.projectPath}/build/${config.controllersDirectory}`;
-        let isDirExists = false;
+        let isDirExists: boolean;
         try {
             await FileSystem.stat(controllerDirectory);
             isDirExists = true;
-        } catch {}
+        } catch {
+            isDirExists = false;
+        }
 
         if (!isDirExists) return;
 

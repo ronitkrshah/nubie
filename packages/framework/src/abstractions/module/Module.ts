@@ -2,8 +2,9 @@ import path from "node:path";
 import * as FileSystem from "node:fs/promises";
 import { AppConfig } from "../../config";
 import ModuleClassMethods from "./ModuleClassMethods";
-import { TConstructor } from "../../types";
-import { IServiceCollection, ServiceCollection } from "../../di";
+import type { TConstructor } from "../../types";
+import type { IServiceCollection } from "../../di";
+import { ServiceCollection } from "../../di";
 
 interface IModuleService {
     service: IServiceCollection;
@@ -67,7 +68,7 @@ class Module {
     /**
      * Check If the param is a class
      */
-    private isClass(value: unknown): value is new (...args: any[]) => any {
+    private isClass(value: unknown): boolean {
         return (
             typeof value === "function" && /^class\s/.test(Function.prototype.toString.call(value))
         );

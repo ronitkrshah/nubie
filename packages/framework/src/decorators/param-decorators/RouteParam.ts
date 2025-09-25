@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { ParamExtensionDecorator } from "../../abstractions/decorator-extensions";
 
 class RouteParamDecorator extends ParamExtensionDecorator {
@@ -6,7 +6,7 @@ class RouteParamDecorator extends ParamExtensionDecorator {
         super();
     }
 
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+    public async executeAsync(req: Request): Promise<unknown> {
         if (this.param) return req.params[this.param];
         return req.params;
     }

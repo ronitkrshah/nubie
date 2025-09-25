@@ -1,8 +1,9 @@
-import { NextFunction, RequestHandler, Request, Response, Router } from "express";
-import { TMethodMetadata } from "../../abstractions";
+import type { NextFunction, RequestHandler, Request, Response } from "express";
+import { Router } from "express";
+import type { TMethodMetadata } from "../../abstractions";
 import AppState from "../../AppState";
 import { AppConfig } from "../../config";
-import { TMethodResponse } from "../../core";
+import type { TMethodResponse } from "../../core";
 import { Logger } from "../../utils";
 import { ControllerBase } from "../../abstractions/controller";
 import { container } from "tsyringe";
@@ -73,7 +74,9 @@ class ApiControllerDecorator extends ControllerBase {
              * Actual Incoming Express Request
              */
             const handleApiRequest = async (req: Request, res: Response, next: NextFunction) => {
-                const instance = container.resolve(this._target.name) as any;
+                const instance: {
+                    [key: string]: (...args: unknown[]) => Promise<TMethodResponse>;
+                } = container.resolve(this._target.name);
                 const uniqueExtensionKey = `${this._target.name}_${methodName}`;
 
                 try {
@@ -88,9 +91,9 @@ class ApiControllerDecorator extends ControllerBase {
                         arguements[param.paramIndex] = await param.executeAsync(req, res, next);
                     }
 
-                    const data: TMethodResponse = await instance[methodName](...arguements);
-                    if (data) {
-                        return res.status(data.statusCode).json(data.data);
+                    const result = await instance[methodName](...arguements);
+                    if (result) {
+                        return res.status(result.statusCode).json(result.data);
                     }
                 } catch (error) {
                     next(error);

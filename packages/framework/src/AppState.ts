@@ -1,7 +1,7 @@
-import { Express } from "express";
-import { Server } from "socket.io";
-import { ControllerBase } from "./abstractions/controller";
-import {
+import type { Express } from "express";
+import type { Server } from "socket.io";
+import type { ControllerBase } from "./abstractions/controller";
+import type {
     MethodExtensionDecorator,
     ParamExtensionDecorator,
 } from "./abstractions/decorator-extensions";

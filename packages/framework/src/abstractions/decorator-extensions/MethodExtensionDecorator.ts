@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import AppState from "../../AppState";
 
 /**
@@ -22,11 +22,11 @@ export default abstract class MethodExtensionDecorator {
      * @param MethodDecorator The decorator class to instantiate.
      * @returns A decorator function to apply to controller methods.
      */
-    public static createDecorator<T extends any[]>(
+    public static createDecorator<T extends unknown[]>(
         MethodDecorator: new (...args: T) => MethodExtensionDecorator,
     ) {
         return function (...params: T) {
-            return function (target: object, methodName: string, descriptor: PropertyDescriptor) {
+            return function (target: object, methodName: string, _descriptor: PropertyDescriptor) {
                 const decoratorInstance = new MethodDecorator(...params);
                 AppState.registerMethodExtension(
                     `${target.constructor.name}_${methodName}`,

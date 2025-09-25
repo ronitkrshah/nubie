@@ -1,6 +1,6 @@
 import path from "path";
 import * as FileSystem from "node:fs/promises";
-import { IConfig } from "./IConfig";
+import type { IConfig } from "./IConfig";
 
 const DEFAULT_NUBIE_CONFIG: IConfig = {
     port: 8080,

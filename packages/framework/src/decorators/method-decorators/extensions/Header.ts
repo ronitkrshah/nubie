@@ -1,7 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { MethodExtensionDecorator } from "../../../abstractions/decorator-extensions";
-import { HttpStatusCodes } from "../../../core";
-import { Exception } from "../../../utils";
 import { HeaderNotFoundException } from "../../../exceptions/req";
 
 class HeaderDecorator extends MethodExtensionDecorator {
@@ -9,7 +7,7 @@ class HeaderDecorator extends MethodExtensionDecorator {
         super();
     }
 
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async executeAsync(req: Request): Promise<void> {
         const headers = req.headers;
 
         if (headers[this.key]) return;

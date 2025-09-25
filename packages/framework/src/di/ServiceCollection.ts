@@ -1,5 +1,5 @@
 import { container, injectable, Lifecycle } from "tsyringe";
-import { TConstructor } from "../types";
+import type { TConstructor } from "../types";
 import type { IServiceCollection } from "./IServiceCollection";
 
 class ServiceCollection implements IServiceCollection {

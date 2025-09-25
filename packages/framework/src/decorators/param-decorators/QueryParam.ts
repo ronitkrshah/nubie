@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { ParamExtensionDecorator } from "../../abstractions/decorator-extensions";
 import { MissingParameterException } from "../../exceptions/req";
 
@@ -15,7 +15,7 @@ class QueryParamDecorator extends ParamExtensionDecorator {
         super();
     }
 
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+    public async executeAsync(req: Request): Promise<unknown> {
         if (!this.query) return req.query;
 
         const query = req.query[this.query];

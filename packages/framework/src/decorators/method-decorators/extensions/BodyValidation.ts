@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { MethodExtensionDecorator } from "../../../abstractions/decorator-extensions";
-import { TConstructor } from "../../../types";
+import type { TConstructor } from "../../../types";
 import { InvalidRequestBodyException } from "../../../exceptions/req";
 
 class BodyValidationDecorator extends MethodExtensionDecorator {
@@ -10,19 +10,10 @@ class BodyValidationDecorator extends MethodExtensionDecorator {
         super();
     }
 
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async executeAsync(req: Request): Promise<void> {
         const dtoInstance = plainToInstance(this.DTO, req.body);
         const validationErrors = await validate(dtoInstance);
         if (validationErrors.length > 0) {
-            const errBody = validationErrors.map((err) => {
-                return {
-                    key: err.property,
-                    problems: Object.entries(err.constraints || {}).map((constraint) => {
-                        return constraint[1];
-                    }),
-                };
-            });
-
             throw new InvalidRequestBodyException();
         }
     }

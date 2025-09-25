@@ -1,4 +1,5 @@
-import { MethodDecorator, TMethodMetadata } from "../../abstractions";
+import type { TMethodMetadata } from "../../abstractions";
+import { MethodDecorator } from "../../abstractions";
 
 abstract class BaseHttpDecorator extends MethodDecorator {
     protected abstract httpMethod: TMethodMetadata["httpMethod"];

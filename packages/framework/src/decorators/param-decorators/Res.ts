@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response } from "express";
 import { ParamExtensionDecorator } from "../../abstractions/decorator-extensions";
 
 class ResParamDecorator extends ParamExtensionDecorator {
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+    public async executeAsync(_req: Request, res: Response): Promise<unknown> {
         return res;
     }
 }

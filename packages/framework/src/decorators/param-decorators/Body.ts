@@ -1,8 +1,8 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { ParamExtensionDecorator } from "../../abstractions/decorator-extensions";
 
 class BodyParamDecorator extends ParamExtensionDecorator {
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+    public async executeAsync(req: Request): Promise<Record<string, unknown>> {
         return req.body;
     }
 }

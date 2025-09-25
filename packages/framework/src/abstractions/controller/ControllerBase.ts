@@ -1,6 +1,6 @@
 import { container, injectable } from "tsyringe";
 import AppState from "../../AppState";
-import { TConstructor } from "../../types";
+import type { TConstructor } from "../../types";
 
 /**
  * Abstract abstractions class for all API controllers.
@@ -28,7 +28,7 @@ export default abstract class ControllerBase {
      * @param apiControllerClass The controller class to instantiate and register.
      * @returns A decorator function to apply to the target class.
      */
-    public static createDecorator<T extends any[]>(
+    public static createDecorator<T extends unknown[]>(
         apiControllerClass: new (...args: T) => ControllerBase,
     ) {
         return function (...params: T) {

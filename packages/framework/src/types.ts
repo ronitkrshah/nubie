@@ -1,1 +1,1 @@
-export type TConstructor<T = any> = new (...args: any[]) => T;
+export type TConstructor<T extends object = object> = new (...args: unknown[]) => T;

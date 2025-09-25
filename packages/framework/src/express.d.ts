@@ -1,5 +1,5 @@
 import "express";
-import { JwtPayload } from "jsonwebtoken";
+import type { JwtPayload } from "jsonwebtoken";
 
 declare module "express-serve-static-core" {
     interface Request {

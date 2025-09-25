@@ -1,8 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { ParamExtensionDecorator } from "../../abstractions/decorator-extensions";
+import type { IncomingHttpHeaders } from "http";
 
 class HeadersParamDecorator extends ParamExtensionDecorator {
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+    public async executeAsync(req: Request): Promise<IncomingHttpHeaders> {
         return req.headers;
     }
 }

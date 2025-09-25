@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { ParamExtensionDecorator } from "../../abstractions/decorator-extensions";
 import { UnauthorizedAccessException } from "../../exceptions/authentication";
 
@@ -7,7 +7,7 @@ class UserDecorator extends ParamExtensionDecorator {
         super();
     }
 
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<unknown> {
+    public async executeAsync(req: Request): Promise<unknown> {
         if (!req.user) throw new UnauthorizedAccessException();
         return req.user;
     }

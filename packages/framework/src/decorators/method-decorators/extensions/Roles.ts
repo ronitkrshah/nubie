@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request } from "express";
 import { MethodExtensionDecorator } from "../../../abstractions/decorator-extensions";
 import {
     AuthorizationHeaderRequiredException,
@@ -13,7 +13,7 @@ class RolesDecorator extends MethodExtensionDecorator {
         this._roles = roles;
     }
 
-    public async executeAsync(req: Request, res: Response, next: NextFunction): Promise<void> {
+    public async executeAsync(req: Request): Promise<void> {
         const user = req.user;
         if (!req.user) throw new AuthorizationHeaderRequiredException();
         if (!user?.role) throw new InsufficientPermissionException();
