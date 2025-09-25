@@ -1,14 +1,16 @@
 import multer from "multer";
 import { AppConfig } from "../config";
 import path from "path";
+import { v4 } from "uuid";
+import mime from "mime-types";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, path.join(AppConfig.projectPath, "uploads"));
     },
     filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname + "-" + uniqueSuffix);
+        const fileName = v4() + "." + mime.extension(file.mimetype);
+        cb(null, fileName);
     },
 });
 
