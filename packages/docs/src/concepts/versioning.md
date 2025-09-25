@@ -9,15 +9,15 @@ If no version is specified, the **default version is `1`**.
 Applies a version **globally** to all routes within a controller.
 
 ```ts
-import { ApiController, ApiVersion, HttpGet, HttpResponse } from "nubie";
+import { ApiController, ApiVersion, HttpGet, HttpResponse } from "@nubie/framework";
 
 @ApiController()
 @ApiVersion(2)
 class AuthController {
-  @HttpGet("status")
-  public async getStatusAsync() {
-    return HttpResponse.Ok({ version: 2, status: "OK" });
-  }
+    @HttpGet("status")
+    public async getStatusAsync() {
+        return HttpResponse.Ok({ version: 2, status: "OK" });
+    }
 }
 ```
 
@@ -28,15 +28,15 @@ class AuthController {
 Applies versioning to a specific route, allowing fine‑grained control.
 
 ```ts
-import { ApiController, RouteVersion, HttpGet, HttpResponse } from "nubie";
+import { ApiController, RouteVersion, HttpGet, HttpResponse } from "@nubie/framework";
 
 @ApiController()
 class AuthController {
-  @HttpGet("login")
-  @RouteVersion(3)
-  public async loginUserAsync() {
-    return HttpResponse.Ok({ version: 3, message: "Login successful" });
-  }
+    @HttpGet("login")
+    @RouteVersion(3)
+    public async loginUserAsync() {
+        return HttpResponse.Ok({ version: 3, message: "Login successful" });
+    }
 }
 ```
 

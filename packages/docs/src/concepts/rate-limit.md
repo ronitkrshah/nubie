@@ -3,18 +3,17 @@
 Nubie provides a simple, decorator-based way to apply **rate limiting** at the method level.  
 This helps you protect sensitive endpoints from abuse by restricting the number of requests within a given time frame.
 
-
 ## Configuration
 
 Before using rate limiting in your controllers, you need to register a rate limit policy in your **index.ts** file:
 
 ```ts
 // index.ts
-import { RateLimit } from "nubie";
+import { RateLimit } from "@nubie/framework";
 
 new RateLimit("fixed", {
-  timeFrameInMinutes: 1,
-  requestLimit: 200,
+    timeFrameInMinutes: 1,
+    requestLimit: 200,
 });
 ```
 
@@ -27,22 +26,16 @@ new RateLimit("fixed", {
 Once a rate limit policy is registered, you can apply it to specific controller methods using the `@LimitRequest()` decorator:
 
 ```ts
-import { 
-  ApiController, 
-  HttpGet, 
-  HttpResponse, 
-  LimitRequest 
-} from "nubie";
+import { ApiController, HttpGet, HttpResponse, LimitRequest } from "@nubie/framework";
 
 @ApiController()
 class AuthController {
-  @HttpGet("status")
-  @LimitRequest("fixed")
-  public async getStatusAsync() {
-    return HttpResponse.Ok({ version: 2, status: "OK" });
-  }
+    @HttpGet("status")
+    @LimitRequest("fixed")
+    public async getStatusAsync() {
+        return HttpResponse.Ok({ version: 2, status: "OK" });
+    }
 }
-
 ```
 
 ### How it works
@@ -63,19 +56,18 @@ new RateLimit("api", { timeFrameInMinutes: 1, requestLimit: 200 });
 // controllers/UsersController.ts
 @ApiController()
 class UsersController {
-  @HttpGet("profile")
-  @LimitRequest("api")
-  public async getProfileAsync() {
-    return HttpResponse.Ok({ user: "John Doe" });
-  }
+    @HttpGet("profile")
+    @LimitRequest("api")
+    public async getProfileAsync() {
+        return HttpResponse.Ok({ user: "John Doe" });
+    }
 
-  @HttpGet("login")
-  @LimitRequest("login")
-  public async loginAsync() {
-    return HttpResponse.Ok({ success: true });
-  }
+    @HttpGet("login")
+    @LimitRequest("login")
+    public async loginAsync() {
+        return HttpResponse.Ok({ success: true });
+    }
 }
-
 ```
 
 ## Default Behavior
@@ -83,4 +75,3 @@ class UsersController {
 - If no rate limit is applied, the endpoint is unrestricted.
 - Rate limit policies are global but applied per endpoint using `@LimitRequest()`.
 - Exceeding the limit returns an HTTP 429 with a JSON error message.
-

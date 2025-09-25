@@ -16,7 +16,7 @@ Nubie offers the following decorators for defining route handlers:
 Each decorator corresponds to its HTTP method and registers the method as a route handler within your controller.
 
 > **Return Values:**  
-> Every route method should return an object literal wrapped in an `HttpResponse` helper (e.g., `HttpResponse.Ok(...)`).  
+> Every route method should return an `object` or `Array` wrapped in an `HttpResponse` helper (e.g., `HttpResponse.Ok(...)`).  
 > If you handle the response manually (e.g., via `res.send()`), you may return `undefined`.
 
 ## GET
@@ -24,14 +24,14 @@ Each decorator corresponds to its HTTP method and registers the method as a rout
 Handles **read-only** requests.
 
 ```ts
-import { ApiController, HttpGet, HttpResponse } from "nubie";
+import { ApiController, HttpGet, HttpResponse } from "@nubie/framework";
 
 @ApiController()
 class ProductController {
-  @HttpGet("/")
-  public async getAllProductsAsync() {
-    return HttpResponse.Ok(["apple", "banana", "carrot"]);
-  }
+    @HttpGet("/")
+    public async getAllProductsAsync() {
+        return HttpResponse.Ok(["apple", "banana", "carrot"]);
+    }
 }
 ```
 
@@ -42,16 +42,14 @@ class ProductController {
 Handles resource creation.
 
 ```ts
-import { ApiController, HttpPost, HttpResponse, Body } from "nubie";
+import { ApiController, HttpPost, HttpResponse, Body } from "@nubie/framework";
 
 @ApiController()
 class ProductController {
-  @HttpPost("/create")
-  public async createProductAsync(
-    @Body() product: Record<string, string | number>
-  ) {
-    return HttpResponse.Created({ id: 1, ...product });
-  }
+    @HttpPost("/create")
+    public async createProductAsync(@Body() product: Record<string, string | number>) {
+        return HttpResponse.Created({ id: 1, ...product });
+    }
 }
 ```
 

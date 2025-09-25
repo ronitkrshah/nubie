@@ -32,9 +32,9 @@ async deleteUserAsync() {
 ```
 
 - Accepts a string or array of strings:
-  ```ts
-  @Roles(["Moderator", "Editor"])
-  ```
+    ```ts
+    @Roles(["Moderator", "Editor"])
+    ```
 - Auto-validates the token & checks `role` field in payload.
 - Must use `@Authorize()` before `@Roles`
 
@@ -43,7 +43,7 @@ async deleteUserAsync() {
 If you need to generate or manually verify tokens (e.g non-route logic):
 
 ```ts
-import { JWTToken } from "nubie";
+import { JWTToken } from "@nubie/framework";
 
 const token = new JWTToken();
 token.addClaim("iss", "Nubie");

@@ -6,10 +6,14 @@ Nubie supports elegant file uploads through its `@FileUpload()` decorator, enabl
 
 `@FileUpload()` is a method-level decorator that attaches middleware to a route to handle file uploads of different types: single file, multiple files, or field-based grouping.
 
+::: info
+Create `uploads` directory on project root before using file upload decorators.
+:::
+
 ### Import
 
 ```ts
-import { FileUpload, FileUploadType } from "nubie";
+import { FileUpload, FileUploadType } from "@nubie/framework";
 ```
 
 ## Syntax & Options
@@ -34,14 +38,12 @@ The decorator supports three file upload modes:
 | Multiple | `FileUploadType.Multiple` | Upload multiple files with one field name |
 | Fields   | `FileUploadType.Fields`   | Upload files mapped to multiple fields    |
 
-## Examples
-
 ### Single File Upload
 
 ```ts
-@FileUpload("avatar", FileUploadType.Single)
 @Post("/profile")
-async updateProfileAsync(@File() file: MulterFile) {
+@FileUpload("avatar", FileUploadType.Single)
+async updateProfileAsync(@File() file: Express.Multer.File) {
 }
 ```
 
@@ -50,7 +52,7 @@ async updateProfileAsync(@File() file: MulterFile) {
 ```ts
 @FileUpload("photos", FileUploadType.Multiple, 5)
 @Post("/album")
-async uploadPhotosAsync(@Files() files: MulterFile[]) {
+async uploadPhotosAsync(@Files() files: Express.Multer.File[]) {
 }
 ```
 
@@ -58,11 +60,11 @@ async uploadPhotosAsync(@Files() files: MulterFile[]) {
 
 ```ts
 @FileUpload([
-  { name: "resume", maxCount: 1 },
-  { name: "certificates", maxCount: 3 }
+  { name: "avatar", maxCount: 1 },
+  { name: "cover", maxCount: 3 }
 ])
-@Post("/job/apply")
-async applyForJobAsync(@Files() files: MulterFile[]) {
+@Post("/photos")
+async applyForJobAsync(@Files() files: Record<string, Express.Multer.File[]>) {
 }
 ```
 

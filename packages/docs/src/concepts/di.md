@@ -16,14 +16,14 @@ Create a class that will tell `Nubie` to register dependencies.
 
 ```ts
 // application/DependencyInjection.ts
-import { IServiceCollection } from "nubie";
+import { IServiceCollection } from "@nubie/framework";
 
 export class ApllicationDi {
-  constructor(serviceCollection: IServiceCollection) {
-    serviceCollection.addScoped("IAuthService", AuthService);
-    // serviceCollection.addSingelton("IAuthService", AuthService);
-    // serviceCollection.addTransient("IAuthService", AuthService);
-  }
+    constructor(serviceCollection: IServiceCollection) {
+        serviceCollection.addScoped("IAuthService", AuthService);
+        // serviceCollection.addSingelton("IAuthService", AuthService);
+        // serviceCollection.addTransient("IAuthService", AuthService);
+    }
 }
 ```
 
@@ -32,15 +32,15 @@ export class ApllicationDi {
 Use the `@Inject` decorator to request dependencies in your controller / other classes constructors. Nubie automatically resolves these dependencies at runtime.
 
 ```ts
-import { ApiController, HttpGet, HttpResponse } from "nubie";
-import { Inject } from "nubie";
+import { ApiController, HttpGet, HttpResponse } from "@nubie/framework";
+import { Inject } from "@nubie/framework";
 
 @ApiController()
 class AuthenticationController {
-  private readonly _authService: IAuthService;
+    private readonly _authService: IAuthService;
 
-  constructor(@Inject("IAuthService") authService: IAuthService) {
-    this._authService = authService;
-  }
+    constructor(@Inject("IAuthService") authService: IAuthService) {
+        this._authService = authService;
+    }
 }
 ```

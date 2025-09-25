@@ -1,6 +1,6 @@
 # Configuration
 
-Nubie supports simple, centralized configuration through a`Nubie.json` file at the root of your project.
+Nubie supports simple, centralized configuration through a `nubie.config.js` file at the root of your project.
 Use it to control your app’s behavior without diving into code.
 
 | Option               | Type     | Default     | Optional | Description                                                                                           |
@@ -12,11 +12,11 @@ Use it to control your app’s behavior without diving into code.
 
 ## Example
 
-```json
-{
-  "port": 8080,
-  "defaultApiVersion": 1,
-  "controllersDirectory": "controllers",
-  "jwtSecretKey": "my-super-secret-key-for-auth"
-}
+```js
+/** @type {import("@nubie/framework").IConfig} */
+const config = {
+    port: 3000,
+};
+
+module.exports = config;
 ```

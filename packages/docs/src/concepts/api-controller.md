@@ -25,14 +25,14 @@ When your application starts, Nubie performs the following steps:
 ## Example: Basic Controller
 
 ```ts
-import { ApiController, HttpGet, HttpResponse } from "nubie";
+import { ApiController, HttpGet, HttpResponse } from "@nubie/framework";
 
 @ApiController()
 class UsersController {
-  @HttpGet("hello")
-  public async sayHiAsync() {
-    return HttpResponse.Ok({ message: "Hello from Nubie" });
-  }
+    @HttpGet("hello")
+    public async sayHiAsync() {
+        return HttpResponse.Ok({ message: "Hello from Nubie" });
+    }
 }
 ```
 

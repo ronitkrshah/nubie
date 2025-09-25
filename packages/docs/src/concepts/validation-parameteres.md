@@ -23,35 +23,29 @@ To validate a request body, define a DTO class and annotate its properties with 
 import { IsString, MinLength } from "class-validator";
 
 export class RegisterRequest {
-  @IsString()
-  email: string;
+    @IsString()
+    email: string;
 
-  @IsString()
-  @MinLength(6)
-  password: string;
+    @IsString()
+    @MinLength(6)
+    password: string;
 }
 ```
 
 Use the DTO in your controller with the `@BodyValidation()` decorator:
 
 ```ts
-import {
-  ApiController,
-  HttpPost,
-  Body,
-  HttpResponse,
-  BodyValidation,
-} from "nubie";
+import { ApiController, HttpPost, Body, HttpResponse, BodyValidation } from "@nubie/framework";
 import { RegisterRequest } from "./RegisterRequest";
 
 @ApiController()
 class AuthController {
-  @HttpPost("register")
-  @BodyValidation(RegisterRequest)
-  public async registerUserAsync(@Body() user: RegisterRequest) {
-    // The 'user' object is validated and transformed before this point
-    return HttpResponse.Created({ message: "User registered successfully." });
-  }
+    @HttpPost("register")
+    @BodyValidation(RegisterRequest)
+    public async registerUserAsync(@Body() user: RegisterRequest) {
+        // The 'user' object is validated and transformed before this point
+        return HttpResponse.Created({ message: "User registered successfully." });
+    }
 }
 ```
 
@@ -60,23 +54,17 @@ class AuthController {
 Use the `@QueryParam()` decorator to extract and optionally validate query string parameters.
 
 ```ts
-import {
-  ApiController,
-  HttpGet,
-  HttpResponse,
-  QueryParam,
-  QueryType,
-} from "nubie";
+import { ApiController, HttpGet, HttpResponse, QueryParam, QueryType } from "@nubie/framework";
 
 @ApiController()
 class UsersController {
-  @HttpGet("all")
-  public async getUsersAsync(
-    @QueryParam("search", QueryType.Required) search: string,
-    @QueryParam("role") role?: string
-  ) {
-    return HttpResponse.Ok([{ id: 1, username: "ExampleUser" }]);
-  }
+    @HttpGet("all")
+    public async getUsersAsync(
+        @QueryParam("search", QueryType.Required) search: string,
+        @QueryParam("role") role?: string,
+    ) {
+        return HttpResponse.Ok([{ id: 1, username: "ExampleUser" }]);
+    }
 }
 ```
 
@@ -87,14 +75,14 @@ class UsersController {
 Use the `@RouteParam()` decorator to extract values from dynamic segments in the route path.
 
 ```ts
-import { ApiController, HttpGet, HttpResponse, RouteParam } from "nubie";
+import { ApiController, HttpGet, HttpResponse, RouteParam } from "@nubie/framework";
 
 @ApiController()
 class UsersController {
-  @HttpGet("find/:id")
-  public async getUserByIdAsync(@RouteParam("id") id: string) {
-    return HttpResponse.Ok({ id });
-  }
+    @HttpGet("find/:id")
+    public async getUserByIdAsync(@RouteParam("id") id: string) {
+        return HttpResponse.Ok({ id });
+    }
 }
 ```
 

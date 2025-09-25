@@ -11,7 +11,7 @@ Create a `src` directory if not exists
 In `src/index.ts`, make sure you have the following setup:
 
 ```ts
-import { Nubie } from "nubie";
+import { Nubie } from "@nubie/framework";
 
 Nubie.createApp().runAsync();
 ```
@@ -23,14 +23,14 @@ This bootstraps the Nubie framework, loads your controllers, and starts the Expr
 Inside `src/controllers`, create a new file called `HelloController.ts`:
 
 ```ts
-import { ApiController, HttpGet, HttpResponse } from "nubie";
+import { ApiController, HttpGet, HttpResponse } from "@nubie/framework";
 
 @ApiController()
 class HelloController {
-  @HttpGet("/")
-  public async sayHelloAsync() {
-    return HttpResponse.Ok({ message: "Hello from Nubie!" });
-  }
+    @HttpGet("/")
+    public async sayHelloAsync() {
+        return HttpResponse.Ok({ message: "Hello from Nubie!" });
+    }
 }
 ```
 
@@ -54,6 +54,6 @@ Your api is live at `http://localhost:8080/api/v1/hello`. With this JSON respons
 
 ```json
 {
-  "message": "Hello from Nubie!"
+    "message": "Hello from Nubie!"
 }
 ```
