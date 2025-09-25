@@ -4,9 +4,8 @@ import AppState from "../../AppState";
 import { AppConfig } from "../../config";
 import { TMethodResponse } from "../../core";
 import { Logger } from "../../utils";
-import { TConstructor } from "../../types";
-import { scopedDiContainerMiddleware } from "../../middlewares";
 import { ControllerBase } from "../../abstractions/controller";
+import { container } from "tsyringe";
 
 export type TApiControllerMetadata = {
     endpoint: string;
@@ -16,7 +15,7 @@ export type TApiControllerMetadata = {
 
 class ApiControllerDecorator extends ControllerBase {
     private _endpoint?: string;
-    private _router: Router;
+    private readonly _router: Router;
 
     public constructor(endpoint?: string) {
         super();
@@ -74,7 +73,7 @@ class ApiControllerDecorator extends ControllerBase {
              * Actual Incoming Express Request
              */
             const handleApiRequest = async (req: Request, res: Response, next: NextFunction) => {
-                const instance = req.scope.resolve(this._target.name) as any;
+                const instance = container.resolve(this._target.name) as any;
                 const uniqueExtensionKey = `${this._target.name}_${methodName}`;
 
                 try {
@@ -98,7 +97,6 @@ class ApiControllerDecorator extends ControllerBase {
                 }
             };
 
-            requestHandlers.push(scopedDiContainerMiddleware);
             requestHandlers.push(handleApiRequest);
             this._router[methodMetadata.httpMethod](fullpath, ...requestHandlers);
         }
