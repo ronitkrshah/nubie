@@ -1,28 +1,12 @@
-import {
-    ApiController,
-    HttpPost,
-    HttpResponse,
-    WebSocketController,
-    WebSocketControllerBase,
-} from "@nubie/framework";
-import { IsString } from "class-validator";
-import { Socket, DisconnectReason } from "socket.io";
+import { ApiController, HttpGet, HttpResponse, Inject } from "@nubie/framework";
+import GetUserCommand from "../commands/GetUserCommand";
 
-class Dto {
-    @IsString()
-    public name!: string;
-}
+@ApiController()
+export default class UsersController {
+    public constructor(@Inject("GetUserCommand") private readonly getUser: GetUserCommand) {}
 
-@WebSocketController("/abc")
-class AbcController extends WebSocketControllerBase {
-    public constructor() {
-        super();
-    }
-
-    onConnection(socket: Socket): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    onDisconnect(socket: Socket, reason: DisconnectReason): Promise<void> {
-        throw new Error("Method not implemented.");
+    @HttpGet("/")
+    public async generate() {
+        return HttpResponse.Ok({ message: this.getUser.message });
     }
 }

@@ -93,10 +93,18 @@ export default class Nubie {
         if (!isDirExists) return;
 
         // This will import and call the the controller decorator
-        await Module.scanFilesAsync("Controller", {
+        const modules = await Module.scanFilesAsync("Controller", {
             parentDir: config.controllersDirectory,
-            onlyImport: true,
         });
+
+        for (const mod of modules) {
+            if (mod.metadata.fileName.replace(".js", "") !== mod.metadata.constructor.name) {
+                Logger.log(
+                    `Export mismatch: "${mod.metadata.className}" must be the default export and match the ${mod.metadata.fileName}. Ensure the class name and file name are identical for proper controller registration.`,
+                );
+                process.exit(0);
+            }
+        }
     }
 
     public addServices(services: TServiceBuilder[]) {

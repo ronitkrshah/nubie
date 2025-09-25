@@ -26,7 +26,7 @@ Inside `src/controllers`, create a new file called `HelloController.ts`:
 import { ApiController, HttpGet, HttpResponse } from "@nubie/framework";
 
 @ApiController()
-class HelloController {
+export default class HelloController {
     @HttpGet("/")
     public async sayHelloAsync() {
         return HttpResponse.Ok({ message: "Hello from Nubie!" });
@@ -34,7 +34,11 @@ class HelloController {
 }
 ```
 
-> You may have noticed that we didn’t export the `HelloController` class. This is intentional. Nubie automatically scans the controllers directory and registers all valid controller classes based on naming conventions. As long as your class name ends with `Controller` and is placed in the correct folder `(src/controllers)`, Nubie will detect and wire it into the application without requiring manual imports or exports. This keeps your codebase clean and focused on logic, not setup.
+::: warning
+File name and class name must be same and controller should be exported default
+
+eg: `UsersController.ts` -> `export default class UsersController {}`
+:::
 
 ## Step 3: Compile Code
 

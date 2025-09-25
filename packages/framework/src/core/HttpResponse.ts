@@ -82,7 +82,7 @@ const HttpResponse = Object.fromEntries(
     Object.entries(HttpStatusCodes).map(([name, code]) => {
         return [
             name,
-            <T>(data: T) => {
+            (data: object) => {
                 return {
                     statusCode: code,
                     data,

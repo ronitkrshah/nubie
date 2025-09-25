@@ -5,6 +5,7 @@ import ModuleClassMethods from "./ModuleClassMethods";
 import type { TConstructor } from "../../types";
 import type { IServiceCollection } from "../../di";
 import { ServiceCollection } from "../../di";
+import { Logger } from "../../utils";
 
 interface IModuleService {
     service: IServiceCollection;
@@ -12,6 +13,8 @@ interface IModuleService {
     metadata: {
         className: string;
         constructor: TConstructor;
+        fileName: string;
+        filePath: string;
     };
 }
 
@@ -44,21 +47,31 @@ class Module {
 
             for (const suffix of fileNames) {
                 if (!file.name.endsWith(`${suffix}.js`)) continue;
-                const mod = await import(path.join(file.parentPath, file.name));
-                if (options?.onlyImport) continue;
-                if (this.isClass(mod?.default)) {
-                    const service = ServiceCollection;
-                    const methods = new ModuleClassMethods(mod.default);
-                    const obj: IModuleService = {
-                        service,
-                        methods,
-                        metadata: {
-                            className: mod.default.name,
-                            constructor: mod.default,
-                        },
-                    };
-                    retVal.push(obj);
+                const module: { default: { default: TConstructor } } = await import(
+                    path.join(file.parentPath, file.name)
+                );
+
+                // Check if it's a class
+                if (!module.default.default.toString().startsWith("class")) {
+                    Logger.log(
+                        `File "${file.name.replace(".js", ".ts")}" must export a default class. Default export is required for dynamic loading.`,
+                    );
+                    process.exit(0);
                 }
+
+                if (options?.onlyImport) continue;
+                const methods = new ModuleClassMethods(module.default.default);
+                const obj: IModuleService = {
+                    service: ServiceCollection,
+                    methods,
+                    metadata: {
+                        className: module.default.default.name,
+                        constructor: module.default.default,
+                        fileName: file.name,
+                        filePath: file.parentPath,
+                    },
+                };
+                retVal.push(obj);
             }
         }
 
@@ -68,10 +81,8 @@ class Module {
     /**
      * Check If the param is a class
      */
-    private isClass(value: unknown): boolean {
-        return (
-            typeof value === "function" && /^class\s/.test(Function.prototype.toString.call(value))
-        );
+    private isClass(value: object): boolean {
+        return value.toString().startsWith("class");
     }
 }
 

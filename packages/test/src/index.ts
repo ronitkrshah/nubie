@@ -1,3 +1,11 @@
-import { Nubie } from "@nubie/framework";
+import { Module, Nubie } from "@nubie/framework";
 
-Nubie.createApp().runAsync();
+Module.scanFilesAsync("Command", { parentDir: "commands" })
+    .then((files) => {
+        files.forEach(({ service, metadata }) => {
+            service.addSingleton(metadata.className, metadata.constructor);
+        });
+    })
+    .finally(() => {
+        Nubie.createApp().runAsync();
+    });

@@ -8,27 +8,32 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const framework_1 = require("@nubie/framework");
-const class_validator_1 = require("class-validator");
-class Dto {
-}
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], Dto.prototype, "name", void 0);
-let AbcController = class AbcController extends framework_1.WebSocketControllerBase {
-    constructor() {
-        super();
+const GetUserCommand_1 = __importDefault(require("../commands/GetUserCommand"));
+let UsersController = class UsersController {
+    constructor(getUser) {
+        this.getUser = getUser;
     }
-    onConnection(socket) {
-        throw new Error("Method not implemented.");
-    }
-    onDisconnect(socket, reason) {
-        throw new Error("Method not implemented.");
+    async generate() {
+        return framework_1.HttpResponse.Ok({ message: this.getUser.message });
     }
 };
-AbcController = __decorate([
-    (0, framework_1.WebSocketController)("/abc"),
-    __metadata("design:paramtypes", [])
-], AbcController);
+__decorate([
+    (0, framework_1.HttpGet)("/"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "generate", null);
+UsersController = __decorate([
+    (0, framework_1.ApiController)(),
+    __param(0, (0, framework_1.Inject)("GetUserCommand")),
+    __metadata("design:paramtypes", [GetUserCommand_1.default])
+], UsersController);
+exports.default = UsersController;
