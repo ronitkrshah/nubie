@@ -8,7 +8,7 @@ import type JwtClaim from "./JwtClaim";
  * Supports adding claims, generating signed tokens, and verifying incoming tokens.
  */
 export default class JwtToken {
-    public claims: JwtClaim[] = [];
+    public constructor(private readonly _claims: JwtClaim[]) {}
 
     /**
      * Generates a signed JWT token using the configured secret key.
@@ -16,11 +16,11 @@ export default class JwtToken {
      * @throws If the JWT secret key is missing in the config.
      * @returns A signed JWT string.
      */
-    public async generateToken() {
+    public generateToken() {
         const config = ApplicationConfig.getSection("Authentication");
         if (!config?.SecretKey) throw new Error("JWT Secret Not Found");
         return jwt.sign(
-            this.claims.map((it) => ({ [it.jwtKey]: [it.value] })),
+            this._claims.map((it) => ({ [it.jwtKey]: [it.value] })),
             config.SecretKey,
         );
     }
