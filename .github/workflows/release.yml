@@ -15,7 +15,7 @@ jobs:
 
         defaults:
             run:
-                working-directory: packages/Framework
+                working-directory: Packages/Framework
 
         steps:
             - name: Checkout repository
@@ -62,4 +62,4 @@ jobs:
               with:
                   name: nubie-${{ steps.release_meta.outputs.version }}
                   tag_name: nubie-${{ steps.release_meta.outputs.version }}
-                  files: packages/Framework/${{ steps.release_meta.outputs.filename }}
+                  files: Packages/Framework/${{ steps.release_meta.outputs.filename }}
