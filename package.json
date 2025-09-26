@@ -1,11 +1,11 @@
 {
-  "name": "nubie",
-  "version": "0.1.0",
-  "private": true,
-  "workspaces": [
-    "Packages/*"
-  ],
-  "devDependencies": {
-    "prettier": "^3.6.2"
-  }
+    "name": "nubie",
+    "version": "0.1.0",
+    "private": true,
+    "workspaces": [
+        "Packages/*"
+    ],
+    "devDependencies": {
+        "prettier": "^3.6.2"
+    }
 }

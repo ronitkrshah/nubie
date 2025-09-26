@@ -2,11 +2,10 @@ import type { Request } from "express";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
 import { MethodExtensionDecorator } from "../../../Abstractions/DecoratorExtensions";
-import type { TConstructor } from "../../../types";
 import { InvalidRequestBodyException } from "../../../Exceptions/HttpRequest";
 
 class BodyValidationDecorator extends MethodExtensionDecorator {
-    public constructor(public readonly DTO: TConstructor) {
+    public constructor(public readonly DTO: Class) {
         super();
     }
 
@@ -25,7 +24,7 @@ class BodyValidationDecorator extends MethodExtensionDecorator {
  * @param DTO The class used for validation schema.
  * @returns A method decorator that performs validation before execution.
  */
-function BodyValidation(DTO: TConstructor) {
+function BodyValidation(DTO: Class) {
     const factory = MethodExtensionDecorator.createDecorator(BodyValidationDecorator);
     const decorator = factory(DTO);
 

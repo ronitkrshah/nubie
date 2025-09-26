@@ -1,9 +1,9 @@
-import { Module, Nubie } from "@nubie/framework";
+import { BuildScanner, Nubie } from "@nubie/framework";
 
-Module.scanFilesAsync("Command", { parentDir: "commands" })
+BuildScanner.scanFilesAsync("Command", { parentDir: "commands" })
     .then((files) => {
-        files.forEach(({ service, metadata }) => {
-            service.addSingleton(metadata.className, metadata.constructor);
+        files.forEach(({ service, introspector }) => {
+            service.addSingleton(introspector.className, introspector.classConstructor);
         });
     })
     .finally(() => {

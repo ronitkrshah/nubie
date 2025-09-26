@@ -9,5 +9,5 @@ export default defineConfig({
     bundle: true,
     minify: false,
     target: "es2022",
-    watch: true,
+    watch: false,
 });

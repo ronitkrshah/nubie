@@ -1,8 +1,8 @@
-import { container } from "tsyringe";
 import AppState from "../../AppState";
 import type { WebSocketControllerBase } from "../../Abstractions/Controller";
 import { ControllerBase } from "../../Abstractions/Controller";
 import { Logger } from "../../Utilities";
+import { ServiceCollection } from "../../Extensions/ServiceCollection";
 
 class WebSocketControllerDecorator extends ControllerBase {
     private readonly _endpoint: string;
@@ -33,7 +33,7 @@ class WebSocketControllerDecorator extends ControllerBase {
      */
     private async configureControllerAsync() {
         const io = AppState.socketIo.of(this._endpoint);
-        const instance = container.resolve(this._target.name) as WebSocketControllerBase;
+        const instance = ServiceCollection.resolveInstance<WebSocketControllerBase>(this._target.name);
 
         instance.io = io;
 

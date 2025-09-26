@@ -2,11 +2,11 @@ import type { NextFunction, RequestHandler, Request, Response } from "express";
 import { Router } from "express";
 import type { TMethodMetadata } from "../../Abstractions";
 import AppState from "../../AppState";
-import { AppConfig } from "../../Config";
+import { ApplicationConfig } from "../../Configuration";
 import type { TMethodResponse } from "../../Core";
 import { Logger } from "../../Utilities";
 import { ControllerBase } from "../../Abstractions/Controller";
-import { container } from "tsyringe";
+import { ServiceCollection } from "../../Extensions/ServiceCollection";
 
 export type TApiControllerMetadata = {
     endpoint: string;
@@ -47,19 +47,16 @@ class ApiControllerDecorator extends ControllerBase {
      * Used to initialize routes, middleware, or metadata before registration.
      */
     private async configureControllerAsync() {
-        const appConfig = await AppConfig.getConfig();
+        const appConfig = ApplicationConfig.config;
         const metadata: TApiControllerMetadata =
             Reflect.getOwnMetadata(ControllerBase.METADATA_KEY, this._target) || {};
 
         /** Registering methods */
         for (const [methodName, methodMetadata] of Object.entries(metadata.methods || {})) {
             const apiVersion =
-                methodMetadata.apiVersion || metadata.apiVersion || appConfig.defaultApiVersion;
-            const fullpath =
-                `/api/v${apiVersion}/${this._endpoint}/${methodMetadata.endpoint}`.replace(
-                    /\/+/g,
-                    "/",
-                );
+                methodMetadata.apiVersion || metadata.apiVersion || appConfig.HttpRequest.DefaultApiVersion;
+
+            const fullpath = `/api/v${apiVersion}/${this._endpoint}/${methodMetadata.endpoint}`.replace(/\/+/g, "/");
 
             const requestHandlers: RequestHandler[] = [];
 
@@ -76,7 +73,7 @@ class ApiControllerDecorator extends ControllerBase {
             const handleApiRequest = async (req: Request, res: Response, next: NextFunction) => {
                 const instance: {
                     [key: string]: (...args: unknown[]) => Promise<TMethodResponse>;
-                } = container.resolve(this._target.name);
+                } = ServiceCollection.resolveInstance(this._target.name);
                 const uniqueExtensionKey = `${this._target.name}_${methodName}`;
 
                 try {

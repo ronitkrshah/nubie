@@ -1,23 +1,24 @@
-import type { Express, NextFunction, Request, Response } from "express";
-import express from "express";
-import { AppConfig } from "./Config";
+import express, { type Express, type NextFunction, type Request, type Response } from "express";
+import type { IConfiguration } from "./Configuration";
+import { ApplicationConfig } from "./Configuration";
 import AppState from "./AppState";
 import { Logger, Exception } from "./Utilities";
 import * as FileSystem from "node:fs/promises";
 import http from "node:http";
 import { detect } from "detect-port";
-import figlet from "figlet";
 import { Server } from "socket.io";
-import { type IServiceCollection, ServiceCollection } from "./DependencyInjection";
-import { Module } from "./Abstractions/Module";
+import { type IServiceCollection, ServiceCollection } from "./Extensions/ServiceCollection";
+import { BuildScanner } from "./Runtime/BuildScanner";
+import path from "node:path";
+import cors from "cors";
 
-type TErrorHandlerFunc = (err: Error, req: Request, res: Response, next: NextFunction) => void;
+type TErrorHandlerCallback = (err: Error, req: Request, res: Response, next: NextFunction) => void;
 type TServiceBuilder = new (serviceCollection: IServiceCollection) => object;
 
 export default class Nubie {
     private readonly _expressApp: Express;
     private readonly _httpServer: http.Server;
-    private _errorHandler?: TErrorHandlerFunc;
+    private _errorHandler?: TErrorHandlerCallback;
     private _services: TServiceBuilder[] = [];
 
     /**
@@ -34,15 +35,7 @@ export default class Nubie {
 
     private constructor() {
         this._expressApp = express();
-        this._expressApp.use(express.json());
-        this._expressApp.use(express.urlencoded({ extended: true }));
         this._httpServer = http.createServer(this._expressApp);
-        AppState.socketIo = new Server(this._httpServer, {
-            cors: {
-                origin: "*",
-                methods: ["GET", "POST"],
-            },
-        });
         AppState.expressApp = this._expressApp;
     }
 
@@ -79,13 +72,22 @@ export default class Nubie {
      *
      * Skips loading if the directory doesn't exist.
      */
-    private async loadControllersDynamically(): Promise<void> {
-        const config = await AppConfig.getConfig();
-        const controllerDirectory = `${AppConfig.projectPath}/build/${config.controllersDirectory}`;
+    private async mapControllersAsync(): Promise<void> {
+        const config = ApplicationConfig.config;
+        const controllerDirectory = path.join(
+            ApplicationConfig.projectPath,
+            "build",
+            config.Mappings.ControllerDirectory,
+        );
         let isDirExists: boolean;
+
         try {
-            await FileSystem.stat(controllerDirectory);
-            isDirExists = true;
+            const stat = await FileSystem.stat(controllerDirectory);
+            if (stat.isDirectory()) {
+                isDirExists = true;
+            } else {
+                isDirExists = false;
+            }
         } catch {
             isDirExists = false;
         }
@@ -93,14 +95,14 @@ export default class Nubie {
         if (!isDirExists) return;
 
         // This will import and call the the controller decorator
-        const modules = await Module.scanFilesAsync("Controller", {
-            parentDir: config.controllersDirectory,
+        const resolvedClasses = await BuildScanner.scanFilesAsync("Controller", {
+            parentDir: config.Mappings?.ControllerDirectory,
         });
 
-        for (const mod of modules) {
-            if (mod.metadata.fileName.replace(".js", "") !== mod.metadata.constructor.name) {
+        for (const exportedClass of resolvedClasses) {
+            if (exportedClass.file.name.replace(".js", "") !== exportedClass.introspector.className) {
                 Logger.log(
-                    `Export mismatch: "${mod.metadata.className}" must be the default export and match the ${mod.metadata.fileName}. Ensure the class name and file name are identical for proper controller registration.`,
+                    `Export mismatch: "${exportedClass.introspector.className}" must be the default export and match the ${exportedClass.file.name}. Ensure the class name and file name are identical.`,
                 );
                 process.exit(0);
             }
@@ -112,12 +114,6 @@ export default class Nubie {
         return this;
     }
 
-    private initializeServices(): void {
-        this._services.forEach((classImpl) => {
-            new classImpl(ServiceCollection);
-        });
-    }
-
     /**
      * Applies the configured error handler to the Express app.
      *
@@ -126,12 +122,11 @@ export default class Nubie {
     private initializeErrorHandler(): Nubie {
         this._expressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
             console.error(err.stack);
-            if (err instanceof Exception) {
-                return res.status(err.statusCode).json(err.toJson());
-            }
 
             if (this._errorHandler) {
                 return this._errorHandler(err, req, res, next);
+            } else if (err instanceof Exception) {
+                return res.status(err.statusCode).json(err.toJson());
             }
 
             next(err);
@@ -153,45 +148,43 @@ export default class Nubie {
     }
 
     /**
+     * Set Application Properties And Intialize Services
+     */
+    private async setupApplicationAsync(config: IConfiguration) {
+        this._services.forEach((serviceBuilder) => new serviceBuilder(ServiceCollection));
+        this._expressApp.use(express.json({ limit: config.HttpRequest.MaxBodySize }));
+        AppState.socketIo = new Server(this._httpServer, {
+            cors: { origin: config.Hosts?.AllowedHosts },
+        });
+        if (config.Hosts?.AllowedHosts) {
+            this._expressApp.use(cors({ origin: config.Hosts.AllowedHosts }));
+        }
+        await this.mapControllersAsync();
+        for (const controller of AppState.controllers) {
+            await controller.registerControllerAsync();
+        }
+        this.initializeErrorHandler();
+    }
+
+    /**
      * Boots up the application asynchronously.
      *
      * Initializes core components, middleware, and controllers.
      * Should be called once during startup.
      */
     public async runAsync(): Promise<void> {
-        console.clear();
-        const nubie = await figlet.text("Nubie");
-        console.log(nubie);
-        console.log();
-        Logger.log("Application Boot Sequence Initialized...");
+        await ApplicationConfig.loadConfigAsync();
+        const config = ApplicationConfig.config;
+        await this.setupApplicationAsync(config);
 
-        Logger.log("Reading Configuration File (if exists)...");
-        const config = await AppConfig.getConfig();
-
-        if (this._services.length > 0) {
-            Logger.log("Injecting Dependencies...");
-            this.initializeServices();
-        }
-
-        Logger.log("Registering Controllers...");
-        await this.loadControllersDynamically();
-        for (const controller of AppState.controllers) {
-            await controller.registerControllerAsync();
-        }
-
-        Logger.log(`Initializing ${this._errorHandler ? "Custom" : "Default"} Error Handler...`);
-        this.initializeErrorHandler();
-
-        Logger.log("Checking Port...");
-        const isPortAvailable = await this.isPortAvailableAsync(config.port);
+        const isPortAvailable = await this.isPortAvailableAsync(config.Port);
         if (!isPortAvailable) {
-            Logger.log(`PORT ${config.port} Is Busy. Aborting Execution...`);
+            Logger.log(`PORT ${config.Port} Is Busy. Aborting Execution...`);
             process.exit(1);
         }
 
-        Logger.log("Starting Application...");
-        this._httpServer.listen(config.port, () => {
-            Logger.log(`Connected to Web API at: http://localhost:${config.port}`);
+        this._httpServer.listen(config.Port, () => {
+            Logger.log(`Connected to Web API at: http://localhost:${config.Port}`);
             Logger.log("Application Started");
         });
     }

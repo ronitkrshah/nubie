@@ -1,0 +1,65 @@
+name: Release Nubie Framework
+
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: "Version to release (default: current version in package.json)"
+                required: false
+                type: string
+
+jobs:
+    release:
+        name: Release Nubie
+        runs-on: ubuntu-latest
+
+        defaults:
+            run:
+                working-directory: packages/Framework
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "22"
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Get current version from package.json
+              id: get_version
+              run: |
+                  current=$(jq -r .version package.json)
+                  echo "current_version=$current" >> "$GITHUB_OUTPUT"
+
+            - name: Update version if provided
+              if: ${{ inputs.version != '' }}
+              run: |
+                  jq --arg v "${{ inputs.version }}" '.version = $v' package.json > tmp.json && mv tmp.json package.json
+                  echo "Using custom version: ${{ inputs.version }}"
+
+            - name: Build @nubie/framework
+              run: npm run build --workspace=@nubie/framework
+
+            - name: Pack module
+              run: npm pack
+              id: pack
+
+            - name: Determine release version and filename
+              id: release_meta
+              run: |
+                  version="${{ inputs.version || steps.get_version.outputs.current_version }}"
+                  filename="nubie-$version.tgz"
+                  echo "filename=$filename" >> "$GITHUB_OUTPUT"
+                  echo "version=$version" >> "$GITHUB_OUTPUT"
+                  mv *.tgz "$filename"
+
+            - name: Create GitHub Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  name: nubie-${{ steps.release_meta.outputs.version }}
+                  tag_name: nubie-${{ steps.release_meta.outputs.version }}
+                  files: packages/Framework/${{ steps.release_meta.outputs.filename }}

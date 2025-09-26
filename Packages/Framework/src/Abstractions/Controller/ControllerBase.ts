@@ -1,6 +1,6 @@
-import { container, injectable } from "tsyringe";
+import { injectable } from "tsyringe";
 import AppState from "../../AppState";
-import type { TConstructor } from "../../types";
+import { ServiceCollection } from "../../Extensions/ServiceCollection";
 
 /**
  * Abstract abstractions class for all API controllers.
@@ -12,7 +12,7 @@ export default abstract class ControllerBase {
     public static readonly METADATA_KEY = Symbol("api:controller");
 
     /** The target constructor associated with the controller. */
-    public _target!: TConstructor;
+    public _target!: Class;
 
     /**
      * Hook for registering controller routes and middleware.
@@ -28,12 +28,10 @@ export default abstract class ControllerBase {
      * @param apiControllerClass The controller class to instantiate and register.
      * @returns A decorator function to apply to the target class.
      */
-    public static createDecorator<T extends unknown[]>(
-        apiControllerClass: new (...args: T) => ControllerBase,
-    ) {
+    public static createDecorator<T extends unknown[]>(apiControllerClass: new (...args: T) => ControllerBase) {
         return function (...params: T) {
-            return function (target: TConstructor) {
-                if (!container.isRegistered(target.name)) {
+            return function (target: Class) {
+                if (!ServiceCollection.contains(target.name)) {
                     injectable({ token: target.name })(target);
                 }
                 const controllerInstance = new apiControllerClass(...params);

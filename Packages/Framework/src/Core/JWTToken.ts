@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { AppConfig } from "../Config";
+import { ApplicationConfig } from "../Configuration";
 
 type TJwtClaims =
     | "iss"
@@ -159,10 +159,7 @@ export default class JWTToken {
      * @param claim The claim name (standard or custom).
      * @param value The value associated with the claim.
      */
-    public addClaim<T extends TJwtClaims | (string & {})>(
-        claim: T,
-        value: number | string | boolean | Array<string>,
-    ) {
+    public addClaim<T extends TJwtClaims | (string & {})>(claim: T, value: number | string | boolean | Array<string>) {
         this._claims[claim] = value;
     }
 
@@ -172,10 +169,10 @@ export default class JWTToken {
      * @throws If the JWT secret key is missing in the config.
      * @returns A signed JWT string.
      */
-    public async generateTokenAsync() {
-        const config = await AppConfig.getConfig();
-        if (!config.jwtSecretKey) throw new Error("JWT Secret Not Found");
-        return jwt.sign(this._claims, config.jwtSecretKey);
+    public async generateToken() {
+        const config = ApplicationConfig.getSection("Authentication");
+        if (!config?.SecretKey) throw new Error("JWT Secret Not Found");
+        return jwt.sign(this._claims, config.SecretKey);
     }
 
     /**
@@ -185,9 +182,9 @@ export default class JWTToken {
      * @throws If the JWT secret key is missing in the config.
      * @returns The decoded token payload if verification succeeds.
      */
-    public static async verifyTokenAsync(token: string) {
-        const config = await AppConfig.getConfig();
-        if (!config.jwtSecretKey) throw new Error("JWT Secret Not Found");
-        return jwt.verify(token, config.jwtSecretKey);
+    public static verifyToken(token: string) {
+        const config = ApplicationConfig.getSection("Authentication");
+        if (!config?.SecretKey) throw new Error("JWT Secret Not Found");
+        return jwt.verify(token, config.SecretKey);
     }
 }

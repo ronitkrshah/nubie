@@ -7,10 +7,10 @@ import {
 } from "./Abstractions/DecoratorExtensions";
 import { WebSocketControllerBase } from "./Abstractions/Controller";
 import { Exception } from "./Utilities";
-import { type IServiceCollection } from "./DependencyInjection";
+import { type IServiceCollection } from "./Extensions/ServiceCollection";
 import { inject } from "tsyringe";
-import { Module } from "./Abstractions/Module";
-import type { IConfig } from "./Config";
+import { BuildScanner } from "./Runtime/BuildScanner";
+import type { IConfiguration } from "./Configuration";
 
 export * from "./Decorators/ClassDecorators";
 export * from "./Decorators/MethodDecorators";
@@ -27,6 +27,6 @@ export {
     IServiceCollection,
     RateLimit,
     inject as Inject,
-    Module,
-    IConfig,
+    BuildScanner,
+    IConfiguration,
 };
