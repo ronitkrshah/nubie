@@ -1,5 +1,5 @@
-import { MethodDecorator } from "../../Abstractions";
-import { FileUploadHandler } from "../../Core";
+import { MethodDecorator } from "../../../Abstractions";
+import { MulterFileUpload } from "../../../Http";
 
 export const enum FileUploadType {
     Single,
@@ -25,14 +25,14 @@ class FileUploadDecorator extends MethodDecorator {
         let handler;
 
         if (Array.isArray(this.field)) {
-            handler = FileUploadHandler.fields(this.field);
+            handler = MulterFileUpload.fields(this.field);
         } else {
             switch (this.uploadType) {
                 case FileUploadType.Single:
-                    handler = FileUploadHandler.single(this.field);
+                    handler = MulterFileUpload.single(this.field);
                     break;
                 case FileUploadType.Multiple:
-                    handler = FileUploadHandler.array(this.field, this.maxCount ?? 2);
+                    handler = MulterFileUpload.array(this.field, this.maxCount ?? 2);
                     break;
                 default:
                     throw new Error("Invalid upload type.");

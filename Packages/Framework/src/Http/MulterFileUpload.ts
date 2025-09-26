@@ -16,10 +16,10 @@ const storage = multer.diskStorage({
 
 const baseUploader = multer({ storage });
 
-const FileUploadHandler = {
+const MulterFileUpload = {
     single: (field: string) => baseUploader.single(field),
     array: (field: string, maxCount = 10) => baseUploader.array(field, maxCount),
     fields: (fields: { name: string; maxCount?: number }[]) => baseUploader.fields(fields),
 };
 
-export default FileUploadHandler;
+export default MulterFileUpload;

@@ -1,5 +1,5 @@
-import { HttpStatusCodes } from "../../Core";
-import { Exception } from "../../Utilities";
+import { HttpStatusCodes } from "../../Http";
+import Exception from "../Exception";
 
 export default class UnauthorizedAccessException extends Exception {
     constructor() {

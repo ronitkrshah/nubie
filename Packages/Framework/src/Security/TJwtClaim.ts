@@ -1,7 +1,4 @@
-import jwt from "jsonwebtoken";
-import { ApplicationConfig } from "../Configuration";
-
-type TJwtClaims =
+export type TJwtClaim =
     | "iss"
     | "sub"
     | "aud"
@@ -139,52 +136,5 @@ type TJwtClaims =
     | "producerNfServiceSetId"
     | "sourceNfInstanceId"
     | "analyticsIdList"
-    | "resOwnerId";
-
-/**
- * Utility class for managing JWT tokens.
- *
- * Supports adding claims, generating signed tokens, and verifying incoming tokens.
- */
-export default class JWTToken {
-    private readonly _claims: Record<string, number | string | boolean | Array<string>>;
-
-    constructor() {
-        this._claims = {};
-    }
-
-    /**
-     * Adds a claim to the token payload.
-     *
-     * @param claim The claim name (standard or custom).
-     * @param value The value associated with the claim.
-     */
-    public addClaim<T extends TJwtClaims | (string & {})>(claim: T, value: number | string | boolean | Array<string>) {
-        this._claims[claim] = value;
-    }
-
-    /**
-     * Generates a signed JWT token using the configured secret key.
-     *
-     * @throws If the JWT secret key is missing in the config.
-     * @returns A signed JWT string.
-     */
-    public async generateToken() {
-        const config = ApplicationConfig.getSection("Authentication");
-        if (!config?.SecretKey) throw new Error("JWT Secret Not Found");
-        return jwt.sign(this._claims, config.SecretKey);
-    }
-
-    /**
-     * Verifies a JWT token using the configured secret key.
-     *
-     * @param token The JWT string to verify.
-     * @throws If the JWT secret key is missing in the config.
-     * @returns The decoded token payload if verification succeeds.
-     */
-    public static verifyToken(token: string) {
-        const config = ApplicationConfig.getSection("Authentication");
-        if (!config?.SecretKey) throw new Error("JWT Secret Not Found");
-        return jwt.verify(token, config.SecretKey);
-    }
-}
+    | "resOwnerId"
+    | (string & {});

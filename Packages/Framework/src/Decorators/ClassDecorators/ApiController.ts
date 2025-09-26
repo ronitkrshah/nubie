@@ -3,7 +3,7 @@ import { Router } from "express";
 import type { TMethodMetadata } from "../../Abstractions";
 import AppState from "../../AppState";
 import { ApplicationConfig } from "../../Configuration";
-import type { TMethodResponse } from "../../Core";
+import type { TMethodResponse } from "../../Http";
 import { Logger } from "../../Utilities";
 import { ControllerBase } from "../../Abstractions/Controller";
 import { ServiceCollection } from "../../Extensions/ServiceCollection";

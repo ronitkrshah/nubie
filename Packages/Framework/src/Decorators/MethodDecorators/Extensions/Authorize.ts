@@ -1,6 +1,6 @@
 import type { Request } from "express";
 import { MethodExtensionDecorator } from "../../../Abstractions/DecoratorExtensions";
-import { JWTToken } from "../../../Core";
+import { JwtToken } from "../../../Security";
 import { AuthorizationHeaderRequiredException, UnauthorizedAccessException } from "../../../Exceptions/Authentication";
 
 class AuthorizeDecorator extends MethodExtensionDecorator {
@@ -10,7 +10,7 @@ class AuthorizeDecorator extends MethodExtensionDecorator {
         if (!bearerToken) throw new AuthorizationHeaderRequiredException();
 
         try {
-            const payload = JWTToken.verifyToken(bearerToken.split(" ")[1]);
+            const payload = JwtToken.verifyToken(bearerToken.split(" ")[1]);
             if (typeof payload === "string") throw new UnauthorizedAccessException();
             req.user = payload;
         } catch {
