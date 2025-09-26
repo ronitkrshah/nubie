@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { ParamExtensionDecorator } from "../../Abstractions/DecoratorExtensions";
+import { ParamExtensionDecorator } from "../../Abstractions";
 import type { IncomingHttpHeaders } from "http";
 
 class HeadersParamDecorator extends ParamExtensionDecorator {

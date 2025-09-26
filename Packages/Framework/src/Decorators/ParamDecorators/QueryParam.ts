@@ -1,6 +1,6 @@
 import type { Request } from "express";
-import { ParamExtensionDecorator } from "../../Abstractions/DecoratorExtensions";
-import { MissingParameterException } from "../../Exceptions/HttpRequest";
+import { ParamExtensionDecorator } from "../../Abstractions";
+import { MissingParameterException } from "../../Exceptions";
 
 export const enum QueryType {
     Optional,

@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { ParamExtensionDecorator } from "../../Abstractions/DecoratorExtensions";
+import { ParamExtensionDecorator } from "../../Abstractions";
 
 class BodyParamDecorator extends ParamExtensionDecorator {
     public async executeAsync(req: Request): Promise<Record<string, unknown>> {

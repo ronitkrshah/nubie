@@ -1,10 +1,7 @@
 import type { Express } from "express";
 import type { Server } from "socket.io";
-import type { ControllerBase } from "./Abstractions/Controller";
-import type {
-    MethodExtensionDecorator,
-    ParamExtensionDecorator,
-} from "./Abstractions/DecoratorExtensions";
+import type { ControllerBase } from "./Abstractions";
+import type { MethodExtensionDecorator, ParamExtensionDecorator } from "./Abstractions";
 
 /**
  * Manages global application state including Express instance,

@@ -1,6 +1,6 @@
 import { MethodDecorator } from "../../../Abstractions";
 import { RateLimit } from "../../../Http";
-import { RateLimitReachedException } from "../../../Exceptions/HttpRequest";
+import { RateLimitReachedException } from "../../../Exceptions";
 import { Logger } from "../../../Utilities";
 import rateLimit from "express-rate-limit";
 

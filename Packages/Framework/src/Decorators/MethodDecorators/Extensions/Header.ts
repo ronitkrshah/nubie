@@ -1,6 +1,6 @@
 import type { Request } from "express";
-import { MethodExtensionDecorator } from "../../../Abstractions/DecoratorExtensions";
-import { HeaderNotFoundException } from "../../../Exceptions/HttpRequest";
+import { MethodExtensionDecorator } from "../../../Abstractions";
+import { HeaderNotFoundException } from "../../../Exceptions";
 
 class HeaderDecorator extends MethodExtensionDecorator {
     public constructor(public readonly key: string) {

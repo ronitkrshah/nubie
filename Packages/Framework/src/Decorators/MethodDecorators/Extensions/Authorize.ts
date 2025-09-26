@@ -1,7 +1,7 @@
 import type { Request } from "express";
-import { MethodExtensionDecorator } from "../../../Abstractions/DecoratorExtensions";
+import { MethodExtensionDecorator } from "../../../Abstractions";
 import { JwtToken } from "../../../Security";
-import { AuthorizationHeaderRequiredException, UnauthorizedAccessException } from "../../../Exceptions/Authentication";
+import { AuthorizationHeaderRequiredException, UnauthorizedAccessException } from "../../../Exceptions";
 
 class AuthorizeDecorator extends MethodExtensionDecorator {
     public async executeAsync(req: Request): Promise<void> {

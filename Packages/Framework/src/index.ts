@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import Nubie from "./Nubie";
-import { MethodExtensionDecorator, ParamExtensionDecorator } from "./Abstractions/DecoratorExtensions";
-import { WebSocketControllerBase } from "./Abstractions/Controller";
+import { MethodExtensionDecorator, ParamExtensionDecorator } from "./Abstractions";
+import { WebSocketControllerBase } from "./Abstractions";
 import { Exception } from "./Exceptions";
-import type { IServiceCollection } from "./Extensions/ServiceCollection";
+import type { IServiceCollection } from "./Extensions";
 import { inject } from "tsyringe";
 import { BuildScanner } from "./Runtime";
 import type { IConfiguration } from "./Configuration";

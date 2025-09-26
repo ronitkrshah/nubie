@@ -1,6 +1,6 @@
 import AppState from "../../AppState";
-import type { WebSocketControllerBase } from "../../Abstractions/Controller";
-import { ControllerBase } from "../../Abstractions/Controller";
+import type { WebSocketControllerBase } from "../../Abstractions";
+import { ControllerBase } from "../../Abstractions";
 import { Logger } from "../../Utilities";
 import { ServiceCollection } from "../../Extensions/ServiceCollection";
 

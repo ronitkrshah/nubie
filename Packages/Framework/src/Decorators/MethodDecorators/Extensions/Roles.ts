@@ -1,9 +1,6 @@
 import type { Request } from "express";
-import { MethodExtensionDecorator } from "../../../Abstractions/DecoratorExtensions";
-import {
-    AuthorizationHeaderRequiredException,
-    InsufficientPermissionException,
-} from "../../../Exceptions/Authentication";
+import { MethodExtensionDecorator } from "../../../Abstractions";
+import { AuthorizationHeaderRequiredException, InsufficientPermissionException } from "../../../Exceptions";
 
 class RolesDecorator extends MethodExtensionDecorator {
     private readonly _roles: string | string[];

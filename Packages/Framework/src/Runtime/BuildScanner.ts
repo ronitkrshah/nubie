@@ -3,7 +3,7 @@ import * as FileSystem from "node:fs/promises";
 import { ApplicationConfig } from "../Configuration";
 import { ClassIntrospector } from "../Extensions";
 import { Logger } from "../Utilities";
-import { ServiceCollection, type IServiceCollection } from "../Extensions/ServiceCollection";
+import { ServiceCollection, type IServiceCollection } from "../Extensions";
 
 interface IResolvedClass {
     service: IServiceCollection;

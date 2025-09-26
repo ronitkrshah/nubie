@@ -1,8 +1,8 @@
 import type { Request } from "express";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { MethodExtensionDecorator } from "../../../Abstractions/DecoratorExtensions";
-import { InvalidRequestBodyException } from "../../../Exceptions/HttpRequest";
+import { MethodExtensionDecorator } from "../../../Abstractions";
+import { InvalidRequestBodyException } from "../../../Exceptions";
 
 class BodyValidationDecorator extends MethodExtensionDecorator {
     public constructor(public readonly DTO: Class) {

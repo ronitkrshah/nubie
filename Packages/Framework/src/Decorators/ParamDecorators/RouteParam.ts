@@ -1,5 +1,5 @@
 import type { Request } from "express";
-import { ParamExtensionDecorator } from "../../Abstractions/DecoratorExtensions";
+import { ParamExtensionDecorator } from "../../Abstractions";
 
 class RouteParamDecorator extends ParamExtensionDecorator {
     public constructor(public readonly param?: string) {

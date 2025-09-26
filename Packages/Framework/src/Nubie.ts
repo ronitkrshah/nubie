@@ -8,7 +8,7 @@ import * as FileSystem from "node:fs/promises";
 import http from "node:http";
 import { detect } from "detect-port";
 import { Server } from "socket.io";
-import { type IServiceCollection, ServiceCollection } from "./Extensions/ServiceCollection";
+import { type IServiceCollection, ServiceCollection } from "./Extensions";
 import { BuildScanner } from "./Runtime";
 import path from "node:path";
 import cors from "cors";

@@ -1,6 +1,6 @@
 import type { Request } from "express";
-import { ParamExtensionDecorator } from "../../Abstractions/DecoratorExtensions";
-import { UnauthorizedAccessException } from "../../Exceptions/Authentication";
+import { ParamExtensionDecorator } from "../../Abstractions";
+import { UnauthorizedAccessException } from "../../Exceptions";
 
 class UserDecorator extends ParamExtensionDecorator {
     constructor() {

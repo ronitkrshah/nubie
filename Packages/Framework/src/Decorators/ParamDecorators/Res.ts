@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { ParamExtensionDecorator } from "../../Abstractions/DecoratorExtensions";
+import { ParamExtensionDecorator } from "../../Abstractions";
 
 class ResParamDecorator extends ParamExtensionDecorator {
     public async executeAsync(_req: Request, res: Response): Promise<unknown> {

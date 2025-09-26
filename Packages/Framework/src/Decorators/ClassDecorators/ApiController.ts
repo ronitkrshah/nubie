@@ -5,7 +5,7 @@ import AppState from "../../AppState";
 import { ApplicationConfig } from "../../Configuration";
 import type { TMethodResponse } from "../../Http";
 import { Logger } from "../../Utilities";
-import { ControllerBase } from "../../Abstractions/Controller";
+import { ControllerBase } from "../../Abstractions";
 import { ServiceCollection } from "../../Extensions/ServiceCollection";
 
 export type TApiControllerMetadata = {
