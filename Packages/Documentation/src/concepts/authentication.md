@@ -2,8 +2,6 @@
 
 Security in Nubie is simple but powerful — and built right into your route handlers with these decorators.
 
-> **Important Setup**: Make sure your `Nubie.json` file includes a valid `jwtSecretKey`. Without it, token validation won’t work.
-
 ## Authentication
 
 Validates the JWT token present in the request headers. If the token is missing or invalid, it auto-responds with an **unauthenticated** error — no extra work needed!
@@ -38,17 +36,18 @@ async deleteUserAsync() {
 - Auto-validates the token & checks `role` field in payload.
 - Must use `@Authorize()` before `@Roles`
 
-## Generate Token with `JWTToken` Class
+## Generate Token with `JwtToken` Class
 
 If you need to generate or manually verify tokens (e.g non-route logic):
 
 ```ts
-import { JWTToken } from "@nubie/framework";
+import { JwtToken } from "@nubie/framework";
 
-const token = new JWTToken();
-token.addClaim("iss", "Nubie");
+const claims = [new JwtClaim("exp", Date.now()), new JwtClaim("aud", "www.github.com")];
 
-console.log(await token.generateTokenAsync());
+const token = new JwtToken(claims);
 
-const payload = await JWTToken.verifyTokenAsync(token); // Decodes and validates
+console.log(token.generateToken());
+
+const payload = Jwtoken.verifyToken(token); // Decodes and validates
 ```

@@ -3,20 +3,34 @@
 Nubie supports simple, centralized configuration through a `nubie.config.js` file at the root of your project.
 Use it to control your app’s behavior without diving into code.
 
-| Option               | Type     | Default     | Optional | Description                                                                                           |
-| -------------------- | -------- | ----------- | -------- | ----------------------------------------------------------------------------------------------------- |
-| port                 | `int`    | 8080        | No       | The port your application will listen on when the server starts.                                      |
-| defaultApiVersion    | `int`    | 1           | No       | Sets the default API version for route prefixing. Useful for versioned APIs like `/api/v1`.           |
-| controllersDirectory | `string` | controllers | No       | Folder where your controller files are located.                                                       |
-| jwtSecretKey         | `string` | undefined   | Yes      | Secret key used to verify and sign JWT tokens. Required if you’re using auth decorator `@Authorize()` |
+```ts
+interface IConfiguration {
+    Port: number; // Default: 8080
+    HttpRequest: {
+        DefaultApiVersion: number; // Default: 1
+        MaxBodySize?: string | number; // Default: 100kb
+    };
+    Mappings: {
+        ControllerDirectory: string; // Default: Controllers
+    };
+    Authentication?: {
+        SecretKey?: string;
+        AccessTokenTimeout?: number;
+        RefreshTokenTimeout?: number;
+    };
+    Hosts?: {
+        AllowedHosts?: Array<string>;
+    };
+}
+```
 
 ## Example
 
-```js
-/** @type {import("@nubie/framework").IConfig} */
-const config = {
-    port: 3000,
-};
-
-module.exports = config;
+```json
+{
+    "Port": 5173,
+    "HttpRequest": {
+        "DefaultApiVersion": 2
+    }
+}
 ```

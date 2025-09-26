@@ -14,7 +14,7 @@ This structure promotes clarity and separation of concerns, making your API easi
 
 When your application starts, Nubie performs the following steps:
 
-- Scans the `controllers/` directory for valid controller classes.
+- Scans the `Controllers/` directory for valid controller classes.
 - Identifies classes decorated with `@ApiController()`, regardless of whether they are exported.
 - Derives the route prefix from the `class name` or a `custom string`.
 - Registers decorated methods as route handlers using Reflection.

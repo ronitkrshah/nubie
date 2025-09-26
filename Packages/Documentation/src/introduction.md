@@ -17,8 +17,8 @@ Nubie wraps Express under the hood but introduces a clean abstraction layer that
 
 Here’s what working with Nubie typically looks like:
 
-- Define controllers using `@Controller()` decorators
-- Create routes with method-specific decorators like `@Get()`, `@Post()`, etc.
+- Define controllers using `@ApiController()` decorators
+- Create routes with method-specific decorators like `@HttpGet()`, `@HttpPost()`, etc.
 - Use dependency injection for services and utilities
 - Let Nubie auto-register and wire everything with minimal setup
 
