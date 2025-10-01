@@ -8,10 +8,7 @@ import { ServiceCollection } from "../../extensions/service-collection";
  * Provides lifecycle hooks and decorator utilities for controller registration.
  */
 export default abstract class ControllerBase {
-    /** Metadata key used to identify controller classes. */
     public static readonly METADATA_KEY = Symbol("api:controller");
-
-    /** The target constructor associated with the controller. */
     public _target!: Class;
 
     /**

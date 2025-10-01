@@ -1,0 +1,29 @@
+{
+    "name": "@nubie/dependency-injection",
+    "version": "0.1.0",
+    "description": "Dependency Injection For Nubie Project",
+    "homepage": "https://github.com/ronitkrshah/nubie#readme",
+    "bugs": {
+        "url": "https://github.com/ronitkrshah/nubie/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ronitkrshah/nubie.git"
+    },
+    "license": "MIT",
+    "author": "RKS",
+    "main": "build/index.mjs",
+    "scripts": {
+        "build": "tsup"
+    },
+    "devDependencies": {
+        "tsup": "^8.5.0"
+    },
+    "dependencies": {
+        "@swc/core": "^1.13.5",
+        "tsyringe": "^4.10.0"
+    },
+    "peerDependencies": {
+        "reflect-metadata": "^0.2.2"
+    }
+}

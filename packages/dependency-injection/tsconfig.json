@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "es2022",
+        "removeComments": true,
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "outDir": "./build",
+        "rootDir": "./src",
+        "declaration": true,
+        "isolatedModules": true,
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "build"]
+}
