@@ -1,10 +1,10 @@
-import { BaseClassDecorator } from "../../../abstractions";
-import { InvalidControllerNameException } from "../exceptions";
-import { ObjectEditor } from "../../../utils";
-import { IRestConfig } from "../IRestConfig";
-import { RestRequestBuilder } from "../utils";
+import { BaseClassDecorator } from "../../../../abstractions";
+import { InvalidControllerNameException } from "../../exceptions";
+import { ObjectEditor } from "../../../../utils";
+import { IRestConfig } from "../../IRestConfig";
+import { RestRequestBuilder } from "../../utils";
 import { DIContainer } from "@nubie/di";
-import { HttpApp } from "../../../HttpApp";
+import { HttpApp } from "../../../../HttpApp";
 
 class RestControllerDecorator extends BaseClassDecorator {
     private _endpoint: string;

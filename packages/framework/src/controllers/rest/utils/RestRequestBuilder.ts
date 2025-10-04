@@ -4,9 +4,12 @@ import { DIContainer } from "@nubie/di";
 import { IRestConfig } from "../IRestConfig";
 import { Config } from "../../../core/config";
 import { THttpMethodResponse } from "./HttpResponse";
-import { createDiScopeMiddleware } from "../middlewares-decorators/class/createDiScopeMiddleware";
+import { createDiScopeMiddleware } from "../decorators/extensions/class/createDiScopeMiddleware";
 
-type TController = Record<string, () => Promise<object | undefined | THttpMethodResponse>>;
+type TController = Record<
+    string,
+    (...args: unknown[]) => Promise<object | undefined | THttpMethodResponse>
+>;
 
 export class RestRequestBuilder {
     public readonly router: Router;
@@ -68,34 +71,52 @@ export class RestRequestBuilder {
         );
 
         // Class Level Middlewares
-        const middlewares = this.getClassMiddlewares(restConfig);
-        middlewares.forEach((reqHandler) => this.router.use(reqHandler));
+        const classMiddlewares = this.getClassMiddlewares(restConfig);
+        classMiddlewares.forEach((reqHandler) => this.router.use(reqHandler));
 
         const requestHandlersArray = Object.entries(restConfig.requestHandlers || {});
 
         for (const [methodName, metadata] of requestHandlersArray) {
-            // Just for ts yelling. It will not be undefined
+            /** For Type Safety */
             if (!metadata) continue;
             const endpoint = this.generateEndpoint(restConfig, methodName);
-            const middlewares = this.getMethodMiddlewares(restConfig, methodName);
+
+            /** Method Level Middlewares */
+            const methodMiddlewares = this.getMethodMiddlewares(restConfig, methodName);
+
+            // Actual Request Handler
             const httpRequestHandler = async (req: Request, res: Response, next: NextFunction) => {
                 // It will create new controller instance on every request
                 const instance: TController = req.diContainer.resolveInstance(
                     this.decoratedClass.target.name,
                 );
 
-                const result = await instance[methodName].apply(instance);
-                if (!result) return res.sendStatus(204);
+                try {
+                    /** Handler Params */
+                    const argument: unknown[] = [];
+                    for (const param of metadata.params || []) {
+                        argument[param.index] = await param.decorator.handleAsync({
+                            req,
+                            res,
+                            next,
+                        });
+                    }
 
-                if ("statusCode" in result && "data" in result) {
-                    const { statusCode, data } = result as THttpMethodResponse;
-                    return res.status(statusCode).json(data);
+                    const result = await instance[methodName].apply(instance, argument);
+                    if (!result) return res.sendStatus(204);
+
+                    if ("statusCode" in result && "data" in result) {
+                        const { statusCode, data } = result as THttpMethodResponse;
+                        return res.status(statusCode).json(data);
+                    }
+
+                    return res.json(result);
+                } catch (error) {
+                    next(error);
                 }
-
-                return res.json(result);
             };
 
-            this.router[metadata.httpMethod](endpoint, [...middlewares, httpRequestHandler]);
+            this.router[metadata.httpMethod](endpoint, [...methodMiddlewares, httpRequestHandler]);
         }
     }
 }

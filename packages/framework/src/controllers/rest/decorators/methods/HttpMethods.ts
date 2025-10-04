@@ -1,6 +1,6 @@
-import { BaseMethodDecorator } from "../../../abstractions";
-import { ObjectEditor } from "../../../utils";
-import { IRestConfig } from "../IRestConfig";
+import { BaseMethodDecorator } from "../../../../abstractions";
+import { ObjectEditor } from "../../../../utils";
+import { IRestConfig } from "../../IRestConfig";
 
 function httpMethodFactory(method: THttpMethod) {
     return class HttpMethodDecorator extends BaseMethodDecorator<IRestConfig> {

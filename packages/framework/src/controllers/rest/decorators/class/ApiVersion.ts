@@ -1,6 +1,6 @@
-import { BaseClassDecorator } from "../../../abstractions";
-import { IRestConfig } from "../IRestConfig";
-import { ObjectEditor } from "../../../utils";
+import { BaseClassDecorator } from "../../../../abstractions";
+import { IRestConfig } from "../../IRestConfig";
+import { ObjectEditor } from "../../../../utils";
 
 class ApiVersionDecorator extends BaseClassDecorator {
     public constructor(public readonly version: number) {

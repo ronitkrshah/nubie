@@ -3,11 +3,11 @@ import { BaseClassDecorator } from "../../../abstractions";
 import { IRestConfig } from "../IRestConfig";
 import { ObjectEditor } from "../../../utils";
 
-export abstract class RestMethodMiddleware {
+export abstract class RestMethodExtension {
     abstract handleAsync(context: THttpContext): Promise<void>;
 
     public static createDecorator<TArgs extends unknown[]>(
-        ExtendedClass: TClass<TArgs, RestMethodMiddleware>,
+        ExtendedClass: TClass<TArgs, RestMethodExtension>,
     ) {
         return function (...args: TArgs) {
             return function (target: object, propertyKey: string, descriptor: PropertyDescriptor) {

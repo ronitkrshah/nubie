@@ -1,2 +1,3 @@
-export * from "./RestMethodMiddleware";
-export * from "./RestClassMiddleware";
+export * from "./RestMethodExtension";
+export * from "./RestClassExtension";
+export * from "./RestParamExtension";

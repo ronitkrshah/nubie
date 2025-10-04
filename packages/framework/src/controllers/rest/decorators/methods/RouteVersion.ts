@@ -1,6 +1,6 @@
-import { BaseMethodDecorator } from "../../../abstractions";
-import { IRestConfig } from "../IRestConfig";
-import { ObjectEditor } from "../../../utils";
+import { BaseMethodDecorator } from "../../../../abstractions";
+import { IRestConfig } from "../../IRestConfig";
+import { ObjectEditor } from "../../../../utils";
 
 class RouteVersionDecorator extends BaseMethodDecorator<IRestConfig> {
     public constructor(public readonly version: number) {

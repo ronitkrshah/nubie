@@ -1,9 +1,9 @@
-import { RestMethodMiddleware } from "../../abstractions";
-import { THttpContext } from "../../types";
-import { UnauthenticatedRequestException } from "../../exceptions";
-import { JwtToken } from "../../../../core/security/jwt";
+import { RestClassExtension, RestMethodExtension } from "../../../abstractions";
+import { THttpContext } from "../../../types";
+import { UnauthenticatedRequestException } from "../../../exceptions";
+import { JwtToken } from "../../../../../core/security/jwt";
 
-class AuthorizeMiddleware extends RestMethodMiddleware {
+class ApiAuthorizeMiddleware extends RestClassExtension {
     public async handleAsync({ req, next }: THttpContext): Promise<void> {
         const bearerToken = req.headers.authorization?.replace("Bearer ", "");
         if (!bearerToken) throw new UnauthenticatedRequestException();
@@ -17,4 +17,4 @@ class AuthorizeMiddleware extends RestMethodMiddleware {
     }
 }
 
-export const Authorize = RestMethodMiddleware.createDecorator(AuthorizeMiddleware);
+export const ApiAuthorize = RestClassExtension.createDecorator(ApiAuthorizeMiddleware);

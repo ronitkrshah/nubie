@@ -1,18 +1,19 @@
-import { RestMethodMiddleware } from "./abstractions";
-import { RestClassMiddleware } from "./abstractions";
+import { RestParamExtension, RestMethodExtension } from "./abstractions";
+import { RestClassExtension } from "./abstractions";
 
 export interface IRestConfig {
     apiVersion?: number;
     baseEndpoint: string;
     className: string;
-    classMiddlewares?: RestClassMiddleware[];
+    classMiddlewares?: RestClassExtension[];
     requestHandlers?: Record<
         string,
         | {
               httpMethod: THttpMethod;
               route: string;
               apiVersion?: number;
-              methodMiddlewares?: RestMethodMiddleware[];
+              methodMiddlewares?: RestMethodExtension[];
+              params?: { decorator: RestParamExtension; index: number }[];
           }
         | undefined
     >;

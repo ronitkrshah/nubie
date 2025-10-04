@@ -1,7 +1,7 @@
 import { HttpResponse } from "./utils";
 
-export * from "./class-decorators";
-export * from "./method-decorators";
-export * from "./middlewares-decorators";
+export * from "./decorators/class";
+export * from "./decorators/methods";
+export * from "./decorators/extensions";
 
 export { HttpResponse };

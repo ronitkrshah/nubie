@@ -1,10 +1,10 @@
-import { RestMethodMiddleware } from "../../abstractions";
-import { THttpContext } from "../../types";
+import { RestMethodExtension } from "../../../abstractions";
+import { THttpContext } from "../../../types";
 import { plainToInstance } from "class-transformer";
 import { validate } from "class-validator";
-import { InvalidRequestBodyException } from "../../exceptions";
+import { InvalidRequestBodyException } from "../../../exceptions";
 
-class BodyValidationDecorator extends RestMethodMiddleware {
+class BodyValidationDecorator extends RestMethodExtension {
     public constructor(public readonly dto: TClass) {
         super();
     }
@@ -18,4 +18,4 @@ class BodyValidationDecorator extends RestMethodMiddleware {
     }
 }
 
-export const BodyValidation = RestMethodMiddleware.createDecorator(BodyValidationDecorator);
+export const BodyValidation = RestMethodExtension.createDecorator(BodyValidationDecorator);
