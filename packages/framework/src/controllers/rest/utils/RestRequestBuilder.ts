@@ -34,13 +34,13 @@ export class RestRequestBuilder {
 
         const requestHandlers: RequestHandler[] = [];
 
-        middlewares.forEach((middleware) => {
+        for (let i = middlewares.length - 1; i >= 0; i--) {
             const handler = async (req: Request, res: Response, next: NextFunction) => {
-                await middleware.handleAsync({ req, res, next });
+                await middlewares[i].handleAsync({ req, res, next });
             };
 
             requestHandlers.push(handler);
-        });
+        }
 
         return requestHandlers;
     }
