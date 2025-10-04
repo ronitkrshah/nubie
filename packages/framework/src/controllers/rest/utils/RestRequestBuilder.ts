@@ -4,7 +4,7 @@ import { DIContainer } from "@nubie/di";
 import { IRestConfig } from "../IRestConfig";
 import { Config } from "../../../core/config";
 import { THttpMethodResponse } from "./HttpResponse";
-import { createDiScopeMiddleware } from "../middlewares/class/createDiScopeMiddleware";
+import { createDiScopeMiddleware } from "../middlewares-decorators/class/createDiScopeMiddleware";
 
 type TController = Record<string, () => Promise<object | undefined | THttpMethodResponse>>;
 

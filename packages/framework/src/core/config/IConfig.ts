@@ -3,4 +3,7 @@ export interface IConfig {
         port: number;
         defaultApiVersion: number;
     };
+    authentication?: {
+        secretKey?: string;
+    };
 }
