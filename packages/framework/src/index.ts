@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ApiVersion, HttpGet, HttpPost, RestController, RouteVersion } from "./decorators/rest";
+import { ApiVersion, HttpGet, RestController } from "./controllers/rest";
 import { Nubie } from "./Nubie";
 import { DIContainer, Inject } from "@nubie/di";
 
@@ -21,11 +21,14 @@ class UsersController {
     ) {}
 
     @HttpGet("/")
-    public async sayHi() {}
+    public async sayHi() {
+        return { message: "Hello" };
+    }
 
-    @HttpPost("/")
-    @RouteVersion(4)
-    public createPost() {}
+    @HttpGet("/hi")
+    public async sayHello() {
+        return { message: "Hello" };
+    }
 }
 
 Nubie.createApplication().runAsync();
