@@ -1,0 +1,30 @@
+{
+  "name": "@nubie/di",
+  "version": "0.1.0",
+  "description": "DependencyInjection for Nubie Projects",
+  "keywords": [
+    "di",
+    "ioc",
+    "nubie"
+  ],
+  "homepage": "https://github.com/ronitkrshah/nubie#readme",
+  "bugs": {
+    "url": "https://github.com/ronitkrshah/nubie/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ronitkrshah/nubie.git"
+  },
+  "license": "MIT",
+  "author": "RKS",
+  "type": "commonjs",
+  "main": "build/index.mjs",
+  "types": "build/index.d.mts",
+  "scripts": {
+    "build": "tsup"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.2.2",
+    "tsyringe": "^4.10.0"
+  }
+}

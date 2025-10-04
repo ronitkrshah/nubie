@@ -1,0 +1,19 @@
+{
+  "name": "nubie",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build:di": "npm run build --workspace=@nubie/di",
+    "build:framework": "npm run build --workspace=@nubie/framework"
+  },
+  "devDependencies": {
+    "@swc/core": "^1.13.5",
+    "@types/node": "^24.6.2",
+    "prettier": "^3.6.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
+  }
+}
