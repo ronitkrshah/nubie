@@ -23,13 +23,14 @@ export class RestRequestBuilder {
         const methodMetadata = config.requestHandlers![methodName];
         const appConfig = DIContainer.resolveInstance<Config>(Config.Token).getConfig();
 
-        const apiVersion =
-            methodMetadata?.apiVersion || config.apiVersion || appConfig.http.defaultApiVersion;
+        let endpoint = `/${config.baseEndpoint}/${methodMetadata?.route}`;
 
-        return `/v${apiVersion}/${config.baseEndpoint}/${methodMetadata?.route}`.replace(
-            /\/+/g,
-            "/",
-        );
+        if (appConfig.http.useApiVersioning) {
+            const apiVersion =
+                methodMetadata?.apiVersion || config.apiVersion || appConfig.http.defaultApiVersion;
+            endpoint = `/v${apiVersion}` + endpoint;
+        }
+        return endpoint.replace(/\/+/g, "/");
     }
 
     private getMethodMiddlewares(config: IRestConfig, methodName: string) {

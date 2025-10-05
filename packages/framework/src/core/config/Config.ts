@@ -4,7 +4,7 @@ import * as fs from "node:fs/promises";
 import deepmerge from "deepmerge";
 
 const DEFAULT_CONFIG: IConfig = {
-    http: { port: 3000, defaultApiVersion: 1 },
+    http: { port: 3000, defaultApiVersion: 1, useApiVersioning: false },
     mappings: {
         controllersDirectory: "controllers",
     },
@@ -14,7 +14,6 @@ export class Config {
     public static readonly Token = Symbol("nubie:internal:config");
     public static readonly ProjectPath = path.resolve();
     public static readonly ConfigFile = "nubie.json";
-    public static readonly ConfigFilePath = path.join(Config.ProjectPath, Config.ConfigFile);
 
     private _config: IConfig = DEFAULT_CONFIG;
 
