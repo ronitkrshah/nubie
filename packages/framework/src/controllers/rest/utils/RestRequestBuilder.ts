@@ -99,7 +99,6 @@ export class RestRequestBuilder {
                         argument[param.index] = await param.decorator.handleAsync({
                             req,
                             res,
-                            next,
                         });
                     }
 

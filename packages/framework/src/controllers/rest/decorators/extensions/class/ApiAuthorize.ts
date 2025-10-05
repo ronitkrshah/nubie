@@ -6,12 +6,12 @@ import { JwtToken } from "../../../../../core/security/jwt";
 class ApiAuthorizeMiddleware extends RestClassExtension {
     public async handleAsync({ req, next }: THttpContext): Promise<void> {
         const bearerToken = req.headers.authorization?.replace("Bearer ", "");
-        if (!bearerToken) throw new UnauthenticatedRequestException();
+        if (!bearerToken) return next(new UnauthenticatedRequestException());
 
         try {
             JwtToken.verifyToken(bearerToken);
         } catch (error) {
-            throw new UnauthenticatedRequestException();
+            return next(new UnauthenticatedRequestException());
         }
         next();
     }

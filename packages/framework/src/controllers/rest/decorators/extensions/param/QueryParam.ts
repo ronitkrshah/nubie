@@ -15,7 +15,7 @@ export class QueryParamDecorator extends RestParamExtension {
         super();
     }
 
-    public async handleAsync({ req }: THttpContext): Promise<unknown> {
+    public async handleAsync({ req }: Omit<THttpContext, "next">): Promise<unknown> {
         if (!this.queryKey) return req.query;
         const query = req.query[this.queryKey];
         if (this.queryMode === QueryMode.Required && !query) {
