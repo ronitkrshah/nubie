@@ -5,6 +5,9 @@ import deepmerge from "deepmerge";
 
 const DEFAULT_CONFIG: IConfig = {
     http: { port: 3000, defaultApiVersion: 1 },
+    mappings: {
+        controllersDirectory: "controllers",
+    },
 };
 
 export class Config {

@@ -6,4 +6,7 @@ export interface IConfig {
     authentication?: {
         secretKey?: string;
     };
+    mappings: {
+        controllersDirectory: string;
+    };
 }

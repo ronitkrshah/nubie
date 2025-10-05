@@ -7,5 +7,5 @@ export default defineConfig({
     dts: true,
     clean: true,
     bundle: true,
-    target: "es2020",
+    target: "es2016",
 });

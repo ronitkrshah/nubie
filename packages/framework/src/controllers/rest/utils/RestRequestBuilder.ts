@@ -26,7 +26,7 @@ export class RestRequestBuilder {
         const apiVersion =
             methodMetadata?.apiVersion || config.apiVersion || appConfig.http.defaultApiVersion;
 
-        return `/api/v${apiVersion}/${config.baseEndpoint}/${methodMetadata?.route}`.replace(
+        return `/v${apiVersion}/${config.baseEndpoint}/${methodMetadata?.route}`.replace(
             /\/+/g,
             "/",
         );

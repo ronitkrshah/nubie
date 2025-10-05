@@ -4,6 +4,7 @@ import { Config } from "./core/config";
 import { DIContainer } from "@nubie/di";
 import { BaseClassDecorator } from "./abstractions";
 import { HttpApp } from "./HttpApp";
+import { CompiledFiles, DynamicImport } from "./core/runtime";
 
 export class Nubie {
     private readonly _httpServer: http.Server;
@@ -26,11 +27,21 @@ export class Nubie {
         }
     }
 
+    private async mapControllersAsync() {
+        const config = DIContainer.resolveInstance<Config>(Config.Token).getSection("mappings");
+        const files = await CompiledFiles.scanFilesAsync("Controller", config.controllersDirectory);
+        for (const file of files) {
+            const dynamicImport = new DynamicImport(file);
+            await dynamicImport.importClassAsync();
+        }
+    }
+
     public async runAsync() {
         const configInstance = DIContainer.resolveInstance<Config>(Config.Token);
         await configInstance.loadConfigAsync();
 
         const appConfig = configInstance.getConfig();
+        await this.mapControllersAsync();
         await this.registerClassDecoratorsAsync();
 
         this._httpServer.listen(appConfig.http.port, () => {
