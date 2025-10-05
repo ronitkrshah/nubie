@@ -10,4 +10,7 @@ export interface IConfig {
     mappings: {
         controllersDirectory: string;
     };
+    cors: {
+        allowedOrigins: string[] | "*";
+    };
 }

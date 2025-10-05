@@ -14,6 +14,9 @@ export interface IRestConfig {
               apiVersion?: number;
               methodMiddlewares?: RestMethodExtension[];
               params?: { decorator: RestParamExtension; index: number }[];
+              config?: {
+                  useClassLevelAuthorize?: boolean;
+              };
           }
         | undefined
     >;

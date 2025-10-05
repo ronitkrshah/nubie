@@ -11,16 +11,10 @@ class RouteVersionDecorator extends BaseMethodDecorator<IRestConfig> {
         const metadata = this.getClassMetadata();
         const editor = new ObjectEditor(metadata);
         editor.mutateState((state) => {
-            if (!state.requestHandlers) state.requestHandlers = {};
-            const metadata = state.requestHandlers[this.propertyKey];
-            if (metadata) {
-                metadata.apiVersion = this.version;
-            } else {
-                // @ts-ignore
-                state.requestHandlers[this.propertyKey] = {
-                    apiVersion: this.version,
-                };
-            }
+            // @ts-ignore
+            (state.requestHandlers ??= {})[this.propertyKey] ??= {};
+            // @ts-ignore
+            state.requestHandlers[this.propertyKey].apiVersion = this.version;
         });
         this.updateClassMetadata(editor.getState());
     }

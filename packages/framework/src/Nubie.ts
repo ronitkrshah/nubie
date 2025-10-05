@@ -1,14 +1,22 @@
 import * as http from "node:http";
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { Config } from "./core/config";
 import { DIContainer } from "@nubie/di";
 import { BaseClassDecorator } from "./abstractions";
 import { HttpApp } from "./HttpApp";
 import { CompiledFiles, DynamicImport } from "./core/runtime";
 
+type TGlobalErrorHandlerCallback = (
+    error: Error,
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => void;
+
 export class Nubie {
     private readonly _httpServer: http.Server;
     private readonly _expressApp: express.Express;
+    private _globalErrorHandler?: TGlobalErrorHandlerCallback = undefined;
 
     private constructor() {
         this._expressApp = express();
@@ -27,6 +35,11 @@ export class Nubie {
         }
     }
 
+    public useGlobalErrorHandler(errorHandler: TGlobalErrorHandlerCallback) {
+        this._globalErrorHandler = errorHandler;
+        return this;
+    }
+
     private async mapControllersAsync() {
         const config = DIContainer.resolveInstance<Config>(Config.Token).getSection("mappings");
         const files = await CompiledFiles.scanFilesAsync("Controller", config.controllersDirectory);
@@ -43,6 +56,7 @@ export class Nubie {
         const appConfig = configInstance.getConfig();
         await this.mapControllersAsync();
         await this.registerClassDecoratorsAsync();
+        if (this._globalErrorHandler) this._expressApp.use(this._globalErrorHandler);
 
         this._httpServer.listen(appConfig.http.port, () => {
             console.log("Server running on port " + appConfig.http.port);

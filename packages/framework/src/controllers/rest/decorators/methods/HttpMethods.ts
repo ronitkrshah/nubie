@@ -12,17 +12,12 @@ function httpMethodFactory(method: THttpMethod) {
             const metadata = this.getClassMetadata();
             const editor = new ObjectEditor(metadata);
             editor.mutateState((state) => {
-                if (!state.requestHandlers) state.requestHandlers = {};
-                const metadata = state.requestHandlers[this.propertyKey];
-                if (metadata) {
-                    metadata.httpMethod = method;
-                    metadata.route = this.route;
-                } else {
-                    state.requestHandlers[this.propertyKey] = {
-                        httpMethod: method,
-                        route: this.route,
-                    };
-                }
+                // @ts-ignore
+                (state.requestHandlers ??= {})[this.propertyKey] ??= {};
+                // @ts-ignore
+                state.requestHandlers[this.propertyKey].httpMethod = method;
+                // @ts-ignore
+                state.requestHandlers[this.propertyKey].route = this.route;
             });
             this.updateClassMetadata(editor.getState());
         }
