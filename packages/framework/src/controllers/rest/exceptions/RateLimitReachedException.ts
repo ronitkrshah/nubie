@@ -1,7 +1,11 @@
-import { Exception } from "../../../utils";
+import { HttpException } from "../../../utils";
 
-export class RateLimitReachedException extends Exception {
+export class RateLimitReachedException extends HttpException {
     public constructor() {
-        super("Maximum Request Limit Reached. Please Try After Some Time.");
+        super(
+            "Too Many Requests",
+            429,
+            "Maximum Request Limit Reached. Please Try After Some Time.",
+        );
     }
 }

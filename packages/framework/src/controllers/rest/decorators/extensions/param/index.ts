@@ -5,3 +5,5 @@ export * from "./Body";
 export * from "./Headers";
 export * from "./File";
 export * from "./Files";
+export * from "./Request";
+export * from "./Response";

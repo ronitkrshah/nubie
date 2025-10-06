@@ -1,7 +1,7 @@
-import { Exception } from "../../../utils";
+import { HttpException } from "../../../utils";
 
-export class MissingRequiredQueryException extends Exception {
+export class MissingRequiredQueryException extends HttpException {
     public constructor(queryKey: string) {
-        super("Missing Required Query Key: " + queryKey);
+        super("Missing Query", 400, "Missing Required Query Key: " + queryKey);
     }
 }
