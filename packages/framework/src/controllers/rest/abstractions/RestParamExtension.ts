@@ -12,23 +12,22 @@ export abstract class RestParamExtension {
         return function (...args: TArgs) {
             return function (target: object, propertyKey: string, index: number) {
                 const metadata: IRestConfig =
-                    Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, target) || {};
+                    Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, target.constructor) ||
+                    {};
 
                 const extendedInstance = new ExtendedClass(...args);
                 const editor = new ObjectEditor(metadata);
 
                 editor.mutateState((state) => {
-                    if (!state.requestHandlers) state.requestHandlers = {};
-                    const metadata = state.requestHandlers[propertyKey];
-                    if (metadata) {
-                        if (!metadata.params) metadata.params = [];
-                        metadata.params.push({ decorator: extendedInstance, index });
-                    } else {
-                        // @ts-ignore
-                        state.requestHandlers[propertyKey] = {
-                            params: [{ decorator: extendedInstance, index }],
-                        };
-                    }
+                    // @ts-ignore
+                    (state.requestHandlers ??= {})[propertyKey] ??= {};
+                    // @ts-ignore
+                    state.requestHandlers[propertyKey].params ??= [];
+                    // @ts-ignore
+                    state.requestHandlers[propertyKey].params.push({
+                        decorator: extendedInstance,
+                        index,
+                    });
                 });
 
                 Reflect.defineMetadata(

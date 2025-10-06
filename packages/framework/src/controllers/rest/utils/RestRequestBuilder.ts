@@ -1,10 +1,11 @@
 import { BaseClassDecorator } from "../../../abstractions";
-import { NextFunction, Request, RequestHandler, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { DIContainer } from "@nubie/di";
 import { IRestConfig } from "../IRestConfig";
 import { Config } from "../../../core/config";
 import { THttpMethodResponse } from "./HttpResponse";
 import { createDiScopeMiddleware } from "../decorators/extensions/class/createDiScopeMiddleware";
+import { MiddlewareResolver } from "./MiddlewareResolver";
 
 type TController = Record<
     string,
@@ -33,46 +34,16 @@ export class RestRequestBuilder {
         return endpoint.replace(/\/+/g, "/");
     }
 
-    private getMethodMiddlewares(config: IRestConfig, methodName: string) {
-        const middlewares = config.requestHandlers?.[methodName]?.methodMiddlewares || [];
-
-        const requestHandlers: RequestHandler[] = [];
-
-        for (let i = middlewares.length - 1; i >= 0; i--) {
-            const handler = async (req: Request, res: Response, next: NextFunction) => {
-                await middlewares[i].handleAsync({ req, res, next });
-            };
-
-            requestHandlers.push(handler);
-        }
-
-        return requestHandlers;
-    }
-
-    private getClassMiddlewares(config: IRestConfig) {
-        const middlewares = config.classMiddlewares || [];
-
-        const requestHandlers: RequestHandler[] = [];
-
-        middlewares.forEach((middleware) => {
-            const handler = async (req: Request, res: Response, next: NextFunction) => {
-                await middleware.handleAsync({ req, res, next });
-            };
-
-            requestHandlers.push(handler);
-        });
-
-        return requestHandlers;
-    }
-
     public async buildAsync() {
         const restConfig: IRestConfig = Reflect.getOwnMetadata(
             BaseClassDecorator.MetadataKey,
             this.decoratedClass.target,
         );
 
+        const middlewareResolver = new MiddlewareResolver(restConfig);
+
         // Class Level Middlewares
-        const classMiddlewares = this.getClassMiddlewares(restConfig);
+        const classMiddlewares = middlewareResolver.getClassMiddlewares();
         classMiddlewares.forEach((reqHandler) => this.router.use(reqHandler));
 
         const requestHandlersArray = Object.entries(restConfig.requestHandlers || {});
@@ -82,8 +53,10 @@ export class RestRequestBuilder {
             if (!metadata) continue;
             const endpoint = this.generateEndpoint(restConfig, methodName);
 
-            /** Method Level Middlewares */
-            const methodMiddlewares = this.getMethodMiddlewares(restConfig, methodName);
+            /** Framework Level Middlewares */
+            const methodMiddlewares = middlewareResolver.getMethodMiddlewares(methodName);
+            /** Native Middlewares */
+            const nativeMiddlewares = middlewareResolver.getNativeMiddlewares(methodName);
 
             // Actual Request Handler
             const httpRequestHandler = async (req: Request, res: Response, next: NextFunction) => {
@@ -95,7 +68,8 @@ export class RestRequestBuilder {
                 try {
                     /** Handler Params */
                     const argument: unknown[] = [];
-                    for (const param of metadata.params || []) {
+
+                    for (const param of metadata.params?.slice().reverse() || []) {
                         argument[param.index] = await param.decorator.handleAsync({
                             req,
                             res,
@@ -116,7 +90,11 @@ export class RestRequestBuilder {
                 }
             };
 
-            this.router[metadata.httpMethod](endpoint, [...methodMiddlewares, httpRequestHandler]);
+            this.router[metadata.httpMethod](endpoint, [
+                ...methodMiddlewares,
+                ...nativeMiddlewares,
+                httpRequestHandler,
+            ]);
         }
     }
 }
