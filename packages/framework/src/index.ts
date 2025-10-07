@@ -6,5 +6,6 @@ export * from "./controllers/rest";
 export * from "./core/config";
 export * from "./core/security/jwt";
 export * from "./core/runtime";
+export * from "./events";
 
 export { Exception, HttpException, Nubie };
