@@ -1,10 +1,10 @@
-import { IRestConfig } from "../IRestConfig";
+import { IRestMetadata } from "../IRestMetadata";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 
 export class MiddlewareResolver {
-    private readonly _config: IRestConfig;
+    private readonly _config: IRestMetadata;
 
-    public constructor(config: IRestConfig) {
+    public constructor(config: IRestMetadata) {
         this._config = config;
     }
 

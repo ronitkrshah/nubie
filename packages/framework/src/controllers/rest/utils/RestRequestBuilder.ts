@@ -1,7 +1,7 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
 import { DIContainer } from "@nubie/di";
-import { IRestConfig } from "../IRestConfig";
+import { IRestMetadata } from "../IRestMetadata";
 import { Config } from "../../../core/config";
 import { THttpMethodResponse } from "./HttpResponse";
 import { createDiScopeMiddleware } from "../decorators/extensions/class/createDiScopeMiddleware";
@@ -20,7 +20,7 @@ export class RestRequestBuilder {
         this.router.use(createDiScopeMiddleware);
     }
 
-    private generateEndpoint(config: IRestConfig, methodName: string) {
+    private generateEndpoint(config: IRestMetadata, methodName: string) {
         const methodMetadata = config.requestHandlers![methodName];
         const appConfig = DIContainer.resolveInstance<Config>(Config.Token).getConfig();
 
@@ -35,7 +35,7 @@ export class RestRequestBuilder {
     }
 
     public async buildAsync() {
-        const restConfig: IRestConfig = Reflect.getOwnMetadata(
+        const restConfig: IRestMetadata = Reflect.getOwnMetadata(
             BaseClassDecorator.MetadataKey,
             this.decoratedClass.target,
         );

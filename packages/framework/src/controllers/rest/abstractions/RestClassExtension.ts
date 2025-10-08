@@ -1,6 +1,6 @@
 import { THttpContext } from "../types";
 import { BaseClassDecorator } from "../../../abstractions";
-import { IRestConfig } from "../IRestConfig";
+import { IRestMetadata } from "../IRestMetadata";
 import { ObjectEditor } from "../../../utils";
 
 export abstract class RestClassExtension {
@@ -11,7 +11,7 @@ export abstract class RestClassExtension {
     ) {
         return function (...args: TArgs) {
             return function (target: object) {
-                const metadata: IRestConfig =
+                const metadata: IRestMetadata =
                     Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, target) || {};
 
                 const extendedInstance = new ExtendedClass(...args);

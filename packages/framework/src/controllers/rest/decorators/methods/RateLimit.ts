@@ -1,11 +1,11 @@
 import { BaseMethodDecorator } from "../../../../abstractions";
-import { IRestConfig } from "../../IRestConfig";
+import { IRestMetadata } from "../../IRestMetadata";
 import { rateLimitRegistryMap } from "../../registry";
 import { InvalidRateLimitRegistryKeyException, RateLimitReachedException } from "../../exceptions";
 import rateLimit from "express-rate-limit";
 import { ObjectEditor } from "../../../../utils";
 
-class RateLimitDecorator extends BaseMethodDecorator<IRestConfig> {
+class RateLimitDecorator extends BaseMethodDecorator<IRestMetadata> {
     public constructor(public readonly rateLimitKey: string) {
         super();
         if (!rateLimitRegistryMap.has(rateLimitKey))

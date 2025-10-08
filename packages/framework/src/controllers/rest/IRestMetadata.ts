@@ -2,7 +2,7 @@ import { RestParamExtension, RestMethodExtension } from "./abstractions";
 import { RestClassExtension } from "./abstractions";
 import { RequestHandler } from "express";
 
-export interface IRestConfig {
+export interface IRestMetadata {
     apiVersion?: number;
     baseEndpoint: string;
     className: string;

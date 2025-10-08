@@ -1,9 +1,9 @@
 import { BaseMethodDecorator } from "../../../../abstractions";
 import { ObjectEditor } from "../../../../utils";
-import { IRestConfig } from "../../IRestConfig";
+import { IRestMetadata } from "../../IRestMetadata";
 
 function httpMethodFactory(method: THttpMethod) {
-    return class HttpMethodDecorator extends BaseMethodDecorator<IRestConfig> {
+    return class HttpMethodDecorator extends BaseMethodDecorator<IRestMetadata> {
         public constructor(public readonly route: string) {
             super();
         }

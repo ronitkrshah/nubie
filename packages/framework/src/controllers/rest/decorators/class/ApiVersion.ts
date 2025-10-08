@@ -1,5 +1,5 @@
 import { BaseClassDecorator } from "../../../../abstractions";
-import { IRestConfig } from "../../IRestConfig";
+import { IRestMetadata } from "../../IRestMetadata";
 import { ObjectEditor } from "../../../../utils";
 
 class ApiVersionDecorator extends BaseClassDecorator {
@@ -8,7 +8,7 @@ class ApiVersionDecorator extends BaseClassDecorator {
     }
 
     public init(): Promise<void> | void {
-        const metadata: IRestConfig =
+        const metadata: IRestMetadata =
             Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, this.target) || {};
 
         const editor = new ObjectEditor(metadata);

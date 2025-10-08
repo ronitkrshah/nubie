@@ -1,8 +1,8 @@
 import { BaseMethodDecorator } from "../../../../abstractions";
-import { IRestConfig } from "../../IRestConfig";
+import { IRestMetadata } from "../../IRestMetadata";
 import { ObjectEditor } from "../../../../utils";
 
-class RouteVersionDecorator extends BaseMethodDecorator<IRestConfig> {
+class RouteVersionDecorator extends BaseMethodDecorator<IRestMetadata> {
     public constructor(public readonly version: number) {
         super();
     }

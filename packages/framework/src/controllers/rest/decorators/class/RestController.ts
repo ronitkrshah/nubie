@@ -1,7 +1,7 @@
 import { BaseClassDecorator } from "../../../../abstractions";
 import { InvalidControllerNameException } from "../../exceptions";
 import { ObjectEditor } from "../../../../utils";
-import { IRestConfig } from "../../IRestConfig";
+import { IRestMetadata } from "../../IRestMetadata";
 import { RestRequestBuilder } from "../../utils";
 import { DIContainer } from "@nubie/di";
 import { HttpApp } from "../../../../HttpApp";
@@ -24,10 +24,10 @@ class RestControllerDecorator extends BaseClassDecorator {
     }
 
     private updateMetadata() {
-        const metadata: IRestConfig =
+        const metadata: IRestMetadata =
             Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, this.target) || {};
 
-        const editor = new ObjectEditor<IRestConfig>(metadata);
+        const editor = new ObjectEditor<IRestMetadata>(metadata);
         editor.mutateState((state) => {
             state.className = this.target.name;
             state.baseEndpoint = this._endpoint;

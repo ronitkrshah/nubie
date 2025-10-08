@@ -1,5 +1,5 @@
 import { BaseMethodDecorator } from "../../../../abstractions";
-import { IRestConfig } from "../../IRestConfig";
+import { IRestMetadata } from "../../IRestMetadata";
 import path from "node:path";
 import { Config } from "../../../../core/config";
 import multer from "multer";
@@ -17,7 +17,7 @@ export type TFileUploadOptions = {
     fields?: { name: string; maxCount?: number }[];
 };
 
-class FileUploadDecorator extends BaseMethodDecorator<IRestConfig> {
+class FileUploadDecorator extends BaseMethodDecorator<IRestMetadata> {
     public constructor(public readonly options: TFileUploadOptions = {}) {
         super();
     }
