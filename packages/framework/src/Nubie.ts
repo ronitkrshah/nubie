@@ -29,13 +29,6 @@ export class Nubie {
         return new Nubie();
     }
 
-    public useWebsocket() {
-        const httpApp = DIContainer.resolveInstance<HttpApp>(HttpApp.Token);
-        import("socket.io").then(({ Server }) => {
-            httpApp.socketIo = new Server(this._httpServer);
-        });
-    }
-
     public async registerClassDecoratorsAsync() {
         for (const decorator of BaseClassDecorator.RegisteredClasses) {
             await decorator.init();
