@@ -77,6 +77,7 @@ export class RestRequestBuilder {
                     }
 
                     const result = await instance[methodName].apply(instance, argument);
+                    if (res.headersSent) return;
                     if (!result) return res.sendStatus(204);
 
                     if ("statusCode" in result && "data" in result) {
