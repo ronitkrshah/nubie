@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { DIContainer } from "@nubie/di";
 import { IRestMetadata } from "../IRestMetadata";
 import { Config } from "../../../core/config";
-import { THttpMethodResponse } from "./HttpResponse";
+import { THttpMethodResponse } from "../utils/HttpResponse";
 import { createDiScopeMiddleware } from "../decorators/extensions/class/createDiScopeMiddleware";
 import { MiddlewareResolver } from "./MiddlewareResolver";
 

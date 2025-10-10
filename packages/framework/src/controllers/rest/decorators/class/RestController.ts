@@ -2,7 +2,7 @@ import { BaseClassDecorator } from "../../../../abstractions";
 import { InvalidControllerNameException } from "../../exceptions";
 import { ObjectEditor } from "../../../../utils";
 import { IRestMetadata } from "../../IRestMetadata";
-import { RestRequestBuilder } from "../../utils";
+import { RestRequestBuilder } from "../../builder";
 import { DIContainer } from "@nubie/di";
 import { HttpApp } from "../../../../HttpApp";
 
