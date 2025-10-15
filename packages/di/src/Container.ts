@@ -1,7 +1,7 @@
-import { IDIContainer, TClass } from "./IDIContainer";
+import { IContainer } from "./IContainer";
 import { container, DependencyContainer, injectable, Lifecycle } from "tsyringe";
 
-export class DIContainer implements IDIContainer {
+class Container implements IContainer {
     private _container: DependencyContainer;
 
     public constructor(diContainer: DependencyContainer = container) {
@@ -40,11 +40,13 @@ export class DIContainer implements IDIContainer {
         return this._container.resolve(key);
     }
 
-    public createScope(): IDIContainer {
-        return new DIContainer(container.createChildContainer());
+    public createScope(): IContainer {
+        return new Container(container.createChildContainer());
     }
 
     public dispose(): void {
         this._container.dispose();
     }
 }
+
+export const GlobalContainer = new Container();

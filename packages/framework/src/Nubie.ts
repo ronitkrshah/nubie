@@ -1,7 +1,7 @@
 import * as http from "node:http";
 import express, { Request, Response, NextFunction } from "express";
 import { Config } from "./core/config";
-import { DIContainer } from "@nubie/di";
+import { GlobalContainer } from "@nubie/di";
 import { BaseClassDecorator } from "./abstractions";
 import { HttpApp } from "./HttpApp";
 import { CompiledFiles, ClassResolver } from "./core/runtime";
@@ -21,8 +21,8 @@ export class Nubie {
     private constructor() {
         this._expressApp = express();
         this._httpServer = http.createServer(this._expressApp);
-        DIContainer.addSingleton(Config.Token, Config);
-        DIContainer.addValue(HttpApp.Token, new HttpApp(this._httpServer, this._expressApp));
+        GlobalContainer.addSingleton(Config.Token, Config);
+        GlobalContainer.addValue(HttpApp.Token, new HttpApp(this._httpServer, this._expressApp));
     }
 
     public static createApplication() {
@@ -41,7 +41,7 @@ export class Nubie {
     }
 
     private async mapControllersAsync() {
-        const config = DIContainer.resolveInstance<Config>(Config.Token).getSection("mappings");
+        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection("mappings");
         const files = await CompiledFiles.scanFilesAsync("Controller", config.controllersDirectory);
         for (const file of files) {
             const resolvedClass = new ClassResolver(file);
@@ -50,7 +50,7 @@ export class Nubie {
     }
 
     public async runAsync() {
-        const configInstance = DIContainer.resolveInstance<Config>(Config.Token);
+        const configInstance = GlobalContainer.resolveInstance<Config>(Config.Token);
         await configInstance.loadConfigAsync();
 
         const appConfig = configInstance.getConfig();

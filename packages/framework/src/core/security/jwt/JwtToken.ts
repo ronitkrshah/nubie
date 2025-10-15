@@ -1,5 +1,5 @@
 import { TClaim } from "./TClaims";
-import { DIContainer } from "@nubie/di";
+import { GlobalContainer } from "@nubie/di";
 import { Config } from "../../config";
 import { MissingJwtSecretException } from "./exceptions";
 import jwt from "jsonwebtoken";
@@ -8,7 +8,7 @@ export class JwtToken {
     private _claims: Record<string, unknown> = {};
 
     public constructor() {
-        const config = DIContainer.resolveInstance<Config>(Config.Token).getSection(
+        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection(
             "authentication",
         );
 
@@ -24,7 +24,7 @@ export class JwtToken {
     }
 
     public generateToken() {
-        const config = DIContainer.resolveInstance<Config>(Config.Token).getSection(
+        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection(
             "authentication",
         );
 
@@ -32,7 +32,7 @@ export class JwtToken {
     }
 
     public static verifyToken(token: string) {
-        const config = DIContainer.resolveInstance<Config>(Config.Token).getSection(
+        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection(
             "authentication",
         );
 

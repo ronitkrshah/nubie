@@ -3,7 +3,7 @@ import { InvalidControllerNameException } from "../../exceptions";
 import { ObjectEditor } from "../../../../utils";
 import { IRestMetadata } from "../../IRestMetadata";
 import { RestRequestBuilder } from "../../builder";
-import { DIContainer } from "@nubie/di";
+import { GlobalContainer } from "@nubie/di";
 import { HttpApp } from "../../../../HttpApp";
 
 class RestControllerDecorator extends BaseClassDecorator {
@@ -40,7 +40,7 @@ class RestControllerDecorator extends BaseClassDecorator {
         this.updateMetadata();
         const requestBuilder = new RestRequestBuilder(this);
         await requestBuilder.buildAsync();
-        const httpApp = DIContainer.resolveInstance<HttpApp>(HttpApp.Token);
+        const httpApp = GlobalContainer.resolveInstance<HttpApp>(HttpApp.Token);
         httpApp.express.use(requestBuilder.router);
     }
 }

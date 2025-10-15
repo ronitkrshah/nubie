@@ -1,6 +1,4 @@
-export type TClass<TInstance extends object> = new (...args: any[]) => TInstance;
-
-export interface IDIContainer {
+export interface IContainer {
     addSingleton(key: string | symbol, useClass: TClass<object>): void;
 
     addTransient(key: string | symbol, useClass: TClass<object>): void;
@@ -15,7 +13,7 @@ export interface IDIContainer {
 
     resolveInstance<TInstance extends object>(key: string | symbol): TInstance;
 
-    createScope(): IDIContainer;
+    createScope(): IContainer;
 
     dispose(): void;
 }

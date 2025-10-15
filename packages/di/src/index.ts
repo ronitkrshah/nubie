@@ -1,8 +1,9 @@
 import "reflect-metadata";
 
-import { DIContainer as Container } from "./DIContainer";
-import { type IDIContainer } from "./IDIContainer";
+import { GlobalContainer } from "./Container";
+import { type IContainer } from "./IContainer";
 
 export { inject as Inject } from "tsyringe";
-const DIContainer = new Container();
-export { DIContainer, type IDIContainer };
+
+export * from "./decorators";
+export { GlobalContainer, type IContainer };

@@ -1,5 +1,6 @@
-import { ClassNotFoundException } from "./ClassNotFoundException";
+import { ClassNotFoundException } from "./exceptions";
 import { createRequire } from "node:module";
+import { ClassIntrospector } from "./ClassIntrospector";
 
 // @ts-ignore
 const require = createRequire(import.meta.url);
@@ -7,7 +8,7 @@ const require = createRequire(import.meta.url);
 export class ClassResolver {
     private readonly _filePath: string;
     private readonly _fileName: string;
-    private _module: { default?: TClass } | null = null;
+    private _module: { default: TClass } | null = null;
 
     public constructor(filePath: string) {
         this._filePath = filePath;
@@ -26,8 +27,8 @@ export class ClassResolver {
         this.validateClass(this._module.default);
     }
 
-    public unloadClass() {
-        this._module = null;
-        delete require.cache[require.resolve(this._filePath)];
+    public getIntrospector(): ClassIntrospector {
+        if (!this._module) throw new ClassNotFoundException();
+        return new ClassIntrospector(this._module.default);
     }
 }

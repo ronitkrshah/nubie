@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { DIContainer } from "@nubie/di";
+import { GlobalContainer } from "@nubie/di";
 
 export function createDiScopeMiddleware(req: Request, res: Response, next: NextFunction) {
-    req.diContainer = DIContainer.createScope();
+    req.diContainer = GlobalContainer.createScope();
 
     res.on("finish", async () => {
         req.diContainer.dispose();

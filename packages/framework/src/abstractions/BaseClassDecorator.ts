@@ -1,5 +1,5 @@
 import { ObjectEditor } from "../utils";
-import { DIContainer } from "@nubie/di";
+import { GlobalContainer } from "@nubie/di";
 
 type TClassDecoratorMetadata = {
     markedAsInjectable?: boolean;
@@ -26,8 +26,8 @@ export abstract class BaseClassDecorator {
                     editor.mutateState((state) => {
                         state.markedAsInjectable = true;
                     });
-                    DIContainer.markAsInjectable(target);
-                    DIContainer.addTransient(target.name, target);
+                    GlobalContainer.markAsInjectable(target);
+                    GlobalContainer.addTransient(target.name, target);
                     Reflect.defineMetadata(
                         BaseClassDecorator.MetadataKey,
                         editor.getState(),

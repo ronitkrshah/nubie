@@ -1,9 +1,9 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
-import { DIContainer } from "@nubie/di";
+import { GlobalContainer } from "@nubie/di";
 import { IRestMetadata } from "../IRestMetadata";
 import { Config } from "../../../core/config";
-import { THttpMethodResponse } from "../utils/HttpResponse";
+import { THttpMethodResponse } from "../utils";
 import { createDiScopeMiddleware } from "../decorators/extensions/class/createDiScopeMiddleware";
 import { MiddlewareResolver } from "./MiddlewareResolver";
 
@@ -22,7 +22,7 @@ export class RestRequestBuilder {
 
     private generateEndpoint(config: IRestMetadata, methodName: string) {
         const methodMetadata = config.requestHandlers![methodName];
-        const appConfig = DIContainer.resolveInstance<Config>(Config.Token).getConfig();
+        const appConfig = GlobalContainer.resolveInstance<Config>(Config.Token).getConfig();
 
         let endpoint = `/${config.baseEndpoint}/${methodMetadata?.route}`;
 
