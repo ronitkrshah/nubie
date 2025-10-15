@@ -4,7 +4,7 @@ import { Config } from "./core/config";
 import { DIContainer } from "@nubie/di";
 import { BaseClassDecorator } from "./abstractions";
 import { HttpApp } from "./HttpApp";
-import { CompiledFiles, DynamicImport } from "./core/runtime";
+import { CompiledFiles, ClassResolver } from "./core/runtime";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -44,8 +44,8 @@ export class Nubie {
         const config = DIContainer.resolveInstance<Config>(Config.Token).getSection("mappings");
         const files = await CompiledFiles.scanFilesAsync("Controller", config.controllersDirectory);
         for (const file of files) {
-            const dynamicImport = new DynamicImport(file);
-            await dynamicImport.importClassAsync();
+            const resolvedClass = new ClassResolver(file);
+            resolvedClass.loadClass();
         }
     }
 

@@ -1,6 +1,6 @@
 import { Exception } from "../../../utils";
 
-export class InvalidDefaultClassException extends Exception {
+export class ClassNotFoundException extends Exception {
     public constructor() {
         super("Invalid Default Class");
     }

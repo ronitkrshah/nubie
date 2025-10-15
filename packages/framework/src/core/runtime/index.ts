@@ -1,4 +1,4 @@
 import CompiledFiles from "./CompiledFiles";
 
-export * from "./dynamic-import/DynamicImport";
+export * from "./classResolver/ClassResolver";
 export { CompiledFiles };
