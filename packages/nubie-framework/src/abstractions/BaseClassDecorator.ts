@@ -1,5 +1,5 @@
 import { ObjectEditor } from "../utils";
-import { GlobalContainer } from "@nubie/di";
+import { GlobalContainer } from "nubie-di";
 
 type TClassDecoratorMetadata = {
     markedAsInjectable?: boolean;

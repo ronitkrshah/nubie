@@ -3,7 +3,7 @@ import { InvalidControllerNameException } from "../../exceptions";
 import { ObjectEditor } from "../../../../utils";
 import { IRestMetadata } from "../../IRestMetadata";
 import { RestRequestBuilder } from "../../builder";
-import { GlobalContainer } from "@nubie/di";
+import { GlobalContainer } from "nubie-di";
 import { HttpApp } from "../../../../HttpApp";
 
 class RestControllerDecorator extends BaseClassDecorator {

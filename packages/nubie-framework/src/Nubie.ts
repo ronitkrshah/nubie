@@ -1,7 +1,7 @@
 import * as http from "node:http";
 import express, { Request, Response, NextFunction } from "express";
 import { Config } from "./core/config";
-import { GlobalContainer } from "@nubie/di";
+import { GlobalContainer } from "nubie-di";
 import { BaseClassDecorator } from "./abstractions";
 import { HttpApp } from "./HttpApp";
 import { CompiledFiles, ClassResolver } from "./core/runtime";

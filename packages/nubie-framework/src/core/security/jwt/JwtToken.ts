@@ -1,5 +1,5 @@
 import { TClaim } from "./TClaims";
-import { GlobalContainer } from "@nubie/di";
+import { GlobalContainer } from "nubie-di";
 import { Config } from "../../config";
 import { MissingJwtSecretException } from "./exceptions";
 import jwt from "jsonwebtoken";

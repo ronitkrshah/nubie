@@ -1,6 +1,6 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
-import { GlobalContainer } from "@nubie/di";
+import { GlobalContainer } from "nubie-di";
 import { IRestMetadata } from "../IRestMetadata";
 import { Config } from "../../../core/config";
 import { THttpMethodResponse } from "../utils";

@@ -13,7 +13,7 @@ export interface IRestMetadata {
               httpMethod: THttpMethod;
               route: string;
               apiVersion?: number;
-              // framework level custom with extension class
+              // nubie-framework level custom with extension class
               methodMiddlewares?: RestMethodExtension[];
               // native express
               nativeMiddlewares?: RequestHandler[];
