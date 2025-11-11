@@ -1,4 +1,4 @@
-import type { IConfig } from "./IConfig";
-import { Config } from "./Config";
+import type { INubieConfig } from "./INubieConfig";
+import { NubieConfig } from "./NubieConfig";
 
-export { type IConfig, Config };
+export { type INubieConfig, NubieConfig };

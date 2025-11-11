@@ -3,8 +3,7 @@ import { InvalidControllerNameException } from "../../exceptions";
 import { ObjectEditor } from "../../../../utils";
 import { IRestMetadata } from "../../IRestMetadata";
 import { RestRequestBuilder } from "../../builder";
-import { GlobalContainer } from "nubie-di";
-import { HttpApp } from "../../../../HttpApp";
+import { AppContext } from "../../../../AppContext";
 
 class RestControllerDecorator extends BaseClassDecorator {
     private _endpoint: string;
@@ -35,13 +34,15 @@ class RestControllerDecorator extends BaseClassDecorator {
         Reflect.defineMetadata(BaseClassDecorator.MetadataKey, editor.getState(), this.target);
     }
 
-    public async init(): Promise<void> {
+    public async build(): Promise<void> {
         this.validateClass();
         this.updateMetadata();
+
         const requestBuilder = new RestRequestBuilder(this);
         await requestBuilder.buildAsync();
-        const httpApp = GlobalContainer.resolveInstance<HttpApp>(HttpApp.Token);
-        httpApp.express.use(requestBuilder.router);
+
+        const express = AppContext.getInstance().express;
+        express.use(requestBuilder.router);
     }
 }
 

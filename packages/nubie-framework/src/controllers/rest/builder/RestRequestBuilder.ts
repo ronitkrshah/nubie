@@ -1,11 +1,10 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
-import { GlobalContainer } from "nubie-di";
 import { IRestMetadata } from "../IRestMetadata";
-import { Config } from "../../../core/config";
-import { THttpMethodResponse } from "../utils";
-import { createDiScopeMiddleware } from "../decorators/extensions/class/createDiScopeMiddleware";
+import { INubieConfig } from "../../../core/config";
+import { THttpMethodResponse, createDiScopeMiddleware } from "../utils";
 import { MiddlewareResolver } from "./MiddlewareResolver";
+import { AppContext } from "../../../AppContext";
 
 type TController = Record<
     string,
@@ -14,54 +13,57 @@ type TController = Record<
 
 export class RestRequestBuilder {
     public readonly router: Router;
+    private readonly _config: INubieConfig;
 
     public constructor(public readonly decoratedClass: BaseClassDecorator) {
         this.router = Router();
         this.router.use(createDiScopeMiddleware);
+        this._config = AppContext.getInstance().config.getConfig();
     }
 
     private generateEndpoint(config: IRestMetadata, methodName: string) {
         const methodMetadata = config.requestHandlers![methodName];
-        const appConfig = GlobalContainer.resolveInstance<Config>(Config.Token).getConfig();
 
         let endpoint = `/${config.baseEndpoint}/${methodMetadata?.route}`;
 
-        if (appConfig.http.useApiVersioning) {
+        if (this._config.http.useApiVersioning) {
             const apiVersion =
-                methodMetadata?.apiVersion || config.apiVersion || appConfig.http.defaultApiVersion;
+                methodMetadata?.apiVersion ||
+                config.apiVersion ||
+                this._config.http.defaultApiVersion;
             endpoint = `/v${apiVersion}` + endpoint;
         }
         return endpoint.replace(/\/+/g, "/");
     }
 
     public async buildAsync() {
-        const restConfig: IRestMetadata = Reflect.getOwnMetadata(
+        const classMetadata: IRestMetadata = Reflect.getOwnMetadata(
             BaseClassDecorator.MetadataKey,
             this.decoratedClass.target,
         );
 
-        const middlewareResolver = new MiddlewareResolver(restConfig);
+        const middlewareResolver = new MiddlewareResolver(classMetadata);
 
         // Class Level Middlewares
-        const classMiddlewares = middlewareResolver.getClassMiddlewares();
-        classMiddlewares.forEach((reqHandler) => this.router.use(reqHandler));
+        const controllerLevelMiddlewares = middlewareResolver.getClassMiddlewares();
+        controllerLevelMiddlewares.forEach((reqHandler) => this.router.use(reqHandler));
 
-        const requestHandlersArray = Object.entries(restConfig.requestHandlers || {});
+        const requestHandlersArray = Object.entries(classMetadata.requestHandlers || {});
 
         for (const [methodName, metadata] of requestHandlersArray) {
             /** For Type Safety */
             if (!metadata) continue;
-            const endpoint = this.generateEndpoint(restConfig, methodName);
+            const endpoint = this.generateEndpoint(classMetadata, methodName);
 
             /** Framework Level Middlewares */
-            const methodMiddlewares = middlewareResolver.getMethodMiddlewares(methodName);
+            const methodLevelMiddlewares = middlewareResolver.getMethodMiddlewares(methodName);
             /** Native Middlewares */
-            const nativeMiddlewares = middlewareResolver.getNativeMiddlewares(methodName);
+            const nativeHttpMiddlewares = middlewareResolver.getNativeMiddlewares(methodName);
 
             // Actual Request Handler
             const httpRequestHandler = async (req: Request, res: Response, next: NextFunction) => {
                 // It will create new controller instance on every request
-                const instance: TController = req.diContainer.resolveInstance(
+                const instance: TController = req.serviceContainer.resolve(
                     this.decoratedClass.target.name,
                 );
 
@@ -92,8 +94,8 @@ export class RestRequestBuilder {
             };
 
             this.router[metadata.httpMethod](endpoint, [
-                ...methodMiddlewares,
-                ...nativeMiddlewares,
+                ...nativeHttpMiddlewares,
+                ...methodLevelMiddlewares,
                 httpRequestHandler,
             ]);
         }

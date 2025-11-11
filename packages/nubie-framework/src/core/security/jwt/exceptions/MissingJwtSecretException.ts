@@ -1,4 +1,4 @@
-import { Exception } from "../../../../utils";
+import { Exception } from "../../../../exceptions";
 
 export class MissingJwtSecretException extends Exception {
     public constructor() {

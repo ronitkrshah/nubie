@@ -1,4 +1,4 @@
-import { HttpException } from "../../../utils";
+import { HttpException } from "../../../exceptions";
 
 export class MissingRequiredQueryException extends HttpException {
     public constructor(queryKey: string) {

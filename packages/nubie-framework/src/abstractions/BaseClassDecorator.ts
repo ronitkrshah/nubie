@@ -1,5 +1,6 @@
 import { ObjectEditor } from "../utils";
-import { GlobalContainer } from "nubie-di";
+import { AppContext } from "../AppContext";
+import { Injectable, Transient } from "../core/dependency-injection/decorators";
 
 type TClassDecoratorMetadata = {
     markedAsInjectable?: boolean;
@@ -7,11 +8,10 @@ type TClassDecoratorMetadata = {
 
 export abstract class BaseClassDecorator {
     public static MetadataKey = Symbol("nubie:internal:classDecorator");
-    public static RegisteredClasses: BaseClassDecorator[] = [];
 
     public target!: TClass;
 
-    abstract init(): Promise<void> | void;
+    abstract build(): Promise<void> | void;
 
     public static createDecorator<TArgs extends unknown[]>(
         ExtendedClass: TClass<TArgs, BaseClassDecorator>,
@@ -26,8 +26,11 @@ export abstract class BaseClassDecorator {
                     editor.mutateState((state) => {
                         state.markedAsInjectable = true;
                     });
-                    GlobalContainer.markAsInjectable(target);
-                    GlobalContainer.addTransient(target.name, target);
+
+                    // Setup for injecting dependencies
+                    Injectable()(target);
+                    Transient(target.name)(target);
+
                     Reflect.defineMetadata(
                         BaseClassDecorator.MetadataKey,
                         editor.getState(),
@@ -37,7 +40,7 @@ export abstract class BaseClassDecorator {
 
                 const extendedClass = new ExtendedClass(...args);
                 extendedClass.target = target;
-                BaseClassDecorator.RegisteredClasses.push(extendedClass);
+                AppContext.getInstance().classDecorators.push(extendedClass);
             };
         };
     }

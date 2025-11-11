@@ -7,7 +7,7 @@ class ApiVersionDecorator extends BaseClassDecorator {
         super();
     }
 
-    public init(): Promise<void> | void {
+    public build(): Promise<void> | void {
         const metadata: IRestMetadata =
             Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, this.target) || {};
 

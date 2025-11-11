@@ -1,4 +1,4 @@
-import CompiledFiles from "./CompiledFiles";
-import { ClassResolver } from "./import/ClassResolver";
+import Assembly from "./Assembly";
+import ClassResolver from "./class-resolver/ClassResolver";
 
-export { CompiledFiles, ClassResolver };
+export { Assembly, ClassResolver };

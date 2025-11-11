@@ -12,7 +12,7 @@ class RateLimitDecorator extends BaseMethodDecorator<IRestMetadata> {
             throw new InvalidRateLimitRegistryKeyException(rateLimitKey);
     }
 
-    public async init(): Promise<void> {
+    public async build(): Promise<void> {
         const metadata = this.getClassMetadata();
         const rateLimitOptions = rateLimitRegistryMap.get(this.rateLimitKey)!;
 

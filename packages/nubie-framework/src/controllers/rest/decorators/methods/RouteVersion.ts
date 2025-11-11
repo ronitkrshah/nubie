@@ -7,7 +7,7 @@ class RouteVersionDecorator extends BaseMethodDecorator<IRestMetadata> {
         super();
     }
 
-    public init(): Promise<void> | void {
+    public build(): Promise<void> | void {
         const metadata = this.getClassMetadata();
         const editor = new ObjectEditor(metadata);
         editor.mutateState((state) => {

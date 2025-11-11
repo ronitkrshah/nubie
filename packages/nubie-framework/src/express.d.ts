@@ -1,8 +1,8 @@
 import "express";
-import type { IContainer } from "nubie-di";
+import type { DependencyContainer } from "tsyringe";
 
 declare module "express-serve-static-core" {
     interface Request {
-        diContainer: IContainer;
+        serviceContainer: DependencyContainer;
     }
 }

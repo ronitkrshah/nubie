@@ -1,18 +1,17 @@
 import { TClaim } from "./TClaims";
-import { GlobalContainer } from "nubie-di";
-import { Config } from "../../config";
+import { INubieConfig } from "../../config";
 import { MissingJwtSecretException } from "./exceptions";
 import jwt from "jsonwebtoken";
+import { AppContext } from "../../../AppContext";
 
 export class JwtToken {
     private _claims: Record<string, unknown> = {};
+    private readonly _authConfig: INubieConfig["authentication"];
 
     public constructor() {
-        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection(
-            "authentication",
-        );
-
+        const config = AppContext.getInstance().config.getSection("authentication");
         if (!config?.secretKey) throw new MissingJwtSecretException();
+        this._authConfig = config;
     }
 
     public addClaim(claim: TClaim, value: unknown) {
@@ -24,18 +23,11 @@ export class JwtToken {
     }
 
     public generateToken() {
-        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection(
-            "authentication",
-        );
-
-        return jwt.sign(this._claims, config!.secretKey!);
+        return jwt.sign(this._claims, this._authConfig!.secretKey!);
     }
 
     public static verifyToken(token: string) {
-        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection(
-            "authentication",
-        );
-
+        const config = AppContext.getInstance().config.getSection("authentication");
         if (!config?.secretKey) throw new MissingJwtSecretException();
         return jwt.verify(token, config.secretKey);
     }

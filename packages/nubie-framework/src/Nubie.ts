@@ -1,10 +1,7 @@
-import * as http from "node:http";
-import express, { Request, Response, NextFunction } from "express";
-import { Config } from "./core/config";
-import { GlobalContainer } from "nubie-di";
-import { BaseClassDecorator } from "./abstractions";
-import { HttpApp } from "./HttpApp";
-import { CompiledFiles, ClassResolver } from "./core/runtime";
+import { Request, Response, NextFunction } from "express";
+import { Assembly, ClassResolver } from "./core/runtime";
+import { AppContext } from "./AppContext";
+import { INubieConfig } from "./core/config";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -14,24 +11,22 @@ type TGlobalErrorHandlerCallback = (
 ) => void;
 
 export class Nubie {
-    private readonly _httpServer: http.Server;
-    private readonly _expressApp: express.Express;
+    private readonly _appContext: AppContext;
+    private readonly _config: INubieConfig;
     private _globalErrorHandler?: TGlobalErrorHandlerCallback = undefined;
 
     private constructor() {
-        this._expressApp = express();
-        this._httpServer = http.createServer(this._expressApp);
-        GlobalContainer.addSingleton(Config.Token, Config);
-        GlobalContainer.addValue(HttpApp.Token, new HttpApp(this._httpServer, this._expressApp));
+        this._appContext = AppContext.getInstance();
+        this._config = this._appContext.config.getConfig();
     }
 
-    public static createApplication() {
+    public static createApp() {
         return new Nubie();
     }
 
     public async registerClassDecoratorsAsync() {
-        for (const decorator of BaseClassDecorator.RegisteredClasses) {
-            await decorator.init();
+        for (const decorator of this._appContext.classDecorators) {
+            await decorator.build();
         }
     }
 
@@ -41,25 +36,23 @@ export class Nubie {
     }
 
     private async mapControllersAsync() {
-        const config = GlobalContainer.resolveInstance<Config>(Config.Token).getSection("mappings");
-        const files = await CompiledFiles.scanFilesAsync("Controller", config.controllersDirectory);
+        const files = await Assembly.scanFilesAsync(
+            "Controller",
+            this._config.mappings.controllersDirectory,
+        );
         for (const file of files) {
-            const resolvedClass = new ClassResolver(file);
-            resolvedClass.loadClass();
+            ClassResolver.resolve(file);
         }
     }
 
     public async runAsync() {
-        const configInstance = GlobalContainer.resolveInstance<Config>(Config.Token);
-        await configInstance.loadConfigAsync();
-
-        const appConfig = configInstance.getConfig();
+        const { express, config } = this._appContext;
         await this.mapControllersAsync();
         await this.registerClassDecoratorsAsync();
-        if (this._globalErrorHandler) this._expressApp.use(this._globalErrorHandler);
+        if (this._globalErrorHandler) express.use(this._globalErrorHandler);
 
-        this._httpServer.listen(appConfig.http.port, () => {
-            console.log("Server running on port " + appConfig.http.port);
+        express.listen(this._config.http.port, () => {
+            console.log("Server running on port " + this._config.http.port);
         });
     }
 }

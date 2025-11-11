@@ -1,4 +1,4 @@
-import { Exception } from "../../../utils";
+import { Exception } from "../../../exceptions";
 
 export class InvalidControllerNameException extends Exception {
     public constructor() {

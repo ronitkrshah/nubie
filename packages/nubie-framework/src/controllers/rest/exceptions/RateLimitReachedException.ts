@@ -1,4 +1,4 @@
-import { HttpException } from "../../../utils";
+import { HttpException } from "../../../exceptions";
 
 export class RateLimitReachedException extends HttpException {
     public constructor() {

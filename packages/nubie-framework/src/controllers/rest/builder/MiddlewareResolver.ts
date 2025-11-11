@@ -2,20 +2,21 @@ import { IRestMetadata } from "../IRestMetadata";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 
 export class MiddlewareResolver {
-    private readonly _config: IRestMetadata;
+    private readonly _metadata: IRestMetadata;
 
-    public constructor(config: IRestMetadata) {
-        this._config = config;
+    public constructor(metadata: IRestMetadata) {
+        this._metadata = metadata;
     }
 
     public getNativeMiddlewares(methodName: string) {
         return (
-            this._config?.requestHandlers?.[methodName]?.nativeMiddlewares?.slice().reverse() ?? []
+            this._metadata?.requestHandlers?.[methodName]?.nativeMiddlewares?.slice().reverse() ??
+            []
         );
     }
 
     public getClassMiddlewares() {
-        const middlewares = this._config.classMiddlewares?.slice().reverse() || [];
+        const middlewares = this._metadata.classMiddlewares?.slice().reverse() || [];
 
         const requestHandlers: RequestHandler[] = [];
 
@@ -32,7 +33,8 @@ export class MiddlewareResolver {
 
     public getMethodMiddlewares(methodName: string) {
         const middlewares =
-            this._config.requestHandlers?.[methodName]?.methodMiddlewares?.slice().reverse() || [];
+            this._metadata.requestHandlers?.[methodName]?.methodMiddlewares?.slice().reverse() ||
+            [];
 
         const requestHandlers: RequestHandler[] = [];
 

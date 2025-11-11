@@ -1,11 +1,14 @@
 import "reflect-metadata";
-import { Exception, HttpException } from "./utils";
+import { Exception, HttpException } from "./exceptions";
 import { Nubie } from "./Nubie";
 
 export * from "./controllers/rest";
 export * from "./core/config";
 export * from "./core/security/jwt";
 export * from "./core/runtime";
+export * from "./core/dependency-injection";
 export * from "./events";
+export * from "./generic";
+export * from "./generic/decorators";
 
 export { Exception, HttpException, Nubie };
