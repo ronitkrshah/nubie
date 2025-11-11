@@ -12,11 +12,9 @@ type TModule = {
 class ClassResolver {
     public resolve(filePath: string): TClass {
         const fileName = filePath.split("/").pop()?.replace(".js", "")!;
-
         const mod = require(filePath) as TModule;
         if (!mod.default) throw new ClassNotFoundException();
-
-        const isClass = mod.toString().startsWith("class");
+        const isClass = mod.default.toString().startsWith("class");
         if (!isClass) throw new ClassNotFoundException();
         if (fileName !== mod.default.name) throw new ClassNotFoundException();
         return mod.default;
