@@ -1,7 +1,7 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
 import { IRestMetadata } from "../IRestMetadata";
-import { INubieConfig } from "../../../core/config";
+import { IConfiguration } from "../../../core/config";
 import { THttpMethodResponse, createDiScopeMiddleware } from "../utils";
 import { MiddlewareResolver } from "./MiddlewareResolver";
 import { AppContext } from "../../../AppContext";
@@ -13,7 +13,7 @@ type TController = Record<
 
 export class RestRequestBuilder {
     public readonly router: Router;
-    private readonly _config: INubieConfig;
+    private readonly _config: IConfiguration;
 
     public constructor(public readonly decoratedClass: BaseClassDecorator) {
         this.router = Router();

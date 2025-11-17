@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { Express, Request, Response, NextFunction } from "express";
 import { Assembly, ClassResolver } from "./core/runtime";
 import { AppContext } from "./AppContext";
-import { INubieConfig } from "./core/config";
+import { Configuration } from "./core/config";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -12,16 +12,10 @@ type TGlobalErrorHandlerCallback = (
 
 export class Nubie {
     private readonly _appContext: AppContext;
-    private readonly _config: INubieConfig;
     private _globalErrorHandler?: TGlobalErrorHandlerCallback = undefined;
 
-    private constructor() {
-        this._appContext = AppContext.getInstance();
-        this._config = this._appContext.config.getConfig();
-    }
-
-    public static createApp() {
-        return new Nubie();
+    public constructor(app: Express) {
+        this._appContext = AppContext.saveContext(app);
     }
 
     public async registerClassDecoratorsAsync() {
@@ -38,7 +32,7 @@ export class Nubie {
     private async mapControllersAsync() {
         const files = await Assembly.scanFilesAsync(
             "Controller",
-            this._config.mappings.controllersDirectory,
+            Configuration.options.controllersDirectory,
         );
         for (const file of files) {
             ClassResolver.resolve(file);
@@ -46,13 +40,13 @@ export class Nubie {
     }
 
     public async runAsync() {
-        const { express, config } = this._appContext;
+        const { express } = this._appContext;
         await this.mapControllersAsync();
         await this.registerClassDecoratorsAsync();
         if (this._globalErrorHandler) express.use(this._globalErrorHandler);
 
-        express.listen(this._config.http.port, () => {
-            console.log("Server running on port " + this._config.http.port);
+        express.listen(Configuration.options.port, () => {
+            console.log("Server running on port " + Configuration.options.port);
         });
     }
 }

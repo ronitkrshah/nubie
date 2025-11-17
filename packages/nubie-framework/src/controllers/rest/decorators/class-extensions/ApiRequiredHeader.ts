@@ -1,7 +1,6 @@
-import { RestClassExtension, RestMethodExtension } from "../../abstractions";
+import { RestClassExtension } from "../../abstractions";
 import { THttpContext } from "../../types";
 import { UnauthenticatedRequestException } from "../../exceptions";
-import { JwtToken } from "../../../../core/security/jwt";
 
 class ApiRequiredHeaderDecorator extends RestClassExtension {
     public constructor(public readonly header: string) {

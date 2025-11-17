@@ -1,7 +1,7 @@
 import { BaseMethodDecorator } from "../../../../abstractions";
 import { IRestMetadata } from "../../IRestMetadata";
 import path from "node:path";
-import { NubieConfig } from "../../../../core/config";
+import { Configuration } from "../../../../core/config";
 import multer from "multer";
 import mime from "mime-types";
 import { v4 as uuidv4 } from "uuid";
@@ -23,7 +23,7 @@ class FileUploadDecorator extends BaseMethodDecorator<IRestMetadata> {
     }
 
     public async build(): Promise<void> {
-        const uploadDir = path.join(NubieConfig.ProjectPath, "uploads");
+        const uploadDir = path.join(Configuration.ROOT_DIR, "uploads");
 
         const storage = multer.diskStorage({
             destination: (_, __, cb) => cb(null, uploadDir),

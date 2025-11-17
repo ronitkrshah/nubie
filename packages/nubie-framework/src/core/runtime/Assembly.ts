@@ -1,6 +1,6 @@
 import path from "node:path";
 import * as fs from "node:fs/promises";
-import { NubieConfig } from "../config";
+import { Configuration } from "../config";
 
 // Just fancy name copied from .NET :)
 
@@ -14,8 +14,8 @@ class Assembly {
     ): Promise<string[]> {
         const fileNames = Array.isArray(fileSuffix) ? fileSuffix : [fileSuffix];
         const searchDir = parentDir
-            ? path.join(NubieConfig.ProjectPath, "build", ...parentDir.split("/"))
-            : path.join(NubieConfig.ProjectPath, "build");
+            ? path.join(Configuration.ROOT_DIR, "build", ...parentDir.split("/"))
+            : path.join(Configuration.ROOT_DIR, "build");
 
         const files = await fs.readdir(searchDir, { recursive: true, withFileTypes: true });
 
