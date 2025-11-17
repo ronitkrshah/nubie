@@ -1,10 +1,8 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
 import { IRestMetadata } from "../IRestMetadata";
-import { IConfiguration } from "../../../core/config";
 import { THttpMethodResponse, createDiScopeMiddleware } from "../utils";
 import { MiddlewareResolver } from "./MiddlewareResolver";
-import { AppContext } from "../../../AppContext";
 
 type TController = Record<
     string,
@@ -13,26 +11,16 @@ type TController = Record<
 
 export class RestRequestBuilder {
     public readonly router: Router;
-    private readonly _config: IConfiguration;
 
     public constructor(public readonly decoratedClass: BaseClassDecorator) {
         this.router = Router();
         this.router.use(createDiScopeMiddleware);
-        this._config = AppContext.getInstance().config.getConfig();
     }
 
     private generateEndpoint(config: IRestMetadata, methodName: string) {
         const methodMetadata = config.requestHandlers![methodName];
 
         let endpoint = `/${config.baseEndpoint}/${methodMetadata?.route}`;
-
-        if (this._config.http.useApiVersioning) {
-            const apiVersion =
-                methodMetadata?.apiVersion ||
-                config.apiVersion ||
-                this._config.http.defaultApiVersion;
-            endpoint = `/v${apiVersion}` + endpoint;
-        }
         return endpoint.replace(/\/+/g, "/");
     }
 
