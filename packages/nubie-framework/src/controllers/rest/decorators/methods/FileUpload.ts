@@ -71,9 +71,9 @@ class FileUploadDecorator extends BaseMethodDecorator<IRestMetadata> {
             // @ts-ignore
             (state.requestHandlers ??= {})[this.propertyKey] ??= {};
             // @ts-ignore
-            state.requestHandlers[this.propertyKey].nativeMiddlewares ??= [];
-
-            state.requestHandlers[this.propertyKey]?.nativeMiddlewares?.push(requestHandler);
+            state.requestHandlers[this.propertyKey].middlewares ??= [];
+            // @ts-ignore
+            state.requestHandlers[this.propertyKey].middlewares?.push(requestHandler);
         });
 
         this.updateClassMetadata(editor.getState());

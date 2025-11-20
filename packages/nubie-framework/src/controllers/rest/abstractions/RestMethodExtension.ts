@@ -2,6 +2,7 @@ import { THttpContext } from "../types";
 import { BaseClassDecorator } from "../../../abstractions";
 import { IRestMetadata } from "../IRestMetadata";
 import { ObjectEditor } from "../../../utils";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export abstract class RestMethodExtension {
     abstract handleAsync(context: THttpContext): Promise<void>;
@@ -16,17 +17,24 @@ export abstract class RestMethodExtension {
                     {};
 
                 const extendedInstance = new ExtendedClass(...args);
+                const handler: RequestHandler = async (
+                    req: Request,
+                    res: Response,
+                    next: NextFunction,
+                ) => {
+                    await extendedInstance.handleAsync({ req, res, next });
+                };
                 const editor = new ObjectEditor(metadata);
                 editor.mutateState((state) => {
                     if (!state.requestHandlers) state.requestHandlers = {};
                     const metadata = state.requestHandlers[propertyKey];
                     if (metadata) {
-                        if (!metadata.methodMiddlewares) metadata.methodMiddlewares = [];
-                        metadata.methodMiddlewares.push(extendedInstance);
+                        if (!metadata.middlewares) metadata.middlewares = [];
+                        metadata.middlewares.push(handler);
                     } else {
                         // @ts-ignore
                         state.requestHandlers[propertyKey] = {
-                            methodMiddlewares: [extendedInstance],
+                            middlewares: [handler],
                         };
                     }
                 });

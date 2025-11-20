@@ -15,7 +15,8 @@ export class AppContext {
     }
 
     public static saveContext(app: Express) {
-        return new AppContext(app);
+        this._instance = new AppContext(app);
+        return this._instance;
     }
 
     public static getInstance(): AppContext {

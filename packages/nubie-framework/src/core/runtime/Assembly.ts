@@ -1,23 +1,22 @@
 import path from "node:path";
-import * as fs from "node:fs/promises";
+import fs from "node:fs";
 import { Configuration } from "../config";
-
-// Just fancy name copied from .NET :)
 
 /**
  * Runtime helper class get compiled js paths
  */
 class Assembly {
-    public async scanFilesAsync(
+    public scanFiles(
         fileSuffix: string | string[],
         parentDir?: string,
-    ): Promise<string[]> {
+        recursive = true,
+    ): string[] {
         const fileNames = Array.isArray(fileSuffix) ? fileSuffix : [fileSuffix];
         const searchDir = parentDir
             ? path.join(Configuration.ROOT_DIR, "build", ...parentDir.split("/"))
             : path.join(Configuration.ROOT_DIR, "build");
 
-        const files = await fs.readdir(searchDir, { recursive: true, withFileTypes: true });
+        const files = fs.readdirSync(searchDir, { recursive, withFileTypes: true });
 
         const retVal: string[] = [];
 

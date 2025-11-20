@@ -1,7 +1,8 @@
-import { Express, Request, Response, NextFunction } from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { Assembly, ClassResolver } from "./core/runtime";
 import { AppContext } from "./AppContext";
 import { Configuration } from "./core/config";
+import helmet from "helmet";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -10,15 +11,23 @@ type TGlobalErrorHandlerCallback = (
     next: NextFunction,
 ) => void;
 
-export class Nubie {
+export class NubieApplication {
     private readonly _appContext: AppContext;
     private _globalErrorHandler?: TGlobalErrorHandlerCallback = undefined;
 
-    public constructor(app: Express) {
-        this._appContext = AppContext.saveContext(app);
+    public get ExpressApp() {
+        return this._appContext.express;
     }
 
-    public async registerClassDecoratorsAsync() {
+    public constructor() {
+        this._appContext = AppContext.saveContext(express());
+
+        this.ExpressApp.use(helmet());
+        this.ExpressApp.use(express.json());
+        this.ExpressApp.use(express.urlencoded({ extended: true }));
+    }
+
+    private async registerClassDecoratorsAsync() {
         for (const decorator of this._appContext.classDecorators) {
             await decorator.build();
         }
@@ -29,11 +38,8 @@ export class Nubie {
         return this;
     }
 
-    private async mapControllersAsync() {
-        const files = await Assembly.scanFilesAsync(
-            "Controller",
-            Configuration.options.controllersDirectory,
-        );
+    private mapControllers() {
+        const files = Assembly.scanFiles("Controller", Configuration.options.controllersDirectory);
         for (const file of files) {
             ClassResolver.resolve(file);
         }
@@ -41,7 +47,7 @@ export class Nubie {
 
     public async runAsync() {
         const { express } = this._appContext;
-        await this.mapControllersAsync();
+        this.mapControllers();
         await this.registerClassDecoratorsAsync();
         if (this._globalErrorHandler) express.use(this._globalErrorHandler);
 

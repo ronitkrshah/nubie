@@ -1,6 +1,5 @@
 import { ClassNotFoundException } from "./exceptions";
 import { createRequire } from "node:module";
-import { ClassIntrospector } from "../../../generic/ClassIntrospector";
 
 // @ts-ignore
 const require = createRequire(import.meta.url);

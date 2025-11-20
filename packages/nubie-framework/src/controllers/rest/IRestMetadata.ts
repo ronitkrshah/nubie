@@ -1,26 +1,18 @@
-import { RestParamExtension, RestMethodExtension } from "./abstractions";
-import { RestClassExtension } from "./abstractions";
+import { RestParamExtension } from "./abstractions";
 import { RequestHandler } from "express";
 
 export interface IRestMetadata {
-    apiVersion?: number;
     baseEndpoint: string;
     className: string;
-    classMiddlewares?: RestClassExtension[];
+    middlewares?: RequestHandler[];
     requestHandlers?: Record<
         string,
         | {
               httpMethod: THttpMethod;
               route: string;
               apiVersion?: number;
-              // nubie-framework level custom with extension class-extensions
-              methodMiddlewares?: RestMethodExtension[];
-              // native express
-              nativeMiddlewares?: RequestHandler[];
+              middlewares?: RequestHandler[];
               params?: { decorator: RestParamExtension; index: number }[];
-              config?: {
-                  useClassLevelAuthorize?: boolean;
-              };
           }
         | undefined
     >;

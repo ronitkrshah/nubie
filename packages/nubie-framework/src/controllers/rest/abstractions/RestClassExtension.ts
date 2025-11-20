@@ -2,6 +2,7 @@ import { THttpContext } from "../types";
 import { BaseClassDecorator } from "../../../abstractions";
 import { IRestMetadata } from "../IRestMetadata";
 import { ObjectEditor } from "../../../utils";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 
 export abstract class RestClassExtension {
     abstract handleAsync(context: THttpContext): Promise<void>;
@@ -15,10 +16,18 @@ export abstract class RestClassExtension {
                     Reflect.getOwnMetadata(BaseClassDecorator.MetadataKey, target) || {};
 
                 const extendedInstance = new ExtendedClass(...args);
+                const handler: RequestHandler = async (
+                    req: Request,
+                    res: Response,
+                    next: NextFunction,
+                ) => {
+                    await extendedInstance.handleAsync({ req, res, next });
+                };
+
                 const editor = new ObjectEditor(metadata);
                 editor.mutateState((state) => {
-                    if (!state.classMiddlewares) state.classMiddlewares = [];
-                    state.classMiddlewares.push(extendedInstance);
+                    if (!state.middlewares) state.middlewares = [];
+                    state.middlewares.push(handler);
                 });
 
                 Reflect.defineMetadata(BaseClassDecorator.MetadataKey, editor.getState(), target);
