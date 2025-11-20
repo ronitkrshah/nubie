@@ -34,12 +34,12 @@ class RestControllerDecorator extends BaseClassDecorator {
         Reflect.defineMetadata(BaseClassDecorator.MetadataKey, editor.getState(), this.target);
     }
 
-    public async build(): Promise<void> {
+    public build(): void {
         this.validateClass();
         this.updateMetadata();
 
         const requestBuilder = new RestRequestBuilder(this);
-        await requestBuilder.buildAsync();
+        requestBuilder.build();
 
         const express = AppContext.getInstance().express;
         express.use(requestBuilder.router);

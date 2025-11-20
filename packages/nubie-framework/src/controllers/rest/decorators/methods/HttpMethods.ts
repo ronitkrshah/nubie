@@ -8,7 +8,7 @@ function httpMethodFactory(method: THttpMethod) {
             super();
         }
 
-        public build(): Promise<void> | void {
+        public build(): void {
             const metadata = this.getClassMetadata();
             const editor = new ObjectEditor(metadata);
             editor.mutateState((state) => {

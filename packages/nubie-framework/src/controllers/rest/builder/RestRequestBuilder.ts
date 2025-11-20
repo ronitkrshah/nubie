@@ -23,7 +23,7 @@ export class RestRequestBuilder {
         return endpoint.replace(/\/+/g, "/");
     }
 
-    public async buildAsync() {
+    public build() {
         const classMetadata: IRestMetadata = Reflect.getOwnMetadata(
             BaseClassDecorator.MetadataKey,
             this.decoratedClass.target,
@@ -60,6 +60,7 @@ export class RestRequestBuilder {
                     if (res.headersSent) return;
                     if (!result) return res.sendStatus(204);
 
+                    /** Assume return statement using HttpResponse object */
                     if ("statusCode" in result && "data" in result) {
                         const { statusCode, data } = result as THttpMethodResponse;
                         return res.status(statusCode).json(data);

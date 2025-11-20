@@ -11,7 +11,7 @@ export abstract class BaseClassDecorator {
 
     public target!: TClass;
 
-    abstract build(): Promise<void> | void;
+    abstract build(): void;
 
     public static createDecorator<TArgs extends unknown[]>(
         ExtendedClass: TClass<TArgs, BaseClassDecorator>,

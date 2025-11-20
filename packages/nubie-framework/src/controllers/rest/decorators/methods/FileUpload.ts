@@ -22,7 +22,7 @@ class FileUploadDecorator extends BaseMethodDecorator<IRestMetadata> {
         super();
     }
 
-    public async build(): Promise<void> {
+    public build(): void {
         const uploadDir = path.join(Configuration.ROOT_DIR, "uploads");
 
         const storage = multer.diskStorage({

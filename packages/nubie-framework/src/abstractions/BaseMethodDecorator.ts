@@ -5,7 +5,7 @@ export abstract class BaseMethodDecorator<TClassMetadata extends object> {
     protected propertyKey!: string;
     protected descriptor!: PropertyDescriptor;
 
-    abstract build(): Promise<void> | void;
+    abstract build(): void;
 
     protected getClassMetadata(): TClassMetadata {
         return (
@@ -29,7 +29,7 @@ export abstract class BaseMethodDecorator<TClassMetadata extends object> {
 
                 /**
                  * The reason we're invoking build method-extensions here because subclasses will mutate
-                 * the constructor
+                 * the constructor metadata
                  */
                 decorator.build();
             };
