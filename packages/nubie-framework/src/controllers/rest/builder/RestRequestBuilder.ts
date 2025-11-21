@@ -2,7 +2,7 @@ import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
 import { IRestMetadata } from "../IRestMetadata";
 import { THttpMethodResponse } from "../utils";
-import { AppContext } from "../../../AppContext";
+import { ServiceContainer } from "../../../core/dependency-injection";
 
 type TController = Record<
     string,
@@ -14,17 +14,6 @@ export class RestRequestBuilder {
 
     public constructor(public readonly decoratedClass: BaseClassDecorator) {
         this.router = Router();
-
-        /** Create a child container to resolve instances */
-        this.router.use((req, res, next) => {
-            req.serviceContainer =
-                AppContext.getInstance().serviceContainer.container.createChildContainer();
-
-            res.on("finish", async () => {
-                req.serviceContainer.dispose();
-            });
-            next();
-        });
     }
 
     private generateEndpoint(config: IRestMetadata, methodName: string) {
@@ -53,7 +42,7 @@ export class RestRequestBuilder {
             // Actual Request Handler
             const httpRequestHandler = async (req: Request, res: Response, next: NextFunction) => {
                 // It will create new controller instance on every request
-                const instance: TController = req.serviceContainer.resolve(
+                const instance: TController = ServiceContainer.resolveStrict(
                     this.decoratedClass.target.name,
                 );
 

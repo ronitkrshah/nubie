@@ -3,6 +3,7 @@ import { Assembly, ClassResolver } from "./core/runtime";
 import { AppContext } from "./AppContext";
 import { Configuration } from "./core/config";
 import helmet from "helmet";
+import fs from "node:fs";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -27,28 +28,23 @@ export class NubieApplication {
         this.ExpressApp.use(express.urlencoded({ extended: true }));
     }
 
-    private async registerClassDecoratorsAsync() {
-        for (const decorator of this._appContext.classDecorators) {
-            await decorator.build();
-        }
-    }
-
     public useGlobalErrorHandler(errorHandler: TGlobalErrorHandlerCallback) {
         this._globalErrorHandler = errorHandler;
         return this;
     }
 
     private mapControllers() {
+        const isDirExists = fs.existsSync(Configuration.options.controllersDirectory);
+        if (!isDirExists) return;
+
         const files = Assembly.scanFiles("Controller", Configuration.options.controllersDirectory);
-        for (const file of files) {
-            ClassResolver.resolve(file);
-        }
+        files.forEach((file) => ClassResolver.resolve(file));
     }
 
-    public async runAsync() {
+    public run() {
         const { express } = this._appContext;
         this.mapControllers();
-        await this.registerClassDecoratorsAsync();
+        this._appContext.classDecorators.forEach((classDecorator) => classDecorator.build());
         if (this._globalErrorHandler) express.use(this._globalErrorHandler);
 
         express.listen(Configuration.options.port, () => {

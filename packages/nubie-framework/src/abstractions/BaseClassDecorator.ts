@@ -1,6 +1,6 @@
 import { ObjectEditor } from "../utils";
 import { AppContext } from "../AppContext";
-import { Injectable, Transient } from "../core/dependency-injection/decorators";
+import { Injectable, ServiceContainer } from "../core/dependency-injection";
 
 type TClassDecoratorMetadata = {
     markedAsInjectable?: boolean;
@@ -29,7 +29,7 @@ export abstract class BaseClassDecorator {
 
                     // Setup for injecting dependencies
                     Injectable()(target);
-                    Transient(target.name)(target);
+                    ServiceContainer.addScoped(target.name, target);
 
                     Reflect.defineMetadata(
                         BaseClassDecorator.MetadataKey,
