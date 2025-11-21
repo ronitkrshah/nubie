@@ -1,7 +1,8 @@
 import { BaseClassDecorator } from "../../../abstractions";
 import { NextFunction, Request, Response, Router } from "express";
 import { IRestMetadata } from "../IRestMetadata";
-import { THttpMethodResponse, createDiScopeMiddleware } from "../utils";
+import { THttpMethodResponse } from "../utils";
+import { AppContext } from "../../../AppContext";
 
 type TController = Record<
     string,
@@ -13,7 +14,17 @@ export class RestRequestBuilder {
 
     public constructor(public readonly decoratedClass: BaseClassDecorator) {
         this.router = Router();
-        this.router.use(createDiScopeMiddleware);
+
+        /** Create a child container to resolve instances */
+        this.router.use((req, res, next) => {
+            req.serviceContainer =
+                AppContext.getInstance().serviceContainer.container.createChildContainer();
+
+            res.on("finish", async () => {
+                req.serviceContainer.dispose();
+            });
+            next();
+        });
     }
 
     private generateEndpoint(config: IRestMetadata, methodName: string) {
@@ -29,9 +40,7 @@ export class RestRequestBuilder {
             this.decoratedClass.target,
         );
 
-        classMetadata.middlewares?.forEach((middleware) => {
-            this.router.use(middleware);
-        });
+        this.router.use(classMetadata.middlewares || []);
 
         const requestHandlersArray = Object.entries(classMetadata.requestHandlers || {});
 
