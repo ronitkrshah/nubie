@@ -4,7 +4,7 @@ import { UnauthenticatedRequestException } from "../../exceptions";
 import { SecurityConfig } from "../../../../core/config";
 
 class ApiAuthorizeMiddleware extends RestClassExtension {
-    public async handleAsync({ req, next }: THttpContext): Promise<void> {
+    public async invokeAsync({ req, next }: THttpContext): Promise<void> {
         if (!SecurityConfig.jwtSecret) {
             throw new Error("SecurityConfig.jwtSecret isn't set");
         }

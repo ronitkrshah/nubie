@@ -51,7 +51,7 @@ export class RestRequestBuilder {
                     const argument: unknown[] = [];
 
                     for (const param of metadata.params || []) {
-                        argument[param.index] = await param.decorator.handleAsync({ req, res });
+                        argument[param.index] = await param.decorator.invokeAsync({ req, res });
                     }
 
                     const result = await instance[methodName].apply(instance, argument);

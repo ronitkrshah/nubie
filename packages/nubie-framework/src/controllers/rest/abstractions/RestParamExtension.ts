@@ -4,7 +4,7 @@ import { IRestMetadata } from "../IRestMetadata";
 import { ObjectEditor } from "../../../utils";
 
 export abstract class RestParamExtension {
-    abstract handleAsync(context: Omit<THttpContext, "next">): Promise<unknown>;
+    abstract invokeAsync(context: Omit<THttpContext, "next">): Promise<unknown>;
 
     public static createDecorator<TArgs extends unknown[]>(
         ExtendedClass: TClass<TArgs, RestParamExtension>,

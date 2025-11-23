@@ -5,7 +5,7 @@ import { SecurityConfig } from "../../../../core/config";
 import jwt from "jsonwebtoken";
 
 class AuthorizeMiddleware extends RestMethodExtension {
-    public async handleAsync({ req, next }: THttpContext): Promise<void> {
+    public async invokeAsync({ req, next }: THttpContext): Promise<void> {
         if (!SecurityConfig.jwtSecret) {
             throw new Error("SecurityConfig.jwtSecret isn't set");
         }

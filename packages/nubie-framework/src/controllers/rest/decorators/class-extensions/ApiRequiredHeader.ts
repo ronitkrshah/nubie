@@ -7,7 +7,7 @@ class ApiRequiredHeaderDecorator extends RestClassExtension {
         super();
     }
 
-    public async handleAsync({ req, next }: THttpContext): Promise<void> {
+    public async invokeAsync({ req, next }: THttpContext): Promise<void> {
         if (!req.headers[this.header]) return next(new UnauthenticatedRequestException());
         next();
     }

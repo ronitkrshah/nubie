@@ -6,7 +6,7 @@ export class RouteParamDecorator extends RestParamExtension {
         super();
     }
 
-    public async handleAsync(context: Omit<THttpContext, "next">): Promise<unknown> {
+    public async invokeAsync(context: Omit<THttpContext, "next">): Promise<unknown> {
         return this.paramKey ? context.req.params[this.paramKey] : context.req.params;
     }
 }

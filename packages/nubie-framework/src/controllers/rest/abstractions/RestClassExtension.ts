@@ -5,7 +5,7 @@ import { ObjectEditor } from "../../../utils";
 import { NextFunction, Request, RequestHandler, Response } from "express";
 
 export abstract class RestClassExtension {
-    abstract handleAsync(context: THttpContext): Promise<void>;
+    abstract invokeAsync(context: THttpContext): Promise<void>;
 
     public static createDecorator<TArgs extends unknown[]>(
         ExtendedClass: TClass<TArgs, RestClassExtension>,
@@ -21,7 +21,7 @@ export abstract class RestClassExtension {
                     res: Response,
                     next: NextFunction,
                 ) => {
-                    await extendedInstance.handleAsync({ req, res, next });
+                    await extendedInstance.invokeAsync({ req, res, next });
                 };
 
                 const editor = new ObjectEditor(metadata);

@@ -5,7 +5,7 @@ import { ObjectEditor } from "../../../utils";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 
 export abstract class RestMethodExtension {
-    abstract handleAsync(context: THttpContext): Promise<void>;
+    abstract invokeAsync(context: THttpContext): Promise<void>;
 
     public static createDecorator<TArgs extends unknown[]>(
         ExtendedClass: TClass<TArgs, RestMethodExtension>,
@@ -22,7 +22,7 @@ export abstract class RestMethodExtension {
                     res: Response,
                     next: NextFunction,
                 ) => {
-                    await extendedInstance.handleAsync({ req, res, next });
+                    await extendedInstance.invokeAsync({ req, res, next });
                 };
                 const editor = new ObjectEditor(metadata);
                 editor.mutateState((state) => {

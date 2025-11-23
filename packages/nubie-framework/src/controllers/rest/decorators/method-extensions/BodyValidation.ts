@@ -9,7 +9,7 @@ class BodyValidationDecorator extends RestMethodExtension {
         super();
     }
 
-    public async handleAsync({ req, next }: THttpContext): Promise<void> {
+    public async invokeAsync({ req, next }: THttpContext): Promise<void> {
         const dtoInstance = plainToInstance(this.dto, req.body);
         const validationErrors = await validate(dtoInstance);
         if (validationErrors.length > 0) next(new InvalidRequestBodyException());
