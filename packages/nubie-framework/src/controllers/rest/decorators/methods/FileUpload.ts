@@ -17,22 +17,22 @@ export type TFileUploadOptions = {
     fields?: { name: string; maxCount?: number }[];
 };
 
+const uploadDir = path.join(Configuration.ROOT_DIR, Configuration.options.fileUploadDirectory);
+
+const storage = multer.diskStorage({
+    destination: (_, __, cb) => cb(null, uploadDir),
+    filename: (_, file, cb) => {
+        const ext = mime.extension(file.mimetype) || "bin";
+        cb(null, `${nanoid()}.${ext}`);
+    },
+});
+
 class FileUploadDecorator extends BaseMethodDecorator<IRestMetadata> {
     public constructor(public readonly options: TFileUploadOptions = {}) {
         super();
     }
 
     public build(): void {
-        const uploadDir = path.join(Configuration.ROOT_DIR, "uploads");
-
-        const storage = multer.diskStorage({
-            destination: (_, __, cb) => cb(null, uploadDir),
-            filename: (_, file, cb) => {
-                const ext = mime.extension(file.mimetype) || "bin";
-                cb(null, `${nanoid()}.${ext}`);
-            },
-        });
-
         const fileUploader = multer({
             storage,
             limits: {
