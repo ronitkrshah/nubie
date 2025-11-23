@@ -1,3 +1,3 @@
-import { ClassIntrospector } from "./ClassIntrospector";
+import { ClassInspector } from "./ClassInspector";
 
-export { ClassIntrospector };
+export { ClassInspector };

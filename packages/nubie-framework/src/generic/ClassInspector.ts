@@ -7,7 +7,7 @@ import { isImplements } from "./decorators";
  * This class is intentionally lightweight and user-friendly —
  * it avoids complex reflection or metadata APIs.
  */
-export class ClassIntrospector {
+export class ClassInspector {
     private readonly _target: TClass;
 
     public constructor(target: TClass) {
@@ -28,7 +28,7 @@ export class ClassIntrospector {
      * @Implements("ISerializable")
      * class User {}
      *
-     * new ClassIntrospector(User).doesImplement("ISerializable"); // true
+     * new ClassInspector(User).doesImplement("ISerializable"); // true
      * ```
      */
     public doesImplement(value: string): boolean {
@@ -48,7 +48,7 @@ export class ClassIntrospector {
      * class Base {}
      * class Sub extends Base {}
      *
-     * new ClassIntrospector(Sub).isSubclassOf(Base); // true
+     * new ClassInspector(Sub).isSubclassOf(Base); // true
      * ```
      */
     public isSubclassOf(BaseClass: TClass): boolean {
@@ -82,9 +82,9 @@ export class ClassIntrospector {
      * class B extends A {}
      * class C extends B {}
      *
-     * new ClassIntrospector(B).isDirectSubclassOf(A); // true
-     * new ClassIntrospector(C).isDirectSubclassOf(A); // false
-     * new ClassIntrospector(C).isSubclassOf(A);       // true
+     * new ClassInspector(B).isDirectSubclassOf(A); // true
+     * new ClassInspector(C).isDirectSubclassOf(A); // false
+     * new ClassInspector(C).isSubclassOf(A);       // true
      * ```
      */
     public isDirectSubclassOf(BaseClass: TClass): boolean {
