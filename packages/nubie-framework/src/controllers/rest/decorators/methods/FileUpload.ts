@@ -4,9 +4,9 @@ import path from "node:path";
 import { Configuration } from "../../../../core/config";
 import multer from "multer";
 import mime from "mime-types";
-import { v4 as uuidv4 } from "uuid";
 import e, { RequestHandler } from "express";
 import { ObjectEditor } from "../../../../utils";
+import { nanoid } from "nanoid";
 
 export type TFileUploadOptions = {
     field?: string;
@@ -29,7 +29,7 @@ class FileUploadDecorator extends BaseMethodDecorator<IRestMetadata> {
             destination: (_, __, cb) => cb(null, uploadDir),
             filename: (_, file, cb) => {
                 const ext = mime.extension(file.mimetype) || "bin";
-                cb(null, `${uuidv4()}.${ext}`);
+                cb(null, `${nanoid()}.${ext}`);
             },
         });
 

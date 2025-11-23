@@ -26,6 +26,7 @@
         "helmet": "^8.1.0",
         "immer": "^10.1.3",
         "mime-types": "^2.1.35",
+        "nanoid": "^5.1.6",
         "reflect-metadata": "^0.2.2",
         "tsyringe": "^4.10.0"
     },
@@ -43,7 +44,6 @@
         "express": "*",
         "express-rate-limit": "^8.1.0",
         "jsonwebtoken": "*",
-        "multer": "^2.0.2",
-        "uuid": "^13.0.0"
+        "multer": "^2.0.2"
     }
 }
