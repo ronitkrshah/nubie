@@ -4,6 +4,7 @@ import { AppContext } from "./AppContext";
 import { Configuration } from "./core/config";
 import helmet from "helmet";
 import fs from "node:fs";
+import { createServer } from "node:http";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -13,6 +14,7 @@ type TGlobalErrorHandlerCallback = (
 ) => void;
 
 export class NubieApplication {
+    private static _isInitialized = false;
     private readonly _appContext: AppContext;
     private _globalErrorHandler?: TGlobalErrorHandlerCallback = undefined;
 
@@ -21,6 +23,10 @@ export class NubieApplication {
     }
 
     public constructor() {
+        if (NubieApplication._isInitialized)
+            throw new Error("Nubie application is already initialized");
+        NubieApplication._isInitialized = true;
+
         this._appContext = AppContext.saveContext(express());
 
         this.ExpressApp.use(helmet());
@@ -47,7 +53,8 @@ export class NubieApplication {
         this._appContext.classDecorators.forEach((classDecorator) => classDecorator.build());
         if (this._globalErrorHandler) express.use(this._globalErrorHandler);
 
-        express.listen(Configuration.options.port, () => {
+        const server = createServer(this.ExpressApp);
+        server.listen(Configuration.options.port, () => {
             console.log("Server running on port " + Configuration.options.port);
         });
     }

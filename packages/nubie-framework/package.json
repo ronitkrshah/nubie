@@ -1,6 +1,6 @@
 {
-    "name": "@nubie/framework",
-    "version": "0.1.0-alpha1",
+    "name": "nubie-framework",
+    "version": "0.0.0-alpha1",
     "description": "Core Nubie Framework",
     "keywords": [
         "nubie",

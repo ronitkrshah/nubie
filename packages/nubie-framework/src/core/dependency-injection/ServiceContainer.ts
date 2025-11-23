@@ -15,7 +15,7 @@ class ServiceContainer {
         this._container.register(
             token,
             { useClass: value },
-            { lifecycle: Lifecycle.ContainerScoped },
+            { lifecycle: Lifecycle.ResolutionScoped },
         );
     }
 

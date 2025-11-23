@@ -29,7 +29,7 @@ export abstract class BaseClassDecorator {
 
                     // Setup for injecting dependencies
                     Injectable()(target);
-                    ServiceContainer.addScoped(target.name, target);
+                    ServiceContainer.addTransient(target.name, target);
 
                     Reflect.defineMetadata(
                         BaseClassDecorator.MetadataKey,

@@ -29,7 +29,7 @@ export class RestRequestBuilder {
             this.decoratedClass.target,
         );
 
-        this.router.use(classMetadata.middlewares || []);
+        classMetadata.middlewares?.forEach((middleware) => this.router.use(middleware));
 
         const requestHandlersArray = Object.entries(classMetadata.requestHandlers || {});
 

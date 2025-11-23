@@ -23,6 +23,6 @@ export function Singleton(token: symbol | string) {
 
 export function Transient(token: symbol | string) {
     return function (target: TClass) {
-        ServiceContainer.addScoped(token, target);
+        ServiceContainer.addTransient(token, target);
     };
 }
