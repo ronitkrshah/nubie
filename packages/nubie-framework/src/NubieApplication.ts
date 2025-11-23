@@ -5,6 +5,7 @@ import { Configuration } from "./core/config";
 import helmet from "helmet";
 import fs from "node:fs";
 import { createServer } from "node:http";
+import cors from "cors";
 
 type TGlobalErrorHandlerCallback = (
     error: Error,
@@ -39,7 +40,14 @@ export class NubieApplication {
         return this;
     }
 
-    private mapControllers() {
+    private applyGlobalMiddlewares() {
+        this.ExpressApp.use(helmet());
+        this.ExpressApp.use(express.json());
+        this.ExpressApp.use(express.urlencoded({ extended: true }));
+        this.ExpressApp.use(cors({ origin: Configuration.options.allowedHosts }));
+    }
+
+    private resolveAllControllers() {
         const isDirExists = fs.existsSync(Configuration.options.controllersDirectory);
         if (!isDirExists) return;
 
@@ -48,10 +56,15 @@ export class NubieApplication {
     }
 
     public run() {
-        const { express } = this._appContext;
-        this.mapControllers();
+        this.applyGlobalMiddlewares();
+
+        this.resolveAllControllers();
+
+        // Register all controllers
         this._appContext.classDecorators.forEach((classDecorator) => classDecorator.build());
-        if (this._globalErrorHandler) express.use(this._globalErrorHandler);
+
+        // Use global error handler
+        if (this._globalErrorHandler) this.ExpressApp.use(this._globalErrorHandler);
 
         const server = createServer(this.ExpressApp);
         server.listen(Configuration.options.port, () => {
