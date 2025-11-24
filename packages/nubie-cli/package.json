@@ -1,6 +1,6 @@
 {
   "name": "nubie-cli",
-  "version": "0.1.0",
+  "version": "0.0.1-alpha.1",
   "description": "CLI to manage Nubie Application",
   "homepage": "https://github.com/ronitkrshah/nubie#readme",
   "bugs": {
