@@ -1,0 +1,31 @@
+{
+  "name": "nubie-cli",
+  "version": "0.1.0",
+  "description": "CLI to manage Nubie Application",
+  "homepage": "https://github.com/ronitkrshah/nubie#readme",
+  "bugs": {
+    "url": "https://github.com/ronitkrshah/nubie/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ronitkrshah/nubie.git"
+  },
+  "bin": {
+    "nubie": "build/index.mjs"
+  },
+  "license": "MIT",
+  "author": "RKS",
+  "type": "commonjs",
+  "main": "build/index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "commander": "^4.1.1",
+    "figlet": "^1.9.4"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "keywords": []
+}
