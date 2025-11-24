@@ -2,6 +2,7 @@ import { Command } from "commander";
 import fs from "fs";
 import childProcess from "node:child_process";
 import path from "node:path";
+import { ICommand } from "./ICommand";
 
 const mainFile = `
 import { NubieApplication, RestController, HttpGet } from "nubie-framework";
@@ -52,15 +53,14 @@ const tsConfig = `
 }
 `;
 
-export class NewProjectCommand {
+export class NewProjectCommand implements ICommand {
     private readonly _command: Command;
 
     constructor(command: Command) {
         this._command = command;
-        this.init();
     }
 
-    private init() {
+    public init() {
         this._command
             .command("create")
             .requiredOption("-o, --output <string>", "Output directory")
