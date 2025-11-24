@@ -64,11 +64,14 @@ export class NewProjectCommand implements ICommand {
         this._command
             .command("create")
             .requiredOption("-o, --output <string>", "Output directory")
+            .option("--skip-git-init", "Do not initialize git repo")
             .description("Bootstrap a new nubie application")
             .action((args) => {
-                const options: Record<string, string> = args.opts();
+                const options: Record<string, string | boolean> = args.opts();
+
                 try {
-                    this.handleNewProjectCreation(options.output);
+                    this.handleNewProjectCreation(options.output as string);
+                    if (!options.skipGitInit) this.initializeGitRepo();
                 } catch (e) {
                     console.log("[error]:", (e as Error).message);
                 }
@@ -78,7 +81,6 @@ export class NewProjectCommand implements ICommand {
     private handleNewProjectCreation(directory: string): void {
         console.log("[info]: project creation initialized");
 
-        // const fullDir = path.join(path.resolve(), directory);
         console.log("[info]: working dir :: " + directory);
 
         const isExists = fs.existsSync(directory);
@@ -104,7 +106,7 @@ export class NewProjectCommand implements ICommand {
                 log: "[info]: setting up nubie app",
             },
             {
-                cmd: "npm install --save-dev typescript @types/node @types/express @types/multer",
+                cmd: "npm install --save-dev typescript @types/node @types/express @types/multer nubie-cli",
                 log: "[info]: installing dev dependencies",
             },
         ];
@@ -143,8 +145,8 @@ export class NewProjectCommand implements ICommand {
         jsonData.version = "0.1.0";
 
         jsonData.scripts = {
-            dev: "tsc",
-            start: "node build/main.js",
+            dev: "nubie run",
+            build: "tsc",
         };
 
         fs.unlinkSync(path.join(process.cwd(), "package.json"));
@@ -154,5 +156,16 @@ export class NewProjectCommand implements ICommand {
         );
 
         console.log("[success]: project creation success");
+    }
+
+    private initializeGitRepo(): void {
+        console.log("[info]: initializing git repo");
+        childProcess.execSync("git init", { stdio: "ignore" });
+        childProcess.execSync("git branch -m main");
+        childProcess.execSync("git add .");
+        childProcess.execSync(
+            "git commit -m 'app: skeleton' --author='RKS <ronitkrshah@tuta.io>' --no-signoff",
+        );
+        console.log("[success]: git repo initialized");
     }
 }
