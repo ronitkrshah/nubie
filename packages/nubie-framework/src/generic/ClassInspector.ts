@@ -10,8 +10,12 @@ import { isImplements } from "./decorators";
 export class ClassInspector {
     private readonly _target: TClass;
 
-    public constructor(target: TClass) {
+    constructor(target: TClass) {
         this._target = target;
+    }
+
+    public getClassName(): string {
+        return this._target.name;
     }
 
     /**
