@@ -21,9 +21,9 @@ class Configuration {
             try {
                 const configPath = path.join(this.ROOT_DIR, this.CONFIG_FILE);
                 if (fs.existsSync(configPath)) {
-                    const rawData = fs.readFileSync(configPath, { encoding: "utf-8" });
+                    const rawData = fs.readFileSync(configPath, { encoding: "utf8" });
                     const parsedData: IConfiguration = JSON.parse(rawData);
-                    this._config = deepmerge(this._config || {}, parsedData);
+                    this._config = deepmerge(DEFAULT_CONFIG, parsedData);
                 } else {
                     this._config = DEFAULT_CONFIG;
                 }
@@ -31,6 +31,7 @@ class Configuration {
                 this._config = DEFAULT_CONFIG;
             }
         }
+
         return this._config;
     }
 
