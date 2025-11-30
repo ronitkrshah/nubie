@@ -3,7 +3,6 @@ import { Assembly, ClassResolver } from "./core/runtime";
 import { AppContext } from "./AppContext";
 import { Configuration } from "./core/config";
 import helmet from "helmet";
-import fs from "node:fs";
 import { createServer } from "node:http";
 import cors from "cors";
 
@@ -48,9 +47,6 @@ export class NubieApplication {
     }
 
     private resolveAllControllers() {
-        const isDirExists = fs.existsSync(Configuration.options.controllersDirectory);
-        if (!isDirExists) return;
-
         const files = Assembly.scanFiles("Controller", Configuration.options.controllersDirectory);
         files.forEach((file) => ClassResolver.resolve(file));
     }

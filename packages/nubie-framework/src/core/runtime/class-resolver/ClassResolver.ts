@@ -12,10 +12,13 @@ class ClassResolver {
     public resolve(filePath: string): TClass {
         const fileName = filePath.split("/").pop()?.replace(".js", "")!;
         const mod = require(filePath) as TModule;
-        if (!mod.default) throw new ClassNotFoundException();
+        if (!mod.default) throw new ClassNotFoundException("No default exports found.");
         const isClass = mod.default.toString().startsWith("class");
-        if (!isClass) throw new ClassNotFoundException();
-        if (fileName !== mod.default.name) throw new ClassNotFoundException();
+        if (!isClass) throw new ClassNotFoundException("Default export must be a class.");
+        if (fileName !== mod.default.name)
+            throw new ClassNotFoundException(
+                `File: ${fileName} :: Class: ${mod.default.name} - Must Be Same`,
+            );
         return mod.default;
     }
 }

@@ -16,6 +16,9 @@ class Assembly {
             ? path.join(Configuration.ROOT_DIR, "build", ...parentDir.split("/"))
             : path.join(Configuration.ROOT_DIR, "build");
 
+        const isDirExists = fs.existsSync(searchDir);
+        if (!isDirExists) return [];
+
         const files = fs.readdirSync(searchDir, { recursive, withFileTypes: true });
 
         const retVal: string[] = [];
