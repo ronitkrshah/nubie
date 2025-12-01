@@ -4,7 +4,7 @@ export class HttpException extends Exception {
     public readonly statusCode: number;
     public readonly explanation: string;
 
-    protected constructor(
+    public constructor(
         message?: string,
         statusCode: number = 500,
         explanation: string = "Further details not available",

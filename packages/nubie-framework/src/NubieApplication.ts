@@ -16,7 +16,7 @@ type TGlobalErrorHandlerCallback = (
 export class NubieApplication {
     private static _isInitialized = false;
     private readonly _appContext: AppContext;
-    private _globalErrorHandler?: TGlobalErrorHandlerCallback = undefined;
+    private _globalErrorHandler: TGlobalErrorHandlerCallback | undefined = undefined;
 
     public get ExpressApp() {
         return this._appContext.express;
@@ -60,7 +60,11 @@ export class NubieApplication {
         this._appContext.classDecorators.forEach((classDecorator) => classDecorator.build());
 
         // Use global error handler
-        if (this._globalErrorHandler) this.ExpressApp.use(this._globalErrorHandler);
+        if (this._globalErrorHandler !== undefined) {
+            this.ExpressApp.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+                this._globalErrorHandler!(err, req, res, next);
+            });
+        }
 
         const server = createServer(this.ExpressApp);
         server.listen(Configuration.options.port, () => {
